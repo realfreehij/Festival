@@ -27,19 +27,13 @@ use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 
-class Creeper extends Monster implements Explosive{
-	
-	const NETWORK_ID = 33;
-	
-	public $width = 0.6;
-	public $length = 0.6;
-	public $height = 1.7;
-	
+class Mooshroom extends Animal{
+
+	const NETWORK_ID = 16;
+
 	public function getName(){
-		return "Creeper"; //Aw man
+		return "Mooshroom";
 	}
-	
-	public function explode(){} //TODO creeper explosions
 	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
