@@ -72,7 +72,7 @@ namespace pocketmine {
 	use pocketmine\utils\Utils;
 	use pocketmine\wizard\Installer;
 
-		const VERSION = '1.0-dev2';
+		const VERSION = '1.0-dev3';
 	const API_VERSION = "1.12.0";
 	const CODENAME = "Puki (プッキー) Kaki (カーキ) ";
 	const MINECRAFT_VERSION = "v0.11.0 alpha";
