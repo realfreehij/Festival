@@ -30,3 +30,4 @@ REM ) else (
 		%PHP_BINARY% -c bin\php %POCKETMINE_FILE% %*
 	)
 REM )
+pause
