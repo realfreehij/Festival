@@ -23,17 +23,28 @@
  * All the Item classes
  */
 namespace pocketmine\item;
-
+use pocketmine\entity\Creeper;
+use pocketmine\entity\Skeleton;
+use pocketmine\entity\Spider;
 use pocketmine\block\Block;
 use pocketmine\block\Flower;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Squid;
 use pocketmine\entity\Villager;
 use pocketmine\entity\Zombie;
+use pocketmine\entity\Chicken;
+use pocketmine\entity\Sheep;
+use pocketmine\entity\Pig;
+use pocketmine\entity\Wolf;
+use pocketmine\entity\Cow;
+use pocketmine\entity\Mooshroom;
 use pocketmine\inventory\Fuel;
 use pocketmine\level\Level;
 use pocketmine\Player;
-
+use pocketmine\entity\PigZombie;
+use pocketmine\entity\Slime;
+use pocketmine\entity\Enderman;
+use pocketmine\entity\Silverfish;
 class Item{
 	//All Block IDs are here too
 	const AIR = 0;
@@ -743,21 +754,27 @@ class Item{
 		self::addCreativeItem(Item::get(Item::CLOCK, 0));
 		self::addCreativeItem(Item::get(Item::COMPASS, 0));
 		self::addCreativeItem(Item::get(Item::MINECART, 0));
-		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Villager::NETWORK_ID));
-		//self::addCreativeItem(Item::get(Item::SPAWN_EGG, 10)); //Chicken
-		//self::addCreativeItem(Item::get(Item::SPAWN_EGG, 11)); //Cow
-		//self::addCreativeItem(Item::get(Item::SPAWN_EGG, 12)); //Pig
-		//self::addCreativeItem(Item::get(Item::SPAWN_EGG, 13)); //Sheep
-		//TODO: Wolf
-		//TODO: Mooshroom
-		//TODO: Creeper
-		//TODO: Enderman
-		//TODO: Silverfish
-		//TODO: Skeleton
-		//TODO: Slime
+		
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Chicken::NETWORK_ID)); //Chicken
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Cow::NETWORK_ID)); //Cow
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Pig::NETWORK_ID)); //Pig
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Sheep::NETWORK_ID)); //Sheep
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Wolf::NETWORK_ID)); //Wolf
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Villager::NETWORK_ID)); //Villager
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Mooshroom::NETWORK_ID)); //Mooshroom
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Squid::NETWORK_ID)); //Squid
+		
 		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Zombie::NETWORK_ID));
-		//TODO: PigZombie
-		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Squid::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Creeper::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Skeleton::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Spider::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, PigZombie::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Slime::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Enderman::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Silverfish::NETWORK_ID));
+		
+		
+		
 
 		self::addCreativeItem(Item::get(Item::SNOWBALL));
 

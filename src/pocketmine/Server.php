@@ -31,7 +31,16 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\command\SimpleCommandMap;
+use pocketmine\entity\Pig;
+use pocketmine\entity\Chicken;
+use pocketmine\entity\Sheep;
+use pocketmine\entity\Cow;
 use pocketmine\entity\Arrow;
+use pocketmine\entity\Mooshroom;
+use pocketmine\entity\Wolf;
+use pocketmine\entity\Creeper;
+use pocketmine\entity\Skeleton;
+use pocketmine\entity\Spider;
 use pocketmine\entity\Effect;
 use pocketmine\entity\Entity;
 use pocketmine\entity\FallingSand;
@@ -42,6 +51,10 @@ use pocketmine\entity\Snowball;
 use pocketmine\entity\Squid;
 use pocketmine\entity\Villager;
 use pocketmine\entity\Zombie;
+use pocketmine\entity\PigZombie;
+use pocketmine\entity\Slime;
+use pocketmine\entity\Enderman;
+use pocketmine\entity\Silverfish;
 use pocketmine\event\HandlerList;
 use pocketmine\event\level\LevelInitEvent;
 use pocketmine\event\level\LevelLoadEvent;
@@ -2584,6 +2597,13 @@ class Server{
 	}
 
 	private function registerEntities(){
+		Entity::registerEntity(Pig::class);
+		Entity::registerEntity(Chicken::class);
+		Entity::registerEntity(Sheep::class);
+		Entity::registerEntity(Cow::class);
+		Entity::registerEntity(Wolf::class);
+		Entity::registerEntity(Mooshroom::class);
+		
 		Entity::registerEntity(Arrow::class);
 		Entity::registerEntity(DroppedItem::class);
 		Entity::registerEntity(FallingSand::class);
@@ -2592,7 +2612,15 @@ class Server{
 		Entity::registerEntity(Villager::class);
 		Entity::registerEntity(Zombie::class);
 		Entity::registerEntity(Squid::class);
-
+		
+		Entity::registerEntity(Spider::class);
+		Entity::registerEntity(Creeper::class);
+		Entity::registerEntity(Skeleton::class);
+		Entity::registerEntity(PigZombie::class);
+		Entity::registerEntity(Slime::class);
+		Entity::registerEntity(Enderman::class);
+		Entity::registerEntity(Silverfish::class);
+		
 		Entity::registerEntity(Human::class, \true);
 	}
 
