@@ -1,0 +1,22 @@
+players/*
+worlds/*
+plugins/*
+logs/*
+bin/*
+*.log
+*.txt
+*.properties
+
+
+############
+## Windows
+############
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Mac crap
+.DS_Store
