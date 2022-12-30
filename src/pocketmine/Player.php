@@ -1811,6 +1811,9 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				$this->forceMovement = $this->teleportPosition = $this->getPosition();
 
 				$this->server->onPlayerLogin($this);
+				
+				$pMotd = str_replace("@player", $this->username, $this->server->getPlayerMotd());
+				$this->sendMessage($pMotd);
 
 				break;
 			case ProtocolInfo::MOVE_PLAYER_PACKET:
