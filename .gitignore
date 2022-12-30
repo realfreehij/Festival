@@ -6,6 +6,9 @@ bin/*
 *.log
 *.txt
 *.properties
+*.yml
+*.dll
+*.exe
 
 
 ############
@@ -20,3 +23,5 @@ Desktop.ini
 
 # Mac crap
 .DS_Store
+*.properties
+bin/php/php.ini
