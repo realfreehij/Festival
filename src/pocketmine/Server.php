@@ -54,6 +54,9 @@ use pocketmine\entity\Zombie;
 use pocketmine\entity\PigZombie;
 use pocketmine\entity\Slime;
 use pocketmine\entity\Enderman;
+use pocketmine\entity\Bat;
+use pocketmine\entity\CaveSpider;
+use pocketmine\entity\MagmaCube;
 use pocketmine\entity\Silverfish;
 use pocketmine\event\HandlerList;
 use pocketmine\event\level\LevelInitEvent;
@@ -2620,6 +2623,8 @@ class Server{
 		Entity::registerEntity(Villager::class);
 		Entity::registerEntity(Zombie::class);
 		Entity::registerEntity(Squid::class);
+		Entity::registerEntity(CaveSpider::class);
+		Entity::registerEntity(MagmaCube::class);
 		
 		Entity::registerEntity(Spider::class);
 		Entity::registerEntity(Creeper::class);
@@ -2628,6 +2633,8 @@ class Server{
 		Entity::registerEntity(Slime::class);
 		Entity::registerEntity(Enderman::class);
 		Entity::registerEntity(Silverfish::class);
+		
+		Entity::registerEntity(Bat::class);
 		
 		Entity::registerEntity(Human::class, \true);
 	}

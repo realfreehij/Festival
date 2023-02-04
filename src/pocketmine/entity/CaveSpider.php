@@ -26,15 +26,15 @@ use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 
-class Silverfish extends Monster{
-	const NETWORK_ID = 39;
+class CaveSpider extends Monster{ //TODO class Neutral
+	const NETWORK_ID = 40;
 	
-	public $width = 0.3;
-	public $length = 0.3;
-	public $height = 0.7;
+	public $width = 1.4; //TODO vanilla?
+	public $length = 1.4;
+	public $height = 0.9;
 	
 	public function getName(){
-		return "Silverfish";
+		return "Cave Spider";
 	}
 	
 	public function spawnTo(Player $player){

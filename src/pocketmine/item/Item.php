@@ -44,6 +44,9 @@ use pocketmine\Player;
 use pocketmine\entity\PigZombie;
 use pocketmine\entity\Slime;
 use pocketmine\entity\Enderman;
+use pocketmine\entity\Bat;
+use pocketmine\entity\CaveSpider;
+use pocketmine\entity\MagmaCube;
 use pocketmine\entity\Silverfish;
 class Item{
 	//All Block IDs are here too
@@ -773,8 +776,9 @@ class Item{
 		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Enderman::NETWORK_ID));
 		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Silverfish::NETWORK_ID));
 		
-		
-		
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Bat::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, CaveSpider::NETWORK_ID));
+		self::addCreativeItem(Item::get(Item::SPAWN_EGG, MagmaCube::NETWORK_ID));
 
 		self::addCreativeItem(Item::get(Item::SNOWBALL));
 
