@@ -426,6 +426,8 @@ class Item{
 	public static function init(){
 		if(self::$list === \null){
 			self::$list = new \SplFixedArray(65536);
+			
+			self::$list[self::EGG] = Egg::class;
 			self::$list[self::SUGARCANE] = Sugarcane::class;
 			self::$list[self::WHEAT_SEEDS] = WheatSeeds::class;
 			self::$list[self::PUMPKIN_SEEDS] = PumpkinSeeds::class;
