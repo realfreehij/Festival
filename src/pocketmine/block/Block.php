@@ -339,7 +339,7 @@ class Block extends Position implements Metadatable{
 			self::$list[self::RED_FLOWER] = Flower::class;
 			self::$list[self::BROWN_MUSHROOM] = BrownMushroom::class;
 			self::$list[self::RED_MUSHROOM] = RedMushroom::class;
-			self::$list[self::RAIL] = PoweredRail::class;
+			self::$list[self::POWERED_RAIL] = PoweredRail::class;
 			self::$list[self::RAIL] = Rail::class;
 			self::$list[self::GOLD_BLOCK] = Gold::class;
 			self::$list[self::IRON_BLOCK] = Iron::class;
