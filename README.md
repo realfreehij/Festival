@@ -2,4 +2,4 @@
 # PopaCore
 PocketMine-MP 1.5dev-1438 fork by Fölix Team
 
-Discord: https://discord.gg/b2H4qnZPCm
+Discord: https://discord.gg/JrAqt9F8vC/
