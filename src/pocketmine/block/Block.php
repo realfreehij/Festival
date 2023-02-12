@@ -156,7 +156,7 @@ class Block extends Position implements Metadatable{
 	const LIT_PUMPKIN = 91;
 	const JACK_O_LANTERN = 91;
 	const CAKE_BLOCK = 92;
-
+	const INVISIBLE_BEDROCK = 95;
 	const TRAPDOOR = 96;
 
 	const STONE_BRICKS = 98;
@@ -248,6 +248,9 @@ class Block extends Position implements Metadatable{
 	const STONECUTTER = 245;
 	const GLOWING_OBSIDIAN = 246;
 	const NETHER_REACTOR = 247;
+	const UPDATE_BLOCK1 = 248;
+	const UPDATE_BLOCK2 = 249;
+	const RESERVED6 = 255;
 
 	/** @var \SplFixedArray */
 	public static $list = \null;
@@ -389,7 +392,7 @@ class Block extends Position implements Metadatable{
 
 			self::$list[self::LIT_PUMPKIN] = LitPumpkin::class;
 			self::$list[self::CAKE_BLOCK] = Cake::class;
-
+			self::$list[self::INVISIBLE_BEDROCK] = InvisibleBedrock::class;
 			self::$list[self::TRAPDOOR] = Trapdoor::class;
 
 			self::$list[self::STONE_BRICKS] = StoneBricks::class;
@@ -457,6 +460,9 @@ class Block extends Position implements Metadatable{
 			self::$list[self::STONECUTTER] = Stonecutter::class;
 			self::$list[self::GLOWING_OBSIDIAN] = GlowingObsidian::class;
 			self::$list[self::NETHER_REACTOR] = NetherReactor::class;
+			self::$list[self::UPDATE_BLOCK1] = UpdateBlock1::class;
+			self::$list[self::UPDATE_BLOCK2] = UpdateBlock2::class;
+			self::$list[self::RESERVED6] = reserved6::class;
 
 			foreach(self::$list as $id => $class){
 				if($class !== \null){
