@@ -25,8 +25,8 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 
 abstract class VanillaCommand extends Command{
-	const MAX_COORD = 30000000;
-	const MIN_COORD = -30000000;
+	const MAX_COORD = 2147483647;
+	const MIN_COORD = -2147483647;
 
 	public function __construct($name, $description = "", $usageMessage = \null, array $aliases = []){
 		parent::__construct($name, $description, $usageMessage, $aliases);
