@@ -74,7 +74,7 @@ namespace pocketmine {
 
 	const VERSION = '1.0-dev';
 	const API_VERSION = "1.12.0";
-	const CODENAME = "Puki (プッキー) Kaki (カーキ) ";
+	const CODENAME = "Oscar (オスカー)";
 	const MINECRAFT_VERSION = "v0.11.1 alpha";
 	const MINECRAFT_VERSION_NETWORK = "0.11.1";
 
