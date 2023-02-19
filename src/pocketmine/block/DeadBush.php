@@ -22,6 +22,9 @@
 namespace pocketmine\block;
 
 use pocketmine\level\Level;
+use pocketmine\item\Item;
+use pocketmine\math\Vector3;
+use pocketmine\Player;
 
 class DeadBush extends Flowable{
 
@@ -34,18 +37,27 @@ class DeadBush extends Flowable{
 	public function getName(){
 		return "Dead Bush";
 	}
+	
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
+                $down = $this->getSide(0);
+                if($down->getId() === Block::SAND){
+                        $this->getLevel()->setBlock($block, $this, true);
+                        return true;
+                }
 
+                return false;
+        }
 
 	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){
-			if($this->getSide(0)->isTransparent() === \true){
+			if($this->getSide(0)->isTransparent()){
 				$this->getLevel()->useBreakOn($this);
 
 				return Level::BLOCK_UPDATE_NORMAL;
 			}
 		}
 
-		return \false;
+		return false;
 	}
 
 }
