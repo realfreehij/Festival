@@ -136,7 +136,9 @@ use pocketmine\utils\VersionString;
 class Server{
 	const BROADCAST_CHANNEL_ADMINISTRATIVE = "pocketmine.broadcast.admin";
 	const BROADCAST_CHANNEL_USERS = "pocketmine.broadcast.user";
-
+	
+	public static $mainmenuinfo = "0.11.0";
+	
 	/** @var Server */
 	private static $instance = \null;
 
@@ -1591,6 +1593,7 @@ class Server{
 		$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
 			"motd" => "Minecraft: PE Server",
 			"player-motd" => "Welcome @player to this server!",
+			"mainmenuinfo" => MINECRAFT_VERSION_NETWORK,
 			"server-port" => 19132,
 			"white-list" => \false,
 			"announce-player-achievements" => \true,
@@ -1613,7 +1616,7 @@ class Server{
 			"rcon.password" => \substr(\base64_encode(@Utils::getRandomBytes(20, \false)), 3, 10),
 			"auto-save" => \true,
 		]);
-
+		Server::$mainmenuinfo = $this->properties->get("mainmenuinfo", MINECRAFT_VERSION_NETWORK);
 		$this->forceLanguage = $this->getProperty("settings.force-language", \false);
 		$this->baseLang = new BaseLang($this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE));
 		$this->logger->info($this->getLanguage()->translateString("language.selected", [$this->getLanguage()->getName(), $this->getLanguage()->getLang()]));
