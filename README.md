@@ -7,7 +7,7 @@ Features:
 
 • All blocks *(will be soon)*
 
-• Some vanilla features what was not added
+• Some vanilla features which were not added
 
 • *and some other bug fixes...*
 
