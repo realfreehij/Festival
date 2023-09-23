@@ -1,4 +1,4 @@
-# PocketMine-MP 1.5dev-1438 fork by Fölix Team
+# PocketMine-MP 1.5dev-1438 fork
 Supported versions: 0.11.0-0.11.1 *& prob some builds*
 
 Features:
@@ -11,6 +11,6 @@ Features:
 
 • *and some other bug fixes...*
 
-**Discord: https://discord.gg/b2H4qnZPCm**
+**Discord: https://discord.gg/JrAqt9F8vC**
 
 *wonder will someone read it?*
