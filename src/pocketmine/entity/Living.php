@@ -155,7 +155,27 @@ abstract class Living extends Entity implements Damageable{
 
 		$this->setMotion($motion);
 	}
+	
+	protected function updateMovement(){
+		if($this->isAlive()){
+			$this->motionY -= $this->gravity;
+			$this->move($this->motionX, $this->motionY, $this->motionZ);
+			$friction = 1 - $this->drag;
 
+			$this->motionX *= $friction;
+			$this->motionY *= $friction;
+			$this->motionZ *= $friction;
+			
+			parent::updateMovement();
+			
+			if($this->onGround){
+				$this->motionY *= -0.5;
+				$this->motionX *= 0.7;
+				$this->motionZ *= 0.7;
+			}
+		}
+	}
+	
 	public function kill(){
 		if(!$this->isAlive()){
 			return;

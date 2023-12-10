@@ -718,7 +718,14 @@ class Level implements ChunkManager, Metadatable{
 		}
 
 		foreach($this->moveToSend as $index => $entry){
-			if(\PHP_INT_SIZE === 8){ $chunkX = ($index >> 32) << 32 >> 32;  $chunkZ = ($index & 0xFFFFFFFF) << 32 >> 32;}else{list( $chunkX,  $chunkZ) = \explode(":", $index);  $chunkX = (int)  $chunkX;  $chunkZ = (int)  $chunkZ;};
+			if(\PHP_INT_SIZE === 8){ 
+				$chunkX = ($index >> 32) << 32 >> 32;  
+				$chunkZ = ($index & 0xFFFFFFFF) << 32 >> 32;
+			}else{
+				list( $chunkX,  $chunkZ) = \explode(":", $index);  
+				$chunkX = (int)  $chunkX;  
+				$chunkZ = (int)  $chunkZ;
+			};
 			$pk = new MoveEntityPacket();
 			$pk->entities = $entry;
 			Server::broadcastPacket($this->getChunkPlayers($chunkX, $chunkZ), $pk->setChannel(Network::CHANNEL_MOVEMENT));
