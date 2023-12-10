@@ -41,7 +41,7 @@ class FlintSteel extends Tool{
 			$player->getInventory()->setItemInHand(new Item(Item::AIR, 0, 0));
 		}
 
-		if($block->getId() === self::AIR and ($target instanceof Solid)){
+		if($block->getId() === self::AIR and ($target instanceof Solid) && $target->getId() != Block::FARMLAND){
 			$level->setBlock($block, new Fire(), \true);
 
 			return \true;
