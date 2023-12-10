@@ -26,6 +26,7 @@
 namespace pocketmine;
 
 use pocketmine\block\Block;
+use pocketmine\block\NetherReactor;
 use pocketmine\command\CommandReader;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
@@ -1605,6 +1606,7 @@ class Server{
 			"rcon.password" => \substr(\base64_encode(@Utils::getRandomBytes(20, \false)), 3, 10),
 			"auto-save" => \true,
 		]);
+		NetherReactor::$enableReactor = $this->getProperty("level-settings.enable-reactor", \false);
 		Server::$mainmenuinfo = $this->properties->get("mainmenuinfo", MINECRAFT_VERSION_NETWORK);
 		$this->forceLanguage = $this->getProperty("settings.force-language", \false);
 		$this->baseLang = new BaseLang($this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE));

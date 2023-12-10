@@ -98,6 +98,8 @@ level-settings:
  base-tick-rate: 1
  #Tick all players each tick even when other settings disallow this.
  always-tick-players: false
+ #Enable or disable nether reactor
+ enable-reactor: false
 
 chunk-sending:
  #Amount of chunks sent to players per tick

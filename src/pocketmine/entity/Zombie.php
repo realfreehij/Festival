@@ -53,8 +53,10 @@ class Zombie extends Monster{
 		$pk->pitch = $this->pitch;
 		$pk->metadata = $this->dataProperties;
 		$player->dataPacket($pk->setChannel(Network::CHANNEL_ENTITY_SPAWNING));
-
-		parent::spawnTo($player);
+		
+		if(!isset($this->hasSpawned[$player->getLoaderId()]) and isset($player->usedChunks[(\PHP_INT_SIZE === 8 ? ((($this->chunk->getX()) & 0xFFFFFFFF) << 32) | (( $this->chunk->getZ()) & 0xFFFFFFFF) : ($this->chunk->getX()) . ":" . ( $this->chunk->getZ()))])){
+			$this->hasSpawned[$player->getLoaderId()] = $player;
+		}
 	}
 
 	public function getDrops(){
