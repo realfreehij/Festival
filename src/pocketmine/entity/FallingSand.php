@@ -98,23 +98,18 @@ class FallingSand extends Entity{
 		$this->lastUpdate = $currentTick;
 
 		$hasUpdate = $this->entityBaseTick($tickDiff);
-
 		if($this->isAlive()){
 			$pos = (new Vector3($this->x - 0.5, $this->y, $this->z - 0.5))->floor();
-
-			if($this->ticksLived === 1){
-				$block = $this->level->getBlock($pos);
-				if($block->getId() !== $this->blockId){
-					$this->kill();
-					return \true;
-				}
-				$this->level->setBlock($pos, Block::get(0), \true);
-			}
-
+			
+			$savdMotionY = $this->motionY;
 			$this->motionY -= $this->gravity;
-
+			
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
-
+			
+			if($savdMotionY == $this->motionY) {
+				$this->onGround = true;
+			}else $this->onGround = false;
+			
 			$friction = 1 - $this->drag;
 
 			$this->motionX *= $friction;

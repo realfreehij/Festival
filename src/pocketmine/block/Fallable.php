@@ -44,6 +44,7 @@ abstract class Fallable extends Solid{
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			$down = $this->getSide(0);
 			if($down->getId() === self::AIR or ($down instanceof Liquid)){
+				$ret = $this->getLevel()->setBlock($this, new Air(), \true, \true);
 				$fall = Entity::createEntity("FallingSand", $this->getLevel()->getChunk($this->x >> 4, $this->z >> 4), new Compound("", [
 					"Pos" => new Enum("Pos", [
 						new Double("", $this->x + 0.5),
