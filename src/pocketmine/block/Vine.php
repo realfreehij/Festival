@@ -47,7 +47,9 @@ class Vine extends Transparent{
 	public function getHardness(){
 		return 1;
 	}
-
+	public function canBeReplaced(){
+		return \true;
+	}
 	public function canPassThrough(){
 		return \true;
 	}
