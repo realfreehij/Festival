@@ -25,6 +25,8 @@ use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
+use pocketmine\level\format\FullChunk;
+use pocketmine\nbt\tag\Compound;
 
 class Bat extends Animal{ //TODO class Neutral
 	const NETWORK_ID = 19;
@@ -32,6 +34,11 @@ class Bat extends Animal{ //TODO class Neutral
 	public $width = 0.25; //todo vanilla?
 	public $length = 0.25;
 	public $height = 0.25;
+	
+	public function __construct(FullChunk $chunk, Compound $nbt){
+		$this->setMaxHealth(6);
+		parent::__construct($chunk, $nbt);
+	}
 	
 	public function getName(){
 		return "Bat";

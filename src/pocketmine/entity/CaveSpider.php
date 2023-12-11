@@ -32,7 +32,12 @@ class CaveSpider extends Monster{ //TODO class Neutral
 	public $width = 1.4; //TODO vanilla?
 	public $length = 1.4;
 	public $height = 0.9;
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(12);
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Cave Spider";
 	}

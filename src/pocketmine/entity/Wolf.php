@@ -34,6 +34,11 @@ class Wolf extends Animal implements Tameable{
 		return "Wolf";
 	}
 	
+	protected function initEntity(){
+		$this->setMaxHealth(8); //TODO should depend on isTamed
+		parent::initEntity();
+	}
+	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();

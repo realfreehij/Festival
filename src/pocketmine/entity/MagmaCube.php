@@ -32,7 +32,12 @@ class MagmaCube extends Monster{
 	public $width = 1; //todo vanilla?
 	public $length = 1;
 	public $height = 1;
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(2); //TODO should depend on size
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Magma Cube";
 	}

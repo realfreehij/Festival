@@ -33,6 +33,11 @@ class Chicken extends Animal{
 	public $length = 0.3;
 	public $height = 0.4;
 	
+	protected function initEntity(){
+		$this->setMaxHealth(4);
+		parent::initEntity();
+	}
+	
 	public function getName(){
 		return "Chicken";
 	}

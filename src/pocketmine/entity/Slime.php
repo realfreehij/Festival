@@ -31,7 +31,12 @@ class Slime extends Monster{
 	public $width = 1;
 	public $length = 1;
 	public $height = 1; //TODO correct size
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(4); //TODO should depend on size
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Slime";
 	}

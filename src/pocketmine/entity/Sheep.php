@@ -32,7 +32,12 @@ class Sheep extends Animal implements Colorable{
 	public $width = 0.9;
 	public $length = 0.9;
 	public $height = 0.9;
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(8);
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Sheep";
 	}

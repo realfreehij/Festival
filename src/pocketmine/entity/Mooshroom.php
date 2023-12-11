@@ -27,9 +27,14 @@ use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 
-class Mooshroom extends Animal{
+class Mooshroom extends Animal{ //TODO in 1.5 it extends Cow
 
 	const NETWORK_ID = 16;
+
+	protected function initEntity(){
+		$this->setMaxHealth(10);
+		parent::initEntity();
+	}
 
 	public function getName(){
 		return "Mooshroom";

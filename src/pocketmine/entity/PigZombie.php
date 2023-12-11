@@ -29,7 +29,7 @@ use pocketmine\Player;
 
 
 class PigZombie extends Zombie{
-const NETWORK_ID = 36;
+	const NETWORK_ID = 36;
 
 	public $width = 0.3;
 	public $length = 0.3;

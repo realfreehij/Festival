@@ -46,6 +46,7 @@ class Villager extends Creature implements NPC, Ageable{
 	}
 
 	protected function initEntity(){
+		$this->setMaxHealth(20);
 		parent::initEntity();
 		if(!isset($this->namedtag->Profession)){
 			$this->setProfession(self::PROFESSION_GENERIC);

@@ -32,7 +32,12 @@ class Silverfish extends Monster{
 	public $width = 0.3;
 	public $length = 0.3;
 	public $height = 0.7;
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(8);
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Silverfish";
 	}

@@ -34,7 +34,12 @@ class Creeper extends Monster implements Explosive{
 	public $width = 0.6;
 	public $length = 0.6;
 	public $height = 1.7;
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(20);
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Creeper"; //Aw man
 	}

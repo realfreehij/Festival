@@ -34,7 +34,12 @@ class Enderman extends Monster implements InventoryHolder{
 	public $width = 0.6;
 	public $length = 0.6;
 	public $height = 2.9;
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(40);
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Enderman"; //Aw man
 	}

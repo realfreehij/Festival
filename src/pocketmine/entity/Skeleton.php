@@ -31,7 +31,12 @@ class Skeleton extends Monster implements ProjectileSource{
 	public $width = 0.6;
 	public $length = 0.6;
 	public $height = 1.99;
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(20);
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Skeleton";
 	}

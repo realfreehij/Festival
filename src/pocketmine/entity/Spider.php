@@ -31,7 +31,12 @@ class Spider extends Monster{
 	public $width = 1.4;
 	public $length = 1.4;
 	public $height = 0.9;
-	
+
+	protected function initEntity(){
+		$this->setMaxHealth(16);
+		parent::initEntity();
+	}
+
 	public function getName(){
 		return "Spider";
 	}
