@@ -161,7 +161,8 @@ class Block extends Position implements Metadatable{
 
 	const STONE_BRICKS = 98;
 	const STONE_BRICK = 98;
-
+	const BROWN_MUSHROOM_BLOCK = 99;
+	const RED_MUSHROOM_BLOCK = 100;
 	const IRON_BAR = 101;
 	const IRON_BARS = 101;
 	const GLASS_PANE = 102;
@@ -396,7 +397,8 @@ class Block extends Position implements Metadatable{
 			self::$list[self::TRAPDOOR] = Trapdoor::class;
 
 			self::$list[self::STONE_BRICKS] = StoneBricks::class;
-
+			self::$list[self::BROWN_MUSHROOM_BLOCK] = BrownMushroomSolid::class;
+			self::$list[self::RED_MUSHROOM_BLOCK] = RedMushroomSolid::class;
 			self::$list[self::IRON_BARS] = IronBars::class;
 			self::$list[self::GLASS_PANE] = GlassPane::class;
 			self::$list[self::MELON_BLOCK] = Melon::class;

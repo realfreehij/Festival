@@ -158,6 +158,8 @@ class Item{
 	const TRAPDOOR = 96;
 	const STONE_BRICKS = 98;
 	const STONE_BRICK = 98;
+	const BROWN_MUSHROOM_BLOCK = 99;
+	const RED_MUSHROOM_BLOCK = 100;
 	const IRON_BAR = 101;
 	const IRON_BARS = 101;
 	const GLASS_PANE = 102;
@@ -632,10 +634,12 @@ class Item{
 		//TODO: Peony
 		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM, 0));
 		self::addCreativeItem(Item::get(Item::RED_MUSHROOM, 0));
-		//TODO: Mushroom block (brown, cover)
-		//TODO: Mushroom block (red, cover)
-		//TODO: Mushroom block (brown, stem)
-		//TODO: Mushroom block (red, stem)
+		
+		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM_BLOCK, 14));
+		self::addCreativeItem(Item::get(Item::RED_MUSHROOM_BLOCK, 14));
+		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM_BLOCK, 0));
+		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM_BLOCK, 15));
+		
 		self::addCreativeItem(Item::get(Item::CACTUS, 0));
 		self::addCreativeItem(Item::get(Item::MELON_BLOCK, 0));
 		self::addCreativeItem(Item::get(Item::PUMPKIN, 0));
