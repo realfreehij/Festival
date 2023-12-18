@@ -627,11 +627,13 @@ class Item{
 		self::addCreativeItem(Item::get(Item::RED_FLOWER, Flower::TYPE_WHITE_TULIP));
 		self::addCreativeItem(Item::get(Item::RED_FLOWER, Flower::TYPE_PINK_TULIP));
 		self::addCreativeItem(Item::get(Item::RED_FLOWER, Flower::TYPE_OXEYE_DAISY));
-		//TODO: Lilac
-		//TODO: Double Tallgrass
-		//TODO: Large Fern
-		//TODO: Rose Bush
-		//TODO: Peony
+
+		self::addCreativeItem(Item::get(Item::DOUBLE_PLANT, 0)); //TODO constants
+		self::addCreativeItem(Item::get(Item::DOUBLE_PLANT, 1));
+		self::addCreativeItem(Item::get(Item::DOUBLE_PLANT, 2));
+		self::addCreativeItem(Item::get(Item::DOUBLE_PLANT, 3));
+		self::addCreativeItem(Item::get(Item::DOUBLE_PLANT, 4));
+		self::addCreativeItem(Item::get(Item::DOUBLE_PLANT, 5));
 		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM, 0));
 		self::addCreativeItem(Item::get(Item::RED_MUSHROOM, 0));
 		

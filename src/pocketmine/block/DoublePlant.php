@@ -23,6 +23,7 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 use pocketmine\level\Level;
+use pocketmine\Player;
 
 class DoublePlant extends Flowable{
 
@@ -51,7 +52,7 @@ class DoublePlant extends Flowable{
 
 	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){
-			if($this->getSide(0)->isTransparent() === \true){ //Replace with common break method
+			if($this->meta & 0x8 == 0 && $this->getSide(0)->isTransparent() === \true){ //Replace with common break method
 				$this->getLevel()->setBlock($this, new Air(), \false, \false, \true);
 
 				return Level::BLOCK_UPDATE_NORMAL;
@@ -60,7 +61,16 @@ class DoublePlant extends Flowable{
 
 		return \false;
 	}
-
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = \null){
+		$down = $this->getSide(0);
+		if($down->getId() == 2 or $down->getId() == 3){ //TODO destroy the block above(tested only in creative)
+			$this->getLevel()->setBlock($block, $this, true, false, true);
+			$this->getLevel()->setBlock($block->add(0, 1, 0), new DoublePlant($this->meta ^ 0x8), true, false, true);
+			return true;
+		}
+		return false;
+	}
+	
 	public function getDrops(Item $item){
 		//TODO
 
