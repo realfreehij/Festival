@@ -49,7 +49,18 @@ class DoublePlant extends Flowable{
 		return $names[$this->meta & 0x07];
 	}
 
-
+	public function onBreak(Item $item){
+		$down = $this->getSide(0);
+		if($down->getId() == Block::DOUBLE_PLANT){
+			$this->getLevel()->setBlock($this, new Air(), true, true);
+			$this->getLevel()->setBlock($this->add(0, -1, 0), new Air(), true, true);
+		}else{
+			$this->getLevel()->setBlock($this, new Air(), true, true);
+			$this->getLevel()->setBlock($this->add(0, 1, 0), new Air(), true, true);
+		}
+		return true;
+	}
+	
 	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){
 			if($this->meta & 0x8 == 0 && $this->getSide(0)->isTransparent() === \true){ //Replace with common break method

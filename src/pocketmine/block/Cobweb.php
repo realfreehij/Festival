@@ -49,7 +49,6 @@ class Cobweb extends Flowable{
 	}
 
 	public function getDrops(Item $item){
-		//TODO: correct drops
-		return [];
+		return [[$item->getId() === Item::SHEARS ? self::COBWEB : Item::STRING, 0, 1]];
 	}
 }
