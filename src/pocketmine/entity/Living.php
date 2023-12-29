@@ -119,9 +119,11 @@ abstract class Living extends Entity implements Damageable{
 				$this->setOnFire(2 * $this->server->getDifficulty());
 			}
 
-			$deltaX = $this->x - $e->x;
-			$deltaZ = $this->z - $e->z;
-			$this->knockBack($e, $damage, $deltaX, $deltaZ, $source->getKnockBack());
+			$d = $e->x - $this->x;
+			for ($d1 = $e->z - $this->z; $d * $d + $d1 * $d1 < 0.0001; $d1 = (lcg_value() - lcg_value()) * 0.01) {
+				$d = (lcg_value() - lcg_value()) * 0.01;
+			}
+			$this->knockBack($d, $d1);
 		}
 
 		$pk = new EntityEventPacket();
@@ -132,25 +134,21 @@ abstract class Living extends Entity implements Damageable{
 		$this->attackTime = 10; //0.5 seconds cooldown
 	}
 
-	public function knockBack(Entity $attacker, $damage, $x, $z, $base = 0.4){
-		$f = \sqrt($x * $x + $z * $z);
-		if($f <= 0){
-			return;
-		}
-
-		$f = 1 / $f;
+	public function knockBack($d, $d1){
+		$f = sqrt($d * $d + $d1 * $d1);
+		$f1 = 0.4;
 
 		$motion = new Vector3($this->motionX, $this->motionY, $this->motionZ);
-
+		
 		$motion->x /= 2;
 		$motion->y /= 2;
 		$motion->z /= 2;
-		$motion->x += $x * $f * $base;
-		$motion->y += $base;
-		$motion->z += $z * $f * $base;
+		$motion->x -= ($d / (double) $f) * (double) $f1;
+		$motion->y += 0.4;
+		$motion->z -= ($d1 / (double) $f) * (double) $f1;
 
-		if($motion->y > $base){
-			$motion->y = $base;
+		if($motion->y > 0.4){
+			$motion->y = 0.4;
 		}
 
 		$this->setMotion($motion);
