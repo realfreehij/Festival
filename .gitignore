@@ -6,7 +6,6 @@ bin/*
 *.log
 *.txt
 *.properties
-*.yml
 *.dll
 *.exe
 

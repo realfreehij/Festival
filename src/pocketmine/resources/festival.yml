@@ -1,0 +1,7 @@
+network-improvements:
+ #String shown as version in minecraft menu
+ main-menu-info: 0.11.1
+
+level-improvements:
+ #Enable or disable nether reactor
+ enable-reactor: false

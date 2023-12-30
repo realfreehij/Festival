@@ -137,7 +137,7 @@ class Server{
 	const BROADCAST_CHANNEL_ADMINISTRATIVE = "pocketmine.broadcast.admin";
 	const BROADCAST_CHANNEL_USERS = "pocketmine.broadcast.user";
 	
-	public static $mainmenuinfo = "0.11.0";
+	public static $mainmenuinfo = "0.11.1"; //🤓
 	
 	/** @var Server */
 	private static $instance = \null;
@@ -259,8 +259,13 @@ class Server{
 
 	private $propertyCache = [];
 
+	private $extrapropertyCache = [];
+
 	/** @var Config */
 	private $config;
+
+	/** @var Config */
+	private $extraconfig;
 
 	/** @var Player[] */
 	private $players = [];
@@ -1338,6 +1343,19 @@ class Server{
 		return $this->propertyCache[$variable] === \null ? $defaultValue : $this->propertyCache[$variable];
 	}
 
+	public function getextraProperty($variable, $defaultValue = \null){
+		if(!\array_key_exists($variable, $this->extrapropertyCache)){
+			$v = \getopt("", ["$variable::"]);
+			if(isset($v[$variable])){
+				$this->extrapropertyCache[$variable] = $v[$variable];
+			}else{
+				$this->extrapropertyCache[$variable] = $this->extraconfig->getNested($variable);
+			}
+		}
+
+		return $this->extrapropertyCache[$variable] === \null ? $defaultValue : $this->extrapropertyCache[$variable];
+	}
+
 	/**
 	 * @param string $variable
 	 * @param string $value
@@ -1579,11 +1597,16 @@ class Server{
 		}
 		$this->config = new Config($this->dataPath . "pocketmine.yml", Config::YAML, []);
 
+		$this->logger->info("Loading festival.yml...");
+		if(!\file_exists($this->dataPath . "festival.yml")){
+			@\file_put_contents($this->dataPath . "festival.yml", \file_get_contents($this->filePath . "src/pocketmine/resources/festival.yml"));
+		}
+		$this->extraconfig = new Config($this->dataPath . "festival.yml", Config::YAML, []);
+
 		$this->logger->info("Loading server properties...");
 		$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
 			"motd" => "Minecraft: PE Server",
 			"player-motd" => "Welcome @player to this server!",
-			"mainmenuinfo" => MINECRAFT_VERSION_NETWORK,
 			"server-port" => 19132,
 			"white-list" => \false,
 			"announce-player-achievements" => \true,
@@ -1606,8 +1629,8 @@ class Server{
 			"rcon.password" => \substr(\base64_encode(@Utils::getRandomBytes(20, \false)), 3, 10),
 			"auto-save" => \true,
 		]);
-		NetherReactor::$enableReactor = $this->getProperty("level-settings.enable-reactor", \false);
-		Server::$mainmenuinfo = $this->properties->get("mainmenuinfo", MINECRAFT_VERSION_NETWORK);
+		NetherReactor::$enableReactor = $this->getextraProperty("level-improvements.enable-reactor", \false);
+		Server::$mainmenuinfo = $this->getextraProperty("network-improvements.main-menu-info", MINECRAFT_VERSION_NETWORK);
 		$this->forceLanguage = $this->getProperty("settings.force-language", \false);
 		$this->baseLang = new BaseLang($this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE));
 		$this->logger->info($this->getLanguage()->translateString("language.selected", [$this->getLanguage()->getName(), $this->getLanguage()->getLang()]));
