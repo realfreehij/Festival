@@ -1290,12 +1290,13 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 								$this->awardAchievement("diamond");
 								break;
 						}
+						
 
 						$pk = new TakeItemEntityPacket();
 						$pk->eid = $this->getId();
 						$pk->target = $entity->getId();
 						Server::broadcastPacket($entity->getViewers(), $pk->setChannel(Network::CHANNEL_ENTITY_SPAWNING));
-						$this->inventory->addItem(clone $item);
+						if($this->isSurvival() || $this->isAdventure()) $this->inventory->addItem(clone $item);
 						$entity->kill();
 					}
 				}
