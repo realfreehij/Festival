@@ -137,7 +137,7 @@ class Server{
 	const BROADCAST_CHANNEL_ADMINISTRATIVE = "pocketmine.broadcast.admin";
 	const BROADCAST_CHANNEL_USERS = "pocketmine.broadcast.user";
 	
-	public static $mainmenuinfo = "0.11.1"; //🤓
+	public static $mainmenuinfo = "0.11.1";
 	
 	/** @var Server */
 	private static $instance = \null;
@@ -1343,7 +1343,7 @@ class Server{
 		return $this->propertyCache[$variable] === \null ? $defaultValue : $this->propertyCache[$variable];
 	}
 
-	public function getextraProperty($variable, $defaultValue = \null){
+	public function getExtraProperty($variable, $defaultValue = \null){
 		if(!\array_key_exists($variable, $this->extrapropertyCache)){
 			$v = \getopt("", ["$variable::"]);
 			if(isset($v[$variable])){
@@ -1629,8 +1629,8 @@ class Server{
 			"rcon.password" => \substr(\base64_encode(@Utils::getRandomBytes(20, \false)), 3, 10),
 			"auto-save" => \true,
 		]);
-		NetherReactor::$enableReactor = $this->getextraProperty("level-improvements.enable-reactor", \false);
-		Server::$mainmenuinfo = $this->getextraProperty("network-improvements.main-menu-info", MINECRAFT_VERSION_NETWORK);
+		NetherReactor::$enableReactor = $this->getExtraProperty("level-improvements.enable-reactor", \false);
+		Server::$mainmenuinfo = $this->getExtraProperty("network-improvements.main-menu-info", MINECRAFT_VERSION_NETWORK);
 		$this->forceLanguage = $this->getProperty("settings.force-language", \false);
 		$this->baseLang = new BaseLang($this->getProperty("settings.language", BaseLang::FALLBACK_LANGUAGE));
 		$this->logger->info($this->getLanguage()->translateString("language.selected", [$this->getLanguage()->getName(), $this->getLanguage()->getLang()]));
