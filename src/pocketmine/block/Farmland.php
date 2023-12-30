@@ -23,6 +23,7 @@ namespace pocketmine\block;
 
 use pocketmine\item\Item;
 use pocketmine\math\AxisAlignedBB;
+use pocketmine\entity\Entity;
 
 class Farmland extends Solid{
 
@@ -39,7 +40,14 @@ class Farmland extends Solid{
 	public function getHardness(){
 		return 3;
 	}
-
+	
+	public function onFall(Entity $entity, $fallDistance){
+		$rv = lcg_value();
+		if($rv < ($fallDistance - 0.5)){
+			$this->level->setBlock($this, new Dirt(), false, true);
+		}
+	}
+	
 	protected function recalculateBoundingBox(){
 		return new AxisAlignedBB(
 			$this->x,

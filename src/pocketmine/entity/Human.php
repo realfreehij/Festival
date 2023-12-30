@@ -34,7 +34,7 @@ use pocketmine\network\Network;
 use pocketmine\network\protocol\AddPlayerPacket;
 use pocketmine\network\protocol\RemovePlayerPacket;
 use pocketmine\Player;
-
+use  pocketmine\math\Vector3;
 class Human extends Creature implements ProjectileSource, InventoryHolder{
 
 	const DATA_PLAYER_FLAG_SLEEP = 1;
@@ -61,7 +61,16 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 	public function isSkinSlim(){
 		return $this->isSlim;
 	}
-
+	public function fall($fallDistance){
+		parent::fall($fallDistance);
+		$x = floor($this->x);
+		$y = floor($this->y - 0.2);
+		$z = floor($this->z);
+		$block = $this->level->getBlock(new Vector3($x, $y, $z));	
+		if($block->getId() > 0){
+			$block->onFall($this, $fallDistance);
+		}
+	}
 	/**
 	 * @param string $str
 	 * @param bool   $isSlim

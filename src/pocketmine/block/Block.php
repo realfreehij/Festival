@@ -588,10 +588,17 @@ class Block extends Position implements Metadatable{
 	 *
 	 * @return void
 	 */
-	public function onUpdate($type){
-
-	}
-
+	public function onUpdate($type){}
+	
+	/**
+	 * Called when entity falls on the block.
+	 *
+	 * @param Entity $entity
+	 * @param float $fallDistance
+	 * @return void
+	 */
+	public function onFall(Entity $entity, $fallDistance){}
+	
 	/**
 	 * Do actions when activated by Item. Returns if it has done anything
 	 *
