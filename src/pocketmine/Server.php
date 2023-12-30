@@ -259,13 +259,13 @@ class Server{
 
 	private $propertyCache = [];
 
-	private $extrapropertyCache = [];
+	private $extraPropertyCache = [];
 
 	/** @var Config */
 	private $config;
 
 	/** @var Config */
-	private $extraconfig;
+	private $extraConfig;
 
 	/** @var Player[] */
 	private $players = [];
@@ -1344,16 +1344,16 @@ class Server{
 	}
 
 	public function getExtraProperty($variable, $defaultValue = \null){
-		if(!\array_key_exists($variable, $this->extrapropertyCache)){
+		if(!\array_key_exists($variable, $this->extraPropertyCache)){
 			$v = \getopt("", ["$variable::"]);
 			if(isset($v[$variable])){
-				$this->extrapropertyCache[$variable] = $v[$variable];
+				$this->extraPropertyCache[$variable] = $v[$variable];
 			}else{
-				$this->extrapropertyCache[$variable] = $this->extraconfig->getNested($variable);
+				$this->extraPropertyCache[$variable] = $this->extraConfig->getNested($variable);
 			}
 		}
 
-		return $this->extrapropertyCache[$variable] === \null ? $defaultValue : $this->extrapropertyCache[$variable];
+		return $this->extraPropertyCache[$variable] === \null ? $defaultValue : $this->extraPropertyCache[$variable];
 	}
 
 	/**
@@ -1601,7 +1601,7 @@ class Server{
 		if(!\file_exists($this->dataPath . "festival.yml")){
 			@\file_put_contents($this->dataPath . "festival.yml", \file_get_contents($this->filePath . "src/pocketmine/resources/festival.yml"));
 		}
-		$this->extraconfig = new Config($this->dataPath . "festival.yml", Config::YAML, []);
+		$this->extraConfig = new Config($this->dataPath . "festival.yml", Config::YAML, []);
 
 		$this->logger->info("Loading server properties...");
 		$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
