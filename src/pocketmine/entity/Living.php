@@ -60,6 +60,7 @@ abstract class Living extends Entity implements Damageable{
 		}
 
 		$this->setHealth($this->namedtag["Health"]);
+		//if(!($this instanceof Human)) $this->setDataProperty(Entity::DATA_NO_AI, Entity::DATA_TYPE_BYTE, 1); //force stop client from updating the entity
 	}
 
 	public function setHealth($amount){
@@ -141,7 +142,6 @@ abstract class Living extends Entity implements Damageable{
 		$motion = new Vector3($this->motionX, $this->motionY, $this->motionZ);
 		
 		$motion->x /= 2;
-		$motion->y /= 2;
 		$motion->z /= 2;
 		$motion->x -= ($d / (double) $f) * (double) $f1;
 		$motion->y += 0.4;
@@ -156,21 +156,21 @@ abstract class Living extends Entity implements Damageable{
 	
 	protected function updateMovement(){
 		if($this->isAlive()){
+			//echo "oG:{$this->onGround}\n";
 			$this->motionY -= $this->gravity;
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
-			$friction = 1 - $this->drag;
+			$friction = 0.91;
+			if($this->onGround){
+				$friction = 0.54;
+				$b = $this->level->getBlock(new Vector3(floor($this->x), floor($this->boundingBox->minY) - 1, floor($this->z)));
+				if($b->getId() > 0) $friction = $b->slipperiness * 0.91;
+			}
 
 			$this->motionX *= $friction;
-			$this->motionY *= $friction;
+			$this->motionY *= 0.98;
 			$this->motionZ *= $friction;
 			
 			parent::updateMovement();
-			
-			if($this->onGround){
-				$this->motionY *= -0.5;
-				$this->motionX *= 0.7;
-				$this->motionZ *= 0.7;
-			}
 		}
 	}
 	

@@ -26,7 +26,7 @@ use pocketmine\item\Item;
 class Ice extends Transparent{
 
 	protected $id = self::ICE;
-
+	public $slipperiness = 0.98;
 	public function __construct(){
 
 	}

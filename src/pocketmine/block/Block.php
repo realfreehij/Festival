@@ -271,7 +271,7 @@ class Block extends Position implements Metadatable{
 
 	protected $id;
 	protected $meta = 0;
-
+	public $slipperiness = 0.6;
 	/** @var AxisAlignedBB */
 	public $boundingBox = \null;
 
