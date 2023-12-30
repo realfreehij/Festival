@@ -25,20 +25,6 @@ use pocketmine\nbt\NBT;
 
 use pocketmine\utils\Binary;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Byte extends NamedTag{
 
 	public function getType(){

@@ -87,6 +87,7 @@ abstract class Entity extends Location implements Metadatable{
 	const DATA_POTION_COLOR = 7;
 	const DATA_POTION_AMBIENT = 8;
 	const DATA_NO_AI = 15;
+	const DATA_AUX_VAL = 16; //TODO better name
 
 
 	const DATA_FLAG_ONFIRE = 0;
