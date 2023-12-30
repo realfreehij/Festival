@@ -350,6 +350,7 @@ class Item{
 	const RAW_CHICKEN = 365;
 	const COOKED_CHICKEN = 366;
 	const ROTTEN_FLESH = 367;
+	const MAGMA_CREAM = 378;
 	const SPAWN_EGG = 383;
 	const EMERALD = 388;
 	const CARROT = 391;
@@ -465,7 +466,7 @@ class Item{
 			self::$list[self::RAW_FISH] = Fish::class;
 			self::$list[self::COOKED_FISH] = CookedFish::class;
 			self::$list[self::ROTTEN_FLESH] = RottenFlesh::class;
-			
+			self::$list[self::MAGMA_CREAM] = MagmaCream::class;
 			for($i = 0; $i < 256; ++$i){
 				if(Block::$list[$i] !== \null){
 					self::$list[$i] = Block::$list[$i];

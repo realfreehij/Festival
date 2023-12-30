@@ -40,7 +40,11 @@ class Slime extends Monster{
 	public function getName(){
 		return "Slime";
 	}
-	
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::SLIMEBALL, 0, mt_rand(0, 3) == 3 ? 1 : 0), //TODO should not drop if small?
+		];
+	}
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();

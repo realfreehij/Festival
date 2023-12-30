@@ -26,7 +26,7 @@ use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 
-class CaveSpider extends Monster{ //TODO class Neutral
+class CaveSpider extends Monster{ //TODO should extend SPIDER
 	const NETWORK_ID = 40;
 	
 	public $width = 1.4; //TODO vanilla?
@@ -40,6 +40,12 @@ class CaveSpider extends Monster{ //TODO class Neutral
 
 	public function getName(){
 		return "Cave Spider";
+	}
+	
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::STRING, 0, 1)
+		];
 	}
 	
 	public function spawnTo(Player $player){

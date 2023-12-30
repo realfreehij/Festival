@@ -44,6 +44,12 @@ class Creeper extends Monster implements Explosive{
 		return "Creeper"; //Aw man
 	}
 	
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::GUNPOWDER, 0, mt_rand(0, 2))
+		];
+	}
+	
 	public function explode(){} //TODO creeper explosions
 	
 	public function spawnTo(Player $player){

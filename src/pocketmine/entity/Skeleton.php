@@ -41,6 +41,13 @@ class Skeleton extends Monster implements ProjectileSource{
 		return "Skeleton";
 	}
 	
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::ARROW, 0, mt_rand(0, 2)),
+			ItemItem::get(ItemItem::BONE, 0, mt_rand(0, 2)),
+		];
+	}
+	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();

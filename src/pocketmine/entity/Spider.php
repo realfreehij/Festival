@@ -41,6 +41,12 @@ class Spider extends Monster{
 		return "Spider";
 	}
 	
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::STRING, 0, 1)
+		];
+	}
+	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();

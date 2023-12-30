@@ -835,7 +835,9 @@ abstract class Entity extends Location implements Metadatable{
 
 		return $hasUpdate;
 	}
-
+	
+	public function updateCounters($tickDiff){}
+	
 	protected function updateMovement(){
 		$diffPosition = ($this->x - $this->lastX) ** 2 + ($this->y - $this->lastY) ** 2 + ($this->z - $this->lastZ) ** 2;
 		$diffRotation = ($this->yaw - $this->lastYaw) ** 2 + ($this->pitch - $this->lastPitch) ** 2;

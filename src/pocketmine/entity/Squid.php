@@ -88,7 +88,7 @@ class Squid extends WaterAnimal implements Ageable{
 				$this->swimDirection = \null;
 			}
 		}
-
+		$tickDiff = $currentTick - $this->lastUpdate;
 		$this->lastUpdate = $currentTick;
 
 		$this->timings->startTiming();
@@ -140,9 +140,11 @@ class Squid extends WaterAnimal implements Ageable{
 			}
 
 		}
-
+		$this->updateMovement();
+		
+		$this->updateCounters($tickDiff);
 		$this->timings->stopTiming();
-
+		
 		return $hasUpdate or !$this->onGround or \abs($this->motionX) > 0.00001 or \abs($this->motionY) > 0.00001 or \abs($this->motionZ) > 0.00001;
 	}
 

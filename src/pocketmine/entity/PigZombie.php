@@ -38,7 +38,14 @@ class PigZombie extends Zombie{
 	public function getName(){
 		return "PigZombie";
 	}
-
+	
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::GOLD_INGOT, 0, 1), //TODO chances?
+			ItemItem::get(ItemItem::FEATHER, 0, 1),
+		];
+	}
+	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();

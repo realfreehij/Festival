@@ -42,6 +42,12 @@ class MagmaCube extends Monster{
 		return "Magma Cube";
 	}
 	
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::MAGMA_CREAM, 0, mt_rand(0, 3) == 3 ? 1 : 0), //TODO should not drop if small?
+		];
+	}
+	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();

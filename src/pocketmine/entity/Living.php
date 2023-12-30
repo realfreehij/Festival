@@ -155,6 +155,10 @@ abstract class Living extends Entity implements Damageable{
 	}
 	
 	protected function updateMovement(){
+		if($this instanceof WaterAnimal) {
+			parent::updateMovement();
+			return;
+		}
 		if($this->isAlive()){
 			//echo "oG:{$this->onGround}\n";
 			$this->motionY -= $this->gravity;
@@ -227,16 +231,18 @@ abstract class Living extends Entity implements Damageable{
 				}
 			}
 		}
-
-		if($this->attackTime > 0){
-			$this->attackTime -= $tickDiff;
-		}
-
+	
+		$this->updateCounters($tickDiff);
+		
 		Timings::$timerLivingEntityBaseTick->stopTiming();
 
 		return $hasUpdate;
 	}
-
+	public function updateCounters($tickDiff){
+		if($this->attackTime > 0){
+			$this->attackTime -= $tickDiff;
+		}
+	}
 	/**
 	 * @return ItemItem[]
 	 */
