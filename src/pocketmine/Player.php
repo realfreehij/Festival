@@ -2393,6 +2393,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 								2 => 1,
 								3 => 1
 							],
+							Item::ROTTEN_FLESH => 4, //TODO effects?
 						];
 						$slot = $this->inventory->getItemInHand();
 						if($this->getHealth() < $this->getMaxHealth() and isset($items[$slot->getId()])){
