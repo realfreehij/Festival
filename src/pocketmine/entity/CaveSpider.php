@@ -28,10 +28,9 @@ use pocketmine\Player;
 
 class CaveSpider extends Monster{ //TODO should extend SPIDER
 	const NETWORK_ID = 40;
-	
-	public $width = 1.4; //TODO vanilla?
-	public $length = 1.4;
-	public $height = 0.9;
+	public $width = 0.7; //from newer pocketmine
+	public $length = 0.7;
+	public $height = 0.5;
 
 	protected function initEntity(){
 		$this->setMaxHealth(12);
@@ -41,13 +40,13 @@ class CaveSpider extends Monster{ //TODO should extend SPIDER
 	public function getName(){
 		return "Cave Spider";
 	}
-	
+
 	public function getDrops(){
 		return [
 			ItemItem::get(ItemItem::STRING, 0, 1)
 		];
 	}
-	
+
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();

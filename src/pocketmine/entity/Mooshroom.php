@@ -39,6 +39,13 @@ class Mooshroom extends Animal{ //TODO in 1.5 it extends Cow
 	public function getName(){
 		return "Mooshroom";
 	}
+
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::RAW_BEEF, 0, mt_rand(1, 3)),
+			ItemItem::get(ItemItem::LEATHER, 0, mt_rand(0, 2))
+		];
+	}
 	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();

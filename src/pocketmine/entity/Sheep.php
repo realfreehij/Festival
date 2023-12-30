@@ -41,6 +41,12 @@ class Sheep extends Animal implements Colorable{
 	public function getName(){
 		return "Sheep";
 	}
+
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::WOOL, 0, 1)
+		];
+	}
 	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();

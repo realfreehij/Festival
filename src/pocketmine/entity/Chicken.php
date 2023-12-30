@@ -41,6 +41,13 @@ class Chicken extends Animal{
 	public function getName(){
 		return "Chicken";
 	}
+
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::FEATHER, 0, mt_rand(0, 2)),
+			ItemItem::get(ItemItem::RAW_CHICKEN, 0, 1)
+		];
+	}
 	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();

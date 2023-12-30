@@ -5,6 +5,7 @@ logs/*
 bin/*
 *.log
 *.txt
+*.yml
 *.properties
 *.dll
 *.exe

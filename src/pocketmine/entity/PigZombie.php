@@ -41,8 +41,8 @@ class PigZombie extends Zombie{
 	
 	public function getDrops(){
 		return [
-			ItemItem::get(ItemItem::GOLD_INGOT, 0, 1), //TODO chances?
-			ItemItem::get(ItemItem::FEATHER, 0, 1),
+			ItemItem::get(ItemItem::GOLD_INGOT, 0, mt_rand(0, 1)),
+			ItemItem::get(ItemItem::FEATHER, 0, mt_rand(1, 4) == 1 ? 1 : 0), //they drops potato and other stuff like zombie D=
 		];
 	}
 	

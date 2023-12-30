@@ -41,6 +41,12 @@ class Pig extends Animal implements Rideable{
 	public function getName(){
 		return "Pig";
 	}
+
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::RAW_PORKCHOP, 0, mt_rand(0, 2))
+		];
+	}
 	
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();

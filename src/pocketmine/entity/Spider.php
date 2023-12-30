@@ -43,7 +43,7 @@ class Spider extends Monster{
 	
 	public function getDrops(){
 		return [
-			ItemItem::get(ItemItem::STRING, 0, 1)
+			ItemItem::get(ItemItem::STRING, 0, mt_rand(0, 2))
 		];
 	}
 	

@@ -60,7 +60,7 @@ abstract class Living extends Entity implements Damageable{
 		}
 
 		$this->setHealth($this->namedtag["Health"]);
-		//if(!($this instanceof Human)) $this->setDataProperty(Entity::DATA_NO_AI, Entity::DATA_TYPE_BYTE, 1); //force stop client from updating the entity
+		if(!($this instanceof Human)) $this->setDataProperty(Entity::DATA_NO_AI, Entity::DATA_TYPE_BYTE, 1); //force stop client from updating the entity
 	}
 
 	public function setHealth($amount){

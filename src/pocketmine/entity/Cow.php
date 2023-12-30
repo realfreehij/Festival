@@ -33,13 +33,22 @@ class Cow extends Animal{
 	public $length = 0.9;
 	public $height = 0.9;
 	
-	public function getName(){
-		return "Cow";
-	}
 	protected function initEntity(){
 		$this->setMaxHealth(10);
 		parent::initEntity();
 	}
+
+	public function getName(){
+		return "Cow";
+	}
+
+	public function getDrops(){
+		return [
+			ItemItem::get(ItemItem::RAW_BEEF, 0, mt_rand(1, 3)),
+			ItemItem::get(ItemItem::LEATHER, 0, mt_rand(0, 2))
+		];
+	}
+
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();
