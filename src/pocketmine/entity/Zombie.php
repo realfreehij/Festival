@@ -36,8 +36,8 @@ class Zombie extends Monster{
 	public $height = 1.8;
 
 	protected function initEntity(){
-		$this->setMaxHealth(20);
 		parent::initEntity();
+		$this->setMaxHealth(20);
 	}
 
 	public function getName(){
