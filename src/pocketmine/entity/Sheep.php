@@ -69,7 +69,7 @@ class Sheep extends Animal implements Colorable{
 
 	public function getDrops(){
 		return [
-			ItemItem::get(ItemItem::WOOL, 0, 1)
+			ItemItem::get(ItemItem::WOOL, $this->namedtag->Color->getValue(), 1)
 		];
 	}
 	
