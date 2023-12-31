@@ -316,7 +316,7 @@ class Item{
 	const REDSTONE = 331;
 	const REDSTONE_DUST = 331;
 	const SNOWBALL = 332;
-	//const BOAT = 333;
+	const BOAT = 333;
 	const LEATHER = 334;
 	const BRICK = 336;
 	const CLAY = 337;
@@ -467,6 +467,7 @@ class Item{
 			self::$list[self::COOKED_FISH] = CookedFish::class;
 			self::$list[self::ROTTEN_FLESH] = RottenFlesh::class;
 			self::$list[self::MAGMA_CREAM] = MagmaCream::class;
+			self::$list[self::BOAT] = Boat::class;
 			for($i = 0; $i < 256; ++$i){
 				if(Block::$list[$i] !== \null){
 					self::$list[$i] = Block::$list[$i];
@@ -717,7 +718,7 @@ class Item{
 		self::addCreativeItem(Item::get(Item::CLOCK, 0));
 		self::addCreativeItem(Item::get(Item::COMPASS, 0));
 		self::addCreativeItem(Item::get(Item::MINECART, 0));
-		//self::addCreativeItem(Item::get(Item::BOAT, 0));
+		self::addCreativeItem(Item::get(Item::BOAT, 0));
 		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Chicken::NETWORK_ID));
 		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Cow::NETWORK_ID));
 		self::addCreativeItem(Item::get(Item::SPAWN_EGG, Pig::NETWORK_ID));

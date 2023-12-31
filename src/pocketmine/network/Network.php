@@ -42,6 +42,7 @@ use pocketmine\network\protocol\FullChunkDataPacket;
 use pocketmine\network\protocol\Info;
 use pocketmine\network\protocol\SetEntityLinkPacket;
 use pocketmine\network\protocol\TileEntityDataPacket;
+use pocketmine\network\protocol\PlayerInputPacket;
 use pocketmine\network\protocol\EntityEventPacket;
 use pocketmine\network\protocol\ExplodePacket;
 use pocketmine\network\protocol\HurtArmorPacket;
@@ -329,5 +330,7 @@ class Network{
 		$this->registerPacket(ProtocolInfo::FULL_CHUNK_DATA_PACKET, FullChunkDataPacket::class);
 		$this->registerPacket(ProtocolInfo::SET_DIFFICULTY_PACKET, SetDifficultyPacket::class);
 		$this->registerPacket(ProtocolInfo::BATCH_PACKET, BatchPacket::class);
+		
+		$this->registerPacket(ProtocolInfo::PLAYER_INPUT_PACKET, PlayerInputPacket::class);
 	}
 }

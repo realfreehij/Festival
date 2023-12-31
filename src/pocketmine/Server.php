@@ -37,6 +37,7 @@ use pocketmine\entity\Chicken;
 use pocketmine\entity\Sheep;
 use pocketmine\entity\Cow;
 use pocketmine\entity\Arrow;
+use pocketmine\entity\Boat;
 use pocketmine\entity\Mooshroom;
 use pocketmine\entity\Wolf;
 use pocketmine\entity\Creeper;
@@ -2632,6 +2633,7 @@ class Server{
 		Entity::registerEntity(Mooshroom::class);
 		
 		Entity::registerEntity(Arrow::class);
+		Entity::registerEntity(Boat::class);
 		Entity::registerEntity(DroppedItem::class);
 		Entity::registerEntity(FallingSand::class);
 		Entity::registerEntity(PrimedTNT::class);
@@ -2650,7 +2652,6 @@ class Server{
 		Entity::registerEntity(Slime::class);
 		Entity::registerEntity(Enderman::class);
 		Entity::registerEntity(Silverfish::class);
-		
 		Entity::registerEntity(Bat::class);
 		
 		Entity::registerEntity(Human::class, \true);
