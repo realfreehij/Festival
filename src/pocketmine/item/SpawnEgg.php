@@ -64,7 +64,7 @@ class SpawnEgg extends Item{
 				new Float("", 0)
 			]),
 		]);
-
+		
 		$entity = Entity::createEntity($this->meta, $chunk, $nbt);
 
 		if($entity instanceof Entity){

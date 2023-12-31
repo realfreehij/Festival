@@ -163,7 +163,7 @@ abstract class Entity extends Location implements Metadatable{
 	public $eyeHeight = \null;
 
 	public $width;
-	public $length;
+	public $length; //TODO remove
 
 	/** @var int */
 	private $health = 20;
@@ -203,7 +203,9 @@ abstract class Entity extends Location implements Metadatable{
 	/** @var \pocketmine\event\TimingsHandler */
 	protected $timings;
 	protected $isPlayer = \false;
-
+	
+	public $linkedEID = null;
+	
 
 	public function __construct(FullChunk $chunk, Compound $nbt){
 		if($chunk === \null or $chunk->getProvider() === \null){
@@ -274,7 +276,14 @@ abstract class Entity extends Location implements Metadatable{
 		$this->scheduleUpdate();
 
 	}
-
+	
+	public function linkEntity(Entity $entity){
+		$this->linkedEID = $entity->eid;
+		$entity->linkedEID = $this->eid;
+		
+		
+	}
+	
 	/**
 	 * @return string
 	 */
