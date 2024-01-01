@@ -29,10 +29,10 @@ use pocketmine\scheduler\ReactorActivateTask;
 use pocketmine\math\Vector3;
 use pocketmine\entity\PigZombie;
 use pocketmine\entity\Entity;
-use pocketmine\nbt\tag\Compound;
-use pocketmine\nbt\tag\Double;
-use pocketmine\nbt\tag\Enum;
-use pocketmine\nbt\tag\Float;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\EnumTag;
+use pocketmine\nbt\tag\FloatTag;
 
 class NetherReactor extends Solid{
 	public static $enableReactor = false;
@@ -163,20 +163,20 @@ class NetherReactor extends Solid{
 			$randomRange = floor(lcg_value()*5+3);
 			$shiftX = cos(floor(lcg_value()*360)*(pi()/180));
 			$shiftZ = sin(floor(lcg_value()*360)*(pi()/180));
-			$nbt = new Compound("", [
-				"Pos" => new Enum("Pos", [
-					new Double("", $x+($shiftX*$randomRange)+0.5),
-					new Double("", $y),
-					new Double("", $z+($shiftZ*$randomRange)+0.5)
+			$nbt = new CompoundTag("", [
+				"Pos" => new EnumTag("Pos", [
+					new DoubleTag("", $x+($shiftX*$randomRange)+0.5),
+					new DoubleTag("", $y),
+					new DoubleTag("", $z+($shiftZ*$randomRange)+0.5)
 				]),
-				"Motion" => new Enum("Motion", [
-					new Double("", 0),
-					new Double("", 0),
-					new Double("", 0)
+				"Motion" => new EnumTag("Motion", [
+					new DoubleTag("", 0),
+					new DoubleTag("", 0),
+					new DoubleTag("", 0)
 				]),
-				"Rotation" => new Enum("Rotation", [
-					new Float("", \lcg_value() * 360),
-					new Float("", 0)
+				"Rotation" => new EnumTag("Rotation", [
+					new FloatTag("", \lcg_value() * 360),
+					new FloatTag("", 0)
 				]),
 			]);
 			$entity = Entity::createEntity(PigZombie::NETWORK_ID, $this->getLevel()->getChunk($x+($shiftX*$randomRange) >> 4, $z+($shiftZ*$randomRange) >> 4), $nbt);

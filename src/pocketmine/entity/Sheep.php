@@ -25,7 +25,7 @@ use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
-use pocketmine\nbt\tag\Byte;
+use pocketmine\nbt\tag\ByteTag;
 
 class Sheep extends Animal implements Colorable{
 	const NETWORK_ID = 13;
@@ -37,8 +37,8 @@ class Sheep extends Animal implements Colorable{
 	protected function initEntity(){
 		parent::initEntity();
 		$this->setMaxHealth(8);
-		if(!isset($this->namedtag->Color) || !($this->namedtag->Color instanceof Byte)){
-			$this->namedtag->Color = new Byte("Color", $this->getRandomColor());
+		if(!isset($this->namedtag->Color) || !($this->namedtag->Color instanceof ByteTag)){
+			$this->namedtag->Color = new ByteTag("Color", $this->getRandomColor());
 		}
 		$this->setDataProperty(Entity::DATA_AUX_VAL, Entity::DATA_TYPE_BYTE, $this->namedtag->Color->getValue() & 0xf);
 	}

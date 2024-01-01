@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * ____ _ _ __ __ _ __ __ ____
+ * | _ \ ___ ___| | _____| |_| \/ (_)_ __ ___ | \/ | _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ * | __/ (_) | (__| < __/ |_| | | | | | | | __/_____| | | | __/
+ * |_| \___/ \___|_|\_\___|\__|_| |_|_|_| |_|\___| |_| |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,7 @@
  * @link http://www.pocketmine.net/
  *
  *
-*/
-
+ */
 namespace pocketmine\level\format\leveldb;
 
 use pocketmine\level\format\FullChunk;
@@ -26,321 +25,356 @@ use pocketmine\level\format\generic\BaseLevelProvider;
 use pocketmine\level\generator\Generator;
 use pocketmine\level\Level;
 use pocketmine\nbt\NBT;
-use pocketmine\nbt\tag\Byte;
-use pocketmine\nbt\tag\Compound;
-use pocketmine\nbt\tag\Int;
-use pocketmine\nbt\tag\Long;
-use pocketmine\nbt\tag\String;
+use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\LongTag;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\tile\Spawnable;
 use pocketmine\utils\Binary;
 use pocketmine\utils\ChunkException;
 use pocketmine\utils\LevelException;
 
-class LevelDB extends BaseLevelProvider{
+class LevelDB extends BaseLevelProvider
+{
 
-	const ENTRY_VERSION = "v";
-	const ENTRY_FLAGS = "f";
-	const ENTRY_TICKS = "3";
-	const ENTRY_ENTITIES = "2";
-	const ENTRY_TILES = "1";
-	const ENTRY_TERRAIN = "0";
+    const ENTRY_VERSION = "v";
 
-	/** @var Chunk[] */
-	protected $chunks = [];
+    const ENTRY_FLAGS = "f";
 
-	/** @var \LevelDB */
-	protected $db;
+    const ENTRY_TICKS = "3";
 
-	public function __construct(Level $level, $path){
-		$this->level = $level;
-		$this->path = $path;
-		if(!\file_exists($this->path)){
-			\mkdir($this->path, 0777, \true);
-		}
-		$nbt = new NBT(NBT::LITTLE_ENDIAN);
-		$nbt->read(\substr(\file_get_contents($this->getPath() . "level.dat"), 8));
-		$levelData = $nbt->getData();
-		if($levelData instanceof Compound){
-			$this->levelData = $levelData;
-		}else{
-			throw new LevelException("Invalid level.dat");
-		}
+    const ENTRY_ENTITIES = "2";
 
-		if(!isset($this->levelData->generatorName)){
-			$this->levelData->generatorName = new String("generatorName", Generator::getGenerator("DEFAULT"));
-		}
+    const ENTRY_TILES = "1";
 
-		if(!isset($this->levelData->generatorOptions)){
-			$this->levelData->generatorOptions = new String("generatorOptions", "");
-		}
+    const ENTRY_TERRAIN = "0";
 
-		$this->db = new \LevelDB($this->path . "/db", [
-			"compression" => LEVELDB_ZLIB_COMPRESSION
-		]);
-	}
+    /** @var Chunk[] */
+    protected $chunks = [];
 
-	public static function getProviderName(){
-		return "leveldb";
-	}
+    /** @var \LevelDB */
+    protected $db;
 
-	public static function getProviderOrder(){
-		return self::ORDER_ZXY;
-	}
+    public function __construct(Level $level, $path)
+    {
+        $this->level = $level;
+        $this->path = $path;
+        if (! \file_exists($this->path)) {
+            \mkdir($this->path, 0777, \true);
+        }
+        $nbt = new NBT(NBT::LITTLE_ENDIAN);
+        $nbt->read(\substr(\file_get_contents($this->getPath() . "level.dat"), 8));
+        $levelData = $nbt->getData();
+        if ($levelData instanceof CompoundTag) {
+            $this->levelData = $levelData;
+        } else {
+            throw new LevelException("Invalid level.dat");
+        }
 
-	public static function usesChunkSection(){
-		return \false;
-	}
+        if (! isset($this->levelData->generatorName)) {
+            $this->levelData->generatorName = new StringTag("generatorName", Generator::getGenerator("DEFAULT"));
+        }
 
-	public static function isValid($path){
-		return \file_exists($path . "/level.dat") and \is_dir($path . "/db/");
-	}
+        if (! isset($this->levelData->generatorOptions)) {
+            $this->levelData->generatorOptions = new StringTag("generatorOptions", "");
+        }
 
-	public static function generate($path, $name, $seed, $generator, array $options = []){
-		if(!\file_exists($path)){
-			\mkdir($path, 0777, \true);
-		}
-		if(!\file_exists($path . "/db")){
-			\mkdir($path . "/db", 0777, \true);
-		}
-		//TODO, add extra details
-		$levelData = new Compound("", [
-			"hardcore" => new Byte("hardcore", 0),
-			"initialized" => new Byte("initialized", 1),
-			"GameType" => new Int("GameType", 0),
-			"generatorVersion" => new Int("generatorVersion", 1), //2 in MCPE
-			"SpawnX" => new Int("SpawnX", 128),
-			"SpawnY" => new Int("SpawnY", 70),
-			"SpawnZ" => new Int("SpawnZ", 128),
-			"version" => new Int("version", 19133),
-			"DayTime" => new Int("DayTime", 0),
-			"LastPlayed" => new Long("LastPlayed", \microtime(\true) * 1000),
-			"RandomSeed" => new Long("RandomSeed", $seed),
-			"SizeOnDisk" => new Long("SizeOnDisk", 0),
-			"Time" => new Long("Time", 0),
-			"generatorName" => new String("generatorName", Generator::getGeneratorName($generator)),
-			"generatorOptions" => new String("generatorOptions", isset($options["preset"]) ? $options["preset"] : ""),
-			"LevelName" => new String("LevelName", $name),
-			"GameRules" => new Compound("GameRules", [])
-		]);
-		$nbt = new NBT(NBT::LITTLE_ENDIAN);
-		$nbt->setData($levelData);
-		$buffer = $nbt->write();
-		\file_put_contents($path . "level.dat", \pack("V", 3) . \pack("V", \strlen($buffer)) . $buffer);
+        $this->db = new \LevelDB($this->path . "/db", [
+            "compression" => LEVELDB_ZLIB_COMPRESSION
+        ]);
+    }
 
-		$db = new \LevelDB($path . "/db");
-		$db->close();
-	}
+    public static function getProviderName()
+    {
+        return "leveldb";
+    }
 
-	public function saveLevelData(){
-		$nbt = new NBT(NBT::LITTLE_ENDIAN);
-		$nbt->setData($this->levelData);
-		$buffer = $nbt->write();
-		\file_put_contents($this->getPath() . "level.dat", \pack("V", 3) . \pack("V", \strlen($buffer)) . $buffer);
-	}
+    public static function getProviderOrder()
+    {
+        return self::ORDER_ZXY;
+    }
 
-	public function requestChunkTask($x, $z){
-		$chunk = $this->getChunk($x, $z, \false);
-		if(!($chunk instanceof Chunk)){
-			throw new ChunkException("Invalid Chunk sent");
-		}
+    public static function usesChunkSection()
+    {
+        return \false;
+    }
 
-		$tiles = "";
-		$nbt = new NBT(NBT::LITTLE_ENDIAN);
-		foreach($chunk->getTiles() as $tile){
-			if($tile instanceof Spawnable){
-				$nbt->setData($tile->getSpawnCompound());
-				$tiles .= $nbt->write();
-			}
-		}
+    public static function isValid($path)
+    {
+        return \file_exists($path . "/level.dat") and \is_dir($path . "/db/");
+    }
 
-		$heightmap = \pack("C*", ...$chunk->getHeightMapArray());
-		$biomeColors = \pack("N*", ...$chunk->getBiomeColorArray());
+    public static function generate($path, $name, $seed, $generator, array $options = [])
+    {
+        if (! \file_exists($path)) {
+            \mkdir($path, 0777, \true);
+        }
+        if (! \file_exists($path . "/db")) {
+            \mkdir($path . "/db", 0777, \true);
+        }
+        // TODO, add extra details
+        $levelData = new CompoundTag("", [
+            "hardcore" => new ByteTag("hardcore", 0),
+            "initialized" => new ByteTag("initialized", 1),
+            "GameType" => new IntTag("GameType", 0),
+            "generatorVersion" => new IntTag("generatorVersion", 1), // 2 in MCPE
+            "SpawnX" => new IntTag("SpawnX", 128),
+            "SpawnY" => new IntTag("SpawnY", 70),
+            "SpawnZ" => new IntTag("SpawnZ", 128),
+            "version" => new IntTag("version", 19133),
+            "DayTime" => new IntTag("DayTime", 0),
+            "LastPlayed" => new LongTag("LastPlayed", \microtime(\true) * 1000),
+            "RandomSeed" => new LongTag("RandomSeed", $seed),
+            "SizeOnDisk" => new LongTag("SizeOnDisk", 0),
+            "Time" => new LongTag("Time", 0),
+            "generatorName" => new StringTag("generatorName", Generator::getGeneratorName($generator)),
+            "generatorOptions" => new StringTag("generatorOptions", isset($options["preset"]) ? $options["preset"] : ""),
+            "LevelName" => new StringTag("LevelName", $name),
+            "GameRules" => new CompoundTag("GameRules", [])
+        ]);
+        $nbt = new NBT(NBT::LITTLE_ENDIAN);
+        $nbt->setData($levelData);
+        $buffer = $nbt->write();
+        \file_put_contents($path . "level.dat", \pack("V", 3) . \pack("V", \strlen($buffer)) . $buffer);
 
-		$ordered = $chunk->getBlockIdArray() .
-			$chunk->getBlockDataArray() .
-			$chunk->getBlockSkyLightArray() .
-			$chunk->getBlockLightArray() .
-			$heightmap .
-			$biomeColors .
-			$tiles;
+        $db = new \LevelDB($path . "/db");
+        $db->close();
+    }
 
-		$this->getLevel()->chunkRequestCallback($x, $z, $ordered);
+    public function saveLevelData()
+    {
+        $nbt = new NBT(NBT::LITTLE_ENDIAN);
+        $nbt->setData($this->levelData);
+        $buffer = $nbt->write();
+        \file_put_contents($this->getPath() . "level.dat", \pack("V", 3) . \pack("V", \strlen($buffer)) . $buffer);
+    }
 
-		return \null;
-	}
+    public function requestChunkTask($x, $z)
+    {
+        $chunk = $this->getChunk($x, $z, \false);
+        if (! ($chunk instanceof Chunk)) {
+            throw new ChunkException("Invalid Chunk sent");
+        }
 
-	public function unloadChunks(){
-		foreach($this->chunks as $chunk){
-			$this->unloadChunk($chunk->getX(), $chunk->getZ(), \false);
-		}
-		$this->chunks = [];
-	}
+        $tiles = "";
+        $nbt = new NBT(NBT::LITTLE_ENDIAN);
+        foreach ($chunk->getTiles() as $tile) {
+            if ($tile instanceof Spawnable) {
+                $nbt->setData($tile->getSpawnCompound());
+                $tiles .= $nbt->write();
+            }
+        }
 
-	public function getGenerator(){
-		return $this->levelData["generatorName"];
-	}
+        $heightmap = \pack("C*", ...$chunk->getHeightMapArray());
+        $biomeColors = \pack("N*", ...$chunk->getBiomeColorArray());
 
-	public function getGeneratorOptions(){
-		return ["preset" => $this->levelData["generatorOptions"]];
-	}
+        $ordered = $chunk->getBlockIdArray() . $chunk->getBlockDataArray() . $chunk->getBlockSkyLightArray() . $chunk->getBlockLightArray() . $heightmap . $biomeColors . $tiles;
 
-	public function getLoadedChunks(){
-		return $this->chunks;
-	}
+        $this->getLevel()->chunkRequestCallback($x, $z, $ordered);
 
-	public function isChunkLoaded($x, $z){
-		return isset($this->chunks[(\PHP_INT_SIZE === 8 ? ((($x) & 0xFFFFFFFF) << 32) | (( $z) & 0xFFFFFFFF) : ($x) . ":" . ( $z))]);
-	}
+        return \null;
+    }
 
-	public function saveChunks(){
-		foreach($this->chunks as $chunk){
-			$this->saveChunk($chunk->getX(), $chunk->getZ());
-		}
-	}
+    public function unloadChunks()
+    {
+        foreach ($this->chunks as $chunk) {
+            $this->unloadChunk($chunk->getX(), $chunk->getZ(), \false);
+        }
+        $this->chunks = [];
+    }
 
-	public function loadChunk($chunkX, $chunkZ, $create = \false){
-		if(isset($this->chunks[$index = (\PHP_INT_SIZE === 8 ? ((($chunkX) & 0xFFFFFFFF) << 32) | (( $chunkZ) & 0xFFFFFFFF) : ($chunkX) . ":" . ( $chunkZ))])){
-			return \true;
-		}
+    public function getGenerator()
+    {
+        return $this->levelData["generatorName"];
+    }
 
-		$this->level->timings->syncChunkLoadDataTimer->startTiming();
-		$chunk = $this->readChunk($chunkX, $chunkZ, $create);
-		if($chunk === \null and $create){
-			$chunk = Chunk::getEmptyChunk($chunkX, $chunkZ, $this);
-		}
-		$this->level->timings->syncChunkLoadDataTimer->stopTiming();
+    public function getGeneratorOptions()
+    {
+        return [
+            "preset" => $this->levelData["generatorOptions"]
+        ];
+    }
 
-		if($chunk !== \null){
-			$this->chunks[$index] = $chunk;
-			return \true;
-		}else{
-			return \false;
-		}
-	}
+    public function getLoadedChunks()
+    {
+        return $this->chunks;
+    }
 
-	/**
-	 * @param      $chunkX
-	 * @param      $chunkZ
-	 *
-	 * @return Chunk
-	 */
-	private function readChunk($chunkX, $chunkZ){
-		$index = LevelDB::chunkIndex($chunkX, $chunkZ);
+    public function isChunkLoaded($x, $z)
+    {
+        return isset($this->chunks[(\PHP_INT_SIZE === 8 ? ((($x) & 0xFFFFFFFF) << 32) | (($z) & 0xFFFFFFFF) : ($x) . ":" . ($z))]);
+    }
 
-		if(!$this->chunkExists($chunkX, $chunkZ) or ($data = $this->db->get($index . self::ENTRY_TERRAIN)) === \false){
-			return \null;
-		}
+    public function saveChunks()
+    {
+        foreach ($this->chunks as $chunk) {
+            $this->saveChunk($chunk->getX(), $chunk->getZ());
+        }
+    }
 
-		$flags = $this->db->get($index . self::ENTRY_FLAGS);
-		if($flags === \false){
-			$flags = "\x03";
-		}
+    public function loadChunk($chunkX, $chunkZ, $create = \false)
+    {
+        if (isset($this->chunks[$index = (\PHP_INT_SIZE === 8 ? ((($chunkX) & 0xFFFFFFFF) << 32) | (($chunkZ) & 0xFFFFFFFF) : ($chunkX) . ":" . ($chunkZ))])) {
+            return \true;
+        }
 
-		return Chunk::fromBinary($index . $data . $flags, $this);
-	}
+        $this->level->timings->syncChunkLoadDataTimer->startTiming();
+        $chunk = $this->readChunk($chunkX, $chunkZ, $create);
+        if ($chunk === \null and $create) {
+            $chunk = Chunk::getEmptyChunk($chunkX, $chunkZ, $this);
+        }
+        $this->level->timings->syncChunkLoadDataTimer->stopTiming();
 
-	private function writeChunk(Chunk $chunk){
-		$binary = $chunk->toBinary(\true);
-		$index = LevelDB::chunkIndex($chunk->getX(), $chunk->getZ());
-		$this->db->put($index . self::ENTRY_TERRAIN, \substr($binary, 8, -1));
-		$this->db->put($index . self::ENTRY_FLAGS, \substr($binary, -1));
-		$this->db->put($index . self::ENTRY_VERSION, "\x02");
-	}
+        if ($chunk !== \null) {
+            $this->chunks[$index] = $chunk;
+            return \true;
+        } else {
+            return \false;
+        }
+    }
 
-	public function unloadChunk($x, $z, $safe = \true){
-		$chunk = isset($this->chunks[$index = (\PHP_INT_SIZE === 8 ? ((($x) & 0xFFFFFFFF) << 32) | (( $z) & 0xFFFFFFFF) : ($x) . ":" . ( $z))]) ? $this->chunks[$index] : \null;
-		if($chunk instanceof FullChunk and $chunk->unload(\false, $safe)){
-			unset($this->chunks[$index]);
-			return \true;
-		}
+    /**
+     *
+     * @param
+     *            $chunkX
+     * @param
+     *            $chunkZ
+     *            
+     * @return Chunk
+     */
+    private function readChunk($chunkX, $chunkZ)
+    {
+        $index = LevelDB::chunkIndex($chunkX, $chunkZ);
 
-		return \false;
-	}
+        if (! $this->chunkExists($chunkX, $chunkZ) or ($data = $this->db->get($index . self::ENTRY_TERRAIN)) === \false) {
+            return \null;
+        }
 
-	public function saveChunk($x, $z){
-		if($this->isChunkLoaded($x, $z)){
-			$this->writeChunk($this->getChunk($x, $z));
+        $flags = $this->db->get($index . self::ENTRY_FLAGS);
+        if ($flags === \false) {
+            $flags = "\x03";
+        }
 
-			return \true;
-		}
+        return Chunk::fromBinary($index . $data . $flags, $this);
+    }
 
-		return \false;
-	}
+    private function writeChunk(Chunk $chunk)
+    {
+        $binary = $chunk->toBinary(\true);
+        $index = LevelDB::chunkIndex($chunk->getX(), $chunk->getZ());
+        $this->db->put($index . self::ENTRY_TERRAIN, \substr($binary, 8, - 1));
+        $this->db->put($index . self::ENTRY_FLAGS, \substr($binary, - 1));
+        $this->db->put($index . self::ENTRY_VERSION, "\x02");
+    }
 
-	/**
-	 * @param int  $chunkX
-	 * @param int  $chunkZ
-	 * @param bool $create
-	 *
-	 * @return Chunk
-	 */
-	public function getChunk($chunkX, $chunkZ, $create = \false){
-		$index = (\PHP_INT_SIZE === 8 ? ((($chunkX) & 0xFFFFFFFF) << 32) | (( $chunkZ) & 0xFFFFFFFF) : ($chunkX) . ":" . ( $chunkZ));
-		if(isset($this->chunks[$index])){
-			return $this->chunks[$index];
-		}else{
-			$this->loadChunk($chunkX, $chunkZ, $create);
+    public function unloadChunk($x, $z, $safe = \true)
+    {
+        $chunk = isset($this->chunks[$index = (\PHP_INT_SIZE === 8 ? ((($x) & 0xFFFFFFFF) << 32) | (($z) & 0xFFFFFFFF) : ($x) . ":" . ($z))]) ? $this->chunks[$index] : \null;
+        if ($chunk instanceof FullChunk and $chunk->unload(\false, $safe)) {
+            unset($this->chunks[$index]);
+            return \true;
+        }
 
-			return isset($this->chunks[$index]) ? $this->chunks[$index] : \null;
-		}
-	}
+        return \false;
+    }
 
-	/**
-	 * @return \LevelDB
-	 */
-	public function getDatabase(){
-		return $this->db;
-	}
+    public function saveChunk($x, $z)
+    {
+        if ($this->isChunkLoaded($x, $z)) {
+            $this->writeChunk($this->getChunk($x, $z));
 
-	public function setChunk($chunkX, $chunkZ, FullChunk $chunk){
-		if(!($chunk instanceof Chunk)){
-			throw new ChunkException("Invalid Chunk class");
-		}
+            return \true;
+        }
 
-		$chunk->setProvider($this);
+        return \false;
+    }
 
-		$chunk->setX($chunkX);
-		$chunk->setZ($chunkZ);
+    /**
+     *
+     * @param int $chunkX
+     * @param int $chunkZ
+     * @param bool $create
+     *
+     * @return Chunk
+     */
+    public function getChunk($chunkX, $chunkZ, $create = \false)
+    {
+        $index = (\PHP_INT_SIZE === 8 ? ((($chunkX) & 0xFFFFFFFF) << 32) | (($chunkZ) & 0xFFFFFFFF) : ($chunkX) . ":" . ($chunkZ));
+        if (isset($this->chunks[$index])) {
+            return $this->chunks[$index];
+        } else {
+            $this->loadChunk($chunkX, $chunkZ, $create);
 
-		if(isset($this->chunks[$index = (\PHP_INT_SIZE === 8 ? ((($chunkX) & 0xFFFFFFFF) << 32) | (( $chunkZ) & 0xFFFFFFFF) : ($chunkX) . ":" . ( $chunkZ))]) and $this->chunks[$index] !== $chunk){
-			$this->unloadChunk($chunkX, $chunkZ, \false);
-		}
+            return isset($this->chunks[$index]) ? $this->chunks[$index] : \null;
+        }
+    }
 
-		$this->chunks[$index] = $chunk;
-	}
+    /**
+     *
+     * @return \LevelDB
+     */
+    public function getDatabase()
+    {
+        return $this->db;
+    }
 
-	public static function createChunkSection($Y){
-		return \null;
-	}
+    public function setChunk($chunkX, $chunkZ, FullChunk $chunk)
+    {
+        if (! ($chunk instanceof Chunk)) {
+            throw new ChunkException("Invalid Chunk class");
+        }
 
-	public static function chunkIndex($chunkX, $chunkZ){
-		return \pack("V", $chunkX) . \pack("V", $chunkZ);
-	}
+        $chunk->setProvider($this);
 
-	private function chunkExists($chunkX, $chunkZ){
-		return $this->db->get(LevelDB::chunkIndex($chunkX, $chunkZ) . self::ENTRY_VERSION) !== \false;
-	}
+        $chunk->setX($chunkX);
+        $chunk->setZ($chunkZ);
 
-	public function isChunkGenerated($chunkX, $chunkZ){
-		if($this->chunkExists($chunkX, $chunkZ) and ($chunk = $this->getChunk($chunkX, $chunkZ, \false)) !== \null){
-			return \true;
-		}
+        if (isset($this->chunks[$index = (\PHP_INT_SIZE === 8 ? ((($chunkX) & 0xFFFFFFFF) << 32) | (($chunkZ) & 0xFFFFFFFF) : ($chunkX) . ":" . ($chunkZ))]) and $this->chunks[$index] !== $chunk) {
+            $this->unloadChunk($chunkX, $chunkZ, \false);
+        }
 
-		return \false;
-	}
+        $this->chunks[$index] = $chunk;
+    }
 
-	public function isChunkPopulated($chunkX, $chunkZ){
-		$chunk = $this->getChunk($chunkX, $chunkZ);
-		if($chunk instanceof FullChunk){
-			return $chunk->isPopulated();
-		}else{
-			return \false;
-		}
-	}
+    public static function createChunkSection($Y)
+    {
+        return \null;
+    }
 
-	public function close(){
-		$this->unloadChunks();
-		$this->db->close();
-		$this->level = \null;
-	}
+    public static function chunkIndex($chunkX, $chunkZ)
+    {
+        return \pack("V", $chunkX) . \pack("V", $chunkZ);
+    }
+
+    private function chunkExists($chunkX, $chunkZ)
+    {
+        return $this->db->get(LevelDB::chunkIndex($chunkX, $chunkZ) . self::ENTRY_VERSION) !== \false;
+    }
+
+    public function isChunkGenerated($chunkX, $chunkZ)
+    {
+        if ($this->chunkExists($chunkX, $chunkZ) and ($chunk = $this->getChunk($chunkX, $chunkZ, \false)) !== \null) {
+            return \true;
+        }
+
+        return \false;
+    }
+
+    public function isChunkPopulated($chunkX, $chunkZ)
+    {
+        $chunk = $this->getChunk($chunkX, $chunkZ);
+        if ($chunk instanceof FullChunk) {
+            return $chunk->isPopulated();
+        } else {
+            return \false;
+        }
+    }
+
+    public function close()
+    {
+        $this->unloadChunks();
+        $this->db->close();
+        $this->level = \null;
+    }
 }

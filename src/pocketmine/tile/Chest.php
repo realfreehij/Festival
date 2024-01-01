@@ -28,12 +28,12 @@ use pocketmine\item\Item;
 use pocketmine\level\format\FullChunk;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\NBT;
-use pocketmine\nbt\tag\Byte;
-use pocketmine\nbt\tag\Compound;
-use pocketmine\nbt\tag\Enum;
-use pocketmine\nbt\tag\Int;
-use pocketmine\nbt\tag\Short;
-use pocketmine\nbt\tag\String;
+use pocketmine\nbt\tag\ByteTag;
+use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\EnumTag;
+use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\ShortTag;
+use pocketmine\nbt\tag\StringTag;
 
 class Chest extends Spawnable implements InventoryHolder, Container{
 
@@ -42,12 +42,12 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	/** @var DoubleChestInventory */
 	protected $doubleInventory = \null;
 
-	public function __construct(FullChunk $chunk, Compound $nbt){
+	public function __construct(FullChunk $chunk, CompoundTag $nbt){
 		parent::__construct($chunk, $nbt);
 		$this->inventory = new ChestInventory($this);
 
-		if(!isset($this->namedtag->Items) or !($this->namedtag->Items instanceof Enum)){
-			$this->namedtag->Items = new Enum("Inventory", []);
+		if(!isset($this->namedtag->Items) or !($this->namedtag->Items instanceof EnumTag)){
+			$this->namedtag->Items = new EnumTag("Inventory", []);
 			$this->namedtag->Items->setTagType(NBT::TAG_Compound);
 		}
 
@@ -70,7 +70,7 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	}
 
 	public function saveNBT(){
-		$this->namedtag->Items = new Enum("Items", []);
+		$this->namedtag->Items = new EnumTag("Items", []);
 		$this->namedtag->Items->setTagType(NBT::TAG_Compound);
 		for($index = 0; $index < $this->getSize(); ++$index){
 			$this->setItem($index, $this->inventory->getItem($index));
@@ -126,11 +126,11 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	public function setItem($index, Item $item){
 		$i = $this->getSlotIndex($index);
 
-		$d = new Compound("", [
-			new Byte("Count", $item->getCount()),
-			new Byte("Slot", $index),
-			new Short("id", $item->getId()),
-			new Short("Damage", $item->getDamage()),
+		$d = new CompoundTag("", [
+			new ByteTag("Count", $item->getCount()),
+			new ByteTag("Slot", $index),
+			new ShortTag("id", $item->getId()),
+			new ShortTag("Damage", $item->getDamage()),
 		]);
 
 		if($item->getId() === Item::AIR or $item->getCount() <= 0){
@@ -224,11 +224,11 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	}
 
 	private function createPair(Chest $tile){
-		$this->namedtag->pairx = new Int("pairx", $tile->x);
-		$this->namedtag->pairz = new Int("pairz", $tile->z);
+		$this->namedtag->pairx = new IntTag("pairx", $tile->x);
+		$this->namedtag->pairz = new IntTag("pairz", $tile->z);
 
-		$tile->namedtag->pairx = new Int("pairx", $this->x);
-		$tile->namedtag->pairz = new Int("pairz", $this->z);
+		$tile->namedtag->pairx = new IntTag("pairx", $this->x);
+		$tile->namedtag->pairz = new IntTag("pairz", $this->z);
 	}
 
 	public function unpair(){
@@ -253,20 +253,20 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 
 	public function getSpawnCompound(){
 		if($this->isPaired()){
-			return new Compound("", [
-				new String("id", Tile::CHEST),
-				new Int("x", (int) $this->x),
-				new Int("y", (int) $this->y),
-				new Int("z", (int) $this->z),
-				new Int("pairx", (int) $this->namedtag["pairx"]),
-				new Int("pairz", (int) $this->namedtag["pairz"])
+			return new CompoundTag("", [
+				new StringTag("id", Tile::CHEST),
+				new IntTag("x", (int) $this->x),
+				new IntTag("y", (int) $this->y),
+				new IntTag("z", (int) $this->z),
+				new IntTag("pairx", (int) $this->namedtag["pairx"]),
+				new IntTag("pairz", (int) $this->namedtag["pairz"])
 			]);
 		}else{
-			return new Compound("", [
-				new String("id", Tile::CHEST),
-				new Int("x", (int) $this->x),
-				new Int("y", (int) $this->y),
-				new Int("z", (int) $this->z)
+			return new CompoundTag("", [
+				new StringTag("id", Tile::CHEST),
+				new IntTag("x", (int) $this->x),
+				new IntTag("y", (int) $this->y),
+				new IntTag("z", (int) $this->z)
 			]);
 		}
 	}
