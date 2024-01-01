@@ -25,3 +25,4 @@ Desktop.ini
 .DS_Store
 *.properties
 bin/php/php.ini
+/.metadata/

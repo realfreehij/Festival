@@ -1,6 +1,6 @@
 <?php
 
-namespace pocketmine\Item;
+namespace pocketmine\item;
 
 use pocketmine\level\Level;
 use pocketmine\block\Block;
