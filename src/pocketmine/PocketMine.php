@@ -378,7 +378,7 @@ namespace pocketmine {
 	}
 
 	if(\php_sapi_name() !== "cli"){
-		$logger->critical("You must run PocketMine-MP using the CLI.");
+		$logger->critical("You must run Festival using the CLI.");
 		++$errors;
 	}
 

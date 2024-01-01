@@ -247,7 +247,7 @@ class CrashDump
         $this->data["general"]["zend"] = \zend_version();
         $this->data["general"]["php_os"] = PHP_OS;
         $this->data["general"]["os"] = Utils::getOS();
-        $this->addLine("PocketMine-MP version: " . $version->get(\false) . " #" . $version->getBuild() . " [Protocol " . Info::CURRENT_PROTOCOL . "; API " . API_VERSION . "]");
+        $this->addLine("Festival version: " . $version->get(\false) . " #" . $version->getBuild() . " [Protocol " . Info::CURRENT_PROTOCOL . "; API " . API_VERSION . "]");
         $this->addLine("Git commit: " . GIT_COMMIT);
         $this->addLine("uname -a: " . \php_uname("a"));
         $this->addLine("PHP Version: " . \phpversion());

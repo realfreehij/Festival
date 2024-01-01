@@ -15,7 +15,7 @@ if exist PocketMine-MP.phar (
 	if exist src\pocketmine\PocketMine.php (
 		set POCKETMINE_FILE=src\pocketmine\PocketMine.php
 	) else (
-		echo "Couldn't find a valid PocketMine-MP installation"
+		echo "Couldn't find a valid Festival installation"
 		pause
 		exit 1
 	)
@@ -25,7 +25,7 @@ REM if exist bin\php\php_wxwidgets.dll (
 REM 	%PHP_BINARY% %POCKETMINE_FILE% --enable-gui %*
 REM ) else (
 	if exist bin\mintty.exe (
-		start "" bin\mintty.exe -o Columns=88 -o Rows=32 -o AllowBlinking=0 -o FontQuality=3 -o Font="DejaVu Sans Mono" -o FontHeight=10 -o CursorType=0 -o CursorBlinks=1 -h error -t "PocketMine-MP" -i bin/pocketmine.ico -w max %PHP_BINARY% %POCKETMINE_FILE% --enable-ansi %*
+		start "" bin\mintty.exe -o Columns=88 -o Rows=32 -o AllowBlinking=0 -o FontQuality=3 -o Font="DejaVu Sans Mono" -o FontHeight=10 -o CursorType=0 -o CursorBlinks=1 -h error -t "Festival" -i bin/pocketmine.ico -w max %PHP_BINARY% %POCKETMINE_FILE% --enable-ansi %*
 	) else (
 		%PHP_BINARY% -c bin\php %POCKETMINE_FILE% %*
 		pause
