@@ -144,7 +144,7 @@ abstract class AsyncTask extends \Collectable{
 
 	public function cleanObject(){
 		foreach($this as $p => $v){
-			$this->[$p] = \null;
+			$this->{$p} = \null;
 		}
 	}
 

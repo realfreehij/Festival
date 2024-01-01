@@ -332,7 +332,7 @@ class NBT
                     }
                 }
                 $tag[$key] = $isNumeric ? ($isIntArray ? new IntArrayTag($key, []) : new EnumTag($key, [])) : new CompoundTag($key, []);
-                $this->fromArray($tag->[$key], $value);
+                $this->fromArray($tag->{$key}, $value);
             } elseif (\is_int($value)) {
                 $tag[$key] = new IntTag($key, $value);
             } elseif (\is_float($value)) {
