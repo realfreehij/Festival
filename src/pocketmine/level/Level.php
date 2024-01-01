@@ -1418,28 +1418,28 @@ class Level implements ChunkManager, Metadatable{
 		$motion = $motion === \null ? new Vector3(\lcg_value() * 0.2 - 0.1, 0.2, \lcg_value() * 0.2 - 0.1) : $motion;
 		if($item->getId() > 0 and $item->getCount() > 0){
 			$itemEntity = Entity::createEntity("Item", $this->getChunk($source->getX() >> 4, $source->getZ() >> 4, \true), new Compound("", [
-				"Pos" => new Enum("Pos", [
-					new Double("", $source->getX()),
-					new Double("", $source->getY()),
-					new Double("", $source->getZ())
+				"Pos" => new EnumTag("Pos", [
+					new DoubleTag("", $source->getX()),
+					new DoubleTag("", $source->getY()),
+					new DoubleTag("", $source->getZ())
 				]),
 
-				"Motion" => new Enum("Motion", [
-					new Double("", $motion->x),
-					new Double("", $motion->y),
-					new Double("", $motion->z)
+				"Motion" => new EnumTag("Motion", [
+					new DoubleTag("", $motion->x),
+					new DoubleTag("", $motion->y),
+					new DoubleTag("", $motion->z)
 				]),
-				"Rotation" => new Enum("Rotation", [
-					new Float("", \lcg_value() * 360),
-					new Float("", 0)
+				"Rotation" => new EnumTag("Rotation", [
+					new FloatTag("", \lcg_value() * 360),
+					new FloatTag("", 0)
 				]),
-				"Health" => new Short("Health", 5),
-				"Item" => new Compound("Item", [
-					"id" => new Short("id", $item->getId()),
-					"Damage" => new Short("Damage", $item->getDamage()),
-					"Count" => new Byte("Count", $item->getCount())
+				"Health" => new ShortTag("Health", 5),
+				"Item" => new CompoundTag("Item", [
+					"id" => new ShortTag("id", $item->getId()),
+					"Damage" => new ShortTag("Damage", $item->getDamage()),
+					"Count" => new ByteTag("Count", $item->getCount())
 				]),
-				"PickupDelay" => new Short("PickupDelay", $delay)
+				"PickupDelay" => new ShortTag("PickupDelay", $delay)
 			]));
 
 			$itemEntity->spawnToAll();

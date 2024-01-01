@@ -409,10 +409,12 @@ namespace pocketmine {
 			++$errors;
 		}
 	}
-	//TODO do something for php8
-	if(!\extension_loaded("Weakref") and !\extension_loaded("weakref")){
-		$logger->critical("Unable to find the Weakref extension.");
-		++$errors;
+	
+	if (version_compare(PHP_VERSION, '8.0.0') < 0) {
+		if(!\extension_loaded("Weakref") and !\extension_loaded("weakref")){
+			$logger->critical("Unable to find the Weakref extension.");
+			++$errors;
+		}
 	}
 
 	if(!\extension_loaded("curl")){

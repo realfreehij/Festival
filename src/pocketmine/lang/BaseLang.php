@@ -57,7 +57,7 @@ class BaseLang{
 		if(\file_exists($path) and \strlen($content = \file_get_contents($path)) > 0){
 			foreach(\explode("\n", $content) as $line){
 				$line = \trim($line);
-				if($line === "" or $line{0} === "#"){
+				if($line === "" or $line[0] === "#"){
 					continue;
 				}
 
@@ -137,7 +137,7 @@ class BaseLang{
 
 		$len = \strlen($text);
 		for($i = 0; $i < $len; ++$i){
-			$c = $text{$i};
+			$c = $text[$i];
 			if($replaceString !== \null){
 				if((\ord($c) >= 0x30 and \ord($c) <= 0x39) or (\ord($c) >= 0x41 and \ord($c) <= 0x5a) or (\ord($c) >= 0x61 and \ord($c) <= 0x7a) or $c === "."){
 					$replaceString .= $c;

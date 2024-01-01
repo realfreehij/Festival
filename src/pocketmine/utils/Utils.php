@@ -442,7 +442,7 @@ class Utils{
 					for($i = 0; $i < 8; $i += 2){
 						$b = ($a & (1 << $i)) > 0 ? 1 : 0;
 						if($b != (($a & (1 << ($i + 1))) > 0 ? 1 : 0)){
-							$secureValue |= $b << $bitcnt;
+							$secureValue = $b << $bitcnt;
 							if($bitcnt == 7){
 								$value .= \chr($secureValue);
 								$secureValue = 0;
