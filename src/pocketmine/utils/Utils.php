@@ -65,7 +65,7 @@ class Utils{
 		$hex = \bin2hex($data);
 
 		//xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx 8-4-4-12
-		return \substr($hex, 0, 8) . "-" . \substr($hex, 8, 4) . "-" . \hexdec($version) . \substr($hex, 13, 3) . "-" . $fixed{0} . \substr($hex, 17, 3) . "-" . \substr($hex, 20, 12);
+		return \substr($hex, 0, 8) . "-" . \substr($hex, 8, 4) . "-" . \hexdec($version) . \substr($hex, 13, 3) . "-" . $fixed[0] . \substr($hex, 17, 3) . "-" . \substr($hex, 20, 12);
 	}
 
 	/**
@@ -363,14 +363,14 @@ class Utils{
 	 *
 	 * @return string
 	 */
-	public static function getRandomBytes($length = 16, $secure = \true, $raw = \true, $startEntropy = "", &$rounds = 0, &$drop = 0){
+	public static function getRandomBytes($length = 16, $secure = \true, $raw = \true, $startEntropy = "", &$rounds = 0, &$drop = 0){ //TODO replace if php8
 		static $lastRandom = "";
 		$output = "";
 		$length = \abs((int) $length);
 		$secureValue = "";
 		$rounds = 0;
 		$drop = 0;
-		while(!isset($output{$length - 1})){
+		while(!isset($output[$length - 1])){
 			//some entropy, but works ^^
 			$weakEntropy = [
 				\is_array($startEntropy) ? \implode($startEntropy) : $startEntropy,
@@ -438,7 +438,7 @@ class Utils{
 				//Von Neumann randomness extractor, increases entropy
 				$bitcnt = 0;
 				for($j = 0; $j < 64; ++$j){
-					$a = \ord($strongEntropy{$j});
+					$a = \ord($strongEntropy[$j]);
 					for($i = 0; $i < 8; $i += 2){
 						$b = ($a & (1 << $i)) > 0 ? 1 : 0;
 						if($b != (($a & (1 << ($i + 1))) > 0 ? 1 : 0)){
