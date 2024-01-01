@@ -92,7 +92,7 @@ class NBT
             return \substr($this->buffer, $this->offset);
         }
 
-        return $len === 1 ? $this->buffer{$this->offset ++} : \substr($this->buffer, ($this->offset += $len) - $len, $len);
+        return $len === 1 ? $this->buffer[$this->offset ++] : \substr($this->buffer, ($this->offset += $len) - $len, $len);
     }
 
     public function put($v)
@@ -102,7 +102,7 @@ class NBT
 
     public function feof()
     {
-        return ! isset($this->buffer{$this->offset});
+        return ! isset($this->buffer[$this->offset]);
     }
 
     public function __construct($endianness = self::LITTLE_ENDIAN)
@@ -331,20 +331,20 @@ class NBT
                         $isIntArray = \false;
                     }
                 }
-                $tag{$key} = $isNumeric ? ($isIntArray ? new IntArrayTag($key, []) : new EnumTag($key, [])) : new CompoundTag($key, []);
-                $this->fromArray($tag->{$key}, $value);
+                $tag[$key] = $isNumeric ? ($isIntArray ? new IntArrayTag($key, []) : new EnumTag($key, [])) : new CompoundTag($key, []);
+                $this->fromArray($tag->[$key], $value);
             } elseif (\is_int($value)) {
-                $tag{$key} = new IntTag($key, $value);
+                $tag[$key] = new IntTag($key, $value);
             } elseif (\is_float($value)) {
-                $tag{$key} = new FloatTag($key, $value);
+                $tag[$key] = new FloatTag($key, $value);
             } elseif (\is_string($value)) {
                 if (Utils::printable($value) !== $value) {
-                    $tag{$key} = new ByteArrayTag($key, $value);
+                    $tag[$key] = new ByteArrayTag($key, $value);
                 } else {
-                    $tag{$key} = new StringTag($key, $value);
+                    $tag[$key] = new StringTag($key, $value);
                 }
             } elseif (\is_bool($value)) {
-                $tag{$key} = new ByteTag($key, $value ? 1 : 0);
+                $tag[$key] = new ByteTag($key, $value ? 1 : 0);
             }
         }
     }

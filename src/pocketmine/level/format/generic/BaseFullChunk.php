@@ -286,7 +286,7 @@ abstract class BaseFullChunk implements FullChunk{
 
 		$column = $this->getBlockIdColumn($x, $z);
 		for($y = 127; $y >= 0; --$y){
-			if($column{$y} !== "\x00"){
+			if($column[$y] !== "\x00"){
 				$this->setHeightMap($x, $z, $y);
 				return $y;
 			}

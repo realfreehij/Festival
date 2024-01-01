@@ -74,7 +74,7 @@ class QueryHandler{
 
 	public function handle($address, $port, $packet){
 		$offset = 2;
-		$packetType = \ord($packet{$offset++});
+		$packetType = \ord($packet[$offset++]);
 		$sessionID = (\PHP_INT_SIZE === 8 ? \unpack("N", \substr($packet, $offset, 4))[1] << 32 >> 32 : \unpack("N", \substr($packet, $offset, 4))[1]);
 		$offset += 4;
 		$payload = \substr($packet, $offset);

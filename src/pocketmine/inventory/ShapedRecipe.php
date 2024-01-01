@@ -54,7 +54,7 @@ class ShapedRecipe implements Recipe{
 			$this->rows[] = $row;
 			$len = \strlen($row);
 			for($i = 0; $i < $len; ++$i){
-				$this->ingredients[$row{$i}] = \null;
+				$this->ingredients[$row[$i]] = \null;
 			}
 		}
 

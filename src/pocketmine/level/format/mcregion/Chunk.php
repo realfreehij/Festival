@@ -128,11 +128,11 @@ class Chunk extends BaseFullChunk
     public function setBlockData($x, $y, $z, $data)
     {
         $i = ($x << 10) | ($z << 6) | ($y >> 1);
-        $old_m = \ord($this->data{$i});
+        $old_m = \ord($this->data[$i]);
         if (($y & 1) === 0) {
-            $this->data{$i} = \chr(($old_m & 0xf0) | ($data & 0x0f));
+            $this->data[$i] = \chr(($old_m & 0xf0) | ($data & 0x0f));
         } else {
-            $this->data{$i} = \chr((($data & 0x0f) << 4) | ($old_m & 0x0f));
+            $this->data[$i] = \chr((($data & 0x0f) << 4) | ($old_m & 0x0f));
         }
         $this->hasChanged = \true;
     }
@@ -141,9 +141,9 @@ class Chunk extends BaseFullChunk
     {
         $i = ($x << 11) | ($z << 7) | $y;
         if (($y & 1) === 0) {
-            return (\ord($this->blocks{$i}) << 4) | (\ord($this->data{$i >> 1}) & 0x0F);
+            return (\ord($this->blocks[$i]) << 4) | (\ord($this->data[$i >> 1]) & 0x0F);
         } else {
-            return (\ord($this->blocks{$i}) << 4) | (\ord($this->data{$i >> 1}) >> 4);
+            return (\ord($this->blocks[$i]) << 4) | (\ord($this->data[$i >> 1]) >> 4);
         }
     }
 
@@ -162,22 +162,22 @@ class Chunk extends BaseFullChunk
 
         if ($blockId !== \null) {
             $blockId = \chr($blockId);
-            if ($this->blocks{$i} !== $blockId) {
-                $this->blocks{$i} = $blockId;
+            if ($this->blocks[$i] !== $blockId) {
+                $this->blocks[$i] = $blockId;
                 $changed = \true;
             }
         }
 
         if ($meta !== \null) {
             $i >>= 1;
-            $old_m = \ord($this->data{$i});
+            $old_m = \ord($this->data[$i]);
             if (($y & 1) === 0) {
-                $this->data{$i} = \chr(($old_m & 0xf0) | ($meta & 0x0f));
+                $this->data[$i] = \chr(($old_m & 0xf0) | ($meta & 0x0f));
                 if (($old_m & 0x0f) !== $meta) {
                     $changed = \true;
                 }
             } else {
-                $this->data{$i} = \chr((($meta & 0x0f) << 4) | ($old_m & 0x0f));
+                $this->data[$i] = \chr((($meta & 0x0f) << 4) | ($old_m & 0x0f));
                 if ((($old_m & 0xf0) >> 4) !== $meta) {
                     $changed = \true;
                 }
@@ -204,11 +204,11 @@ class Chunk extends BaseFullChunk
     public function setBlockSkyLight($x, $y, $z, $level)
     {
         $i = ($x << 10) | ($z << 6) | ($y >> 1);
-        $old_sl = \ord($this->skyLight{$i});
+        $old_sl = \ord($this->skyLight[$i]);
         if (($y & 1) === 0) {
-            $this->skyLight{$i} = \chr(($old_sl & 0xf0) | ($level & 0x0f));
+            $this->skyLight[$i] = \chr(($old_sl & 0xf0) | ($level & 0x0f));
         } else {
-            $this->skyLight{$i} = \chr((($level & 0x0f) << 4) | ($old_sl & 0x0f));
+            $this->skyLight[$i] = \chr((($level & 0x0f) << 4) | ($old_sl & 0x0f));
         }
         $this->hasChanged = \true;
     }
@@ -226,11 +226,11 @@ class Chunk extends BaseFullChunk
     public function setBlockLight($x, $y, $z, $level)
     {
         $i = ($x << 10) | ($z << 6) | ($y >> 1);
-        $old_l = \ord($this->blockLight{$i});
+        $old_l = \ord($this->blockLight[$i]);
         if (($y & 1) === 0) {
-            $this->blockLight{$i} = \chr(($old_l & 0xf0) | ($level & 0x0f));
+            $this->blockLight[$i] = \chr(($old_l & 0xf0) | ($level & 0x0f));
         } else {
-            $this->blockLight{$i} = \chr((($level & 0x0f) << 4) | ($old_l & 0x0f));
+            $this->blockLight[$i] = \chr((($level & 0x0f) << 4) | ($old_l & 0x0f));
         }
         $this->hasChanged = \true;
     }
@@ -367,7 +367,7 @@ class Chunk extends BaseFullChunk
                 $chunk->heightMap[$i] = $hm[$i + 1];
             }
 
-            $flags = \ord($data{$offset ++});
+            $flags = \ord($data[$offset ++]);
 
             $chunk->nbt->TerrainGenerated = new ByteTag("TerrainGenerated", $flags & 0b1);
             $chunk->nbt->TerrainPopulated = new ByteTag("TerrainPopulated", ($flags >> 1) & 0b1);

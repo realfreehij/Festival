@@ -1,30 +1,8 @@
 <?php
 
-/*
- * RakLib network library
- *
- *
- * This project is not affiliated with Jenkins Software LLC nor RakNet.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- */
-
 namespace raklib\protocol;
 
-
 use raklib\Binary;
-
-
-
-
-
-
-
-
 
 abstract class Packet{
     public static $ID = -1;
@@ -44,7 +22,7 @@ abstract class Packet{
 
         $buffer = "";
         for(; $len > 0; --$len, ++$this->offset){
-            $buffer .= $this->buffer{$this->offset};
+            $buffer .= $this->buffer[$this->offset];
         }
 
         return $buffer;
@@ -71,7 +49,7 @@ abstract class Packet{
     }
 
     protected function getByte(){
-        return \ord($this->buffer{$this->offset++});
+        return \ord($this->buffer[$this->offset++]);
     }
 
     protected function getString(){
@@ -89,7 +67,7 @@ abstract class Packet{
 	}
 
     protected function feof(){
-        return !isset($this->buffer{$this->offset});
+        return !isset($this->buffer[$this->offset]);
     }
 
     protected function put($str){
