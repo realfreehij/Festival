@@ -42,7 +42,7 @@ abstract class BaseFullChunk implements FullChunk{
 	/** @var Tile[] */
 	protected $tileList = [];
 
-	/** @var int[256] */
+	/** @var int[] */
 	protected $biomeColors;
 
 	protected $blocks;

@@ -33,8 +33,6 @@ use pocketmine\block\RedstoneOre;
 use pocketmine\level\ChunkManager;
 use pocketmine\level\generator\biome\Biome;
 use pocketmine\level\generator\biome\BiomeSelector;
-use pocketmine\level\generator\GenerationChunkManager;
-use pocketmine\level\generator\GenerationManager;
 use pocketmine\level\generator\Generator;
 use pocketmine\level\generator\noise\Perlin;
 use pocketmine\level\generator\noise\Simplex;
