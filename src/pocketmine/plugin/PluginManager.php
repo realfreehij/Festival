@@ -433,7 +433,7 @@ class PluginManager{
 		if(!isset($this->permSubs[$permission])){
 			$this->permSubs[$permission] = [];
 		}
-		$this->permSubs[$permission][\spl_object_hash($permissible)] = new \WeakRef($permissible);
+		$this->permSubs[$permission][\spl_object_hash($permissible)] = \WeakReference::create($permissible);
 	}
 
 	/**
@@ -479,9 +479,9 @@ class PluginManager{
 	 */
 	public function subscribeToDefaultPerms($op, Permissible $permissible){
 		if($op === \true){
-			$this->defSubsOp[\spl_object_hash($permissible)] = new \WeakRef($permissible);
+			$this->defSubsOp[\spl_object_hash($permissible)] = \WeakReference::create($permissible);
 		}else{
-			$this->defSubs[\spl_object_hash($permissible)] = new \WeakRef($permissible);
+			$this->defSubs[\spl_object_hash($permissible)] = \WeakReference::create($permissible);
 		}
 	}
 
