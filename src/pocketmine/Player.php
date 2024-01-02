@@ -3579,7 +3579,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
     public function onChunkChanged(FullChunk $chunk)
     {
-        $this->loadQueue[(\PHP_INT_SIZE === 8 ? ((($chunk->getX()) & 0xFFFFFFFF) << 32) | (($chunk->getZ()) & 0xFFFFFFFF) : ($chunk->getX()) . ":" . ($chunk->getZ()))] = \abs(($this->x >> 4) - $chunk->getX()) + \abs(($this->z >> 4) - $chunk->getZ());
+        $this->loadQueue[(\PHP_INT_SIZE === 8 ? ((($chunk->getX()) & 0xFFFFFFFF) << 32) | (($chunk->getZ()) & 0xFFFFFFFF) : ($chunk->getX()) . ":" . ($chunk->getZ()))] = \abs(((int)$this->x >> 4) - $chunk->getX()) + \abs(((int)$this->z >> 4) - $chunk->getZ());
     }
 
     public function onChunkLoaded(FullChunk $chunk)
