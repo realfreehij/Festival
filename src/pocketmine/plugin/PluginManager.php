@@ -721,17 +721,21 @@ class PluginManager{
 				}
 
 				$parameters = $method->getParameters();
-				if(\count($parameters) === 1 and $parameters[0]->getClass() instanceof \ReflectionClass and \is_subclass_of($parameters[0]->getClass()->getName(), Event::class)){
-					$class = $parameters[0]->getClass()->getName();
-					$reflection = new \ReflectionClass($class);
-					if(\strpos((string) $reflection->getDocComment(), "@deprecated") !== \false and $this->server->getProperty("settings.deprecated-verbose", \true)){
-						$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.plugin.deprecatedEvent", [
-							$plugin->getName(),
-							$class,
-							\get_class($listener) . "->" . $method->getName() . "()"
-						]));
+
+				if(\count($parameters) === 1){
+					$class = $parameters[0]->getType();
+					if($class != null && !$class->isBuiltin() && is_subclass_of($class->getName(), Event::class)){
+						$class = $class->getName();
+						$reflection = new \ReflectionClass($class);
+						if(\strpos((string) $reflection->getDocComment(), "@deprecated") !== \false and $this->server->getProperty("settings.deprecated-verbose", \true)){
+							$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.plugin.deprecatedEvent", [
+								$plugin->getName(),
+								$class,
+								\get_class($listener) . "->" . $method->getName() . "()"
+							]));
+						}
+						$this->registerEvent($class, $listener, $priority, new MethodEventExecutor($method->getName()), $plugin, $ignoreCancelled);
 					}
-					$this->registerEvent($class, $listener, $priority, new MethodEventExecutor($method->getName()), $plugin, $ignoreCancelled);
 				}
 			}
 		}
