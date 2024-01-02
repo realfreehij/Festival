@@ -68,18 +68,13 @@ abstract class Thread extends \Thread{
 	 * Stops the thread using the best way possible. Try to stop it yourself before calling this.
 	 */
 	public function quit(){
-		if($this->isRunning()){
-			$this->kill();
-			$this->detach();
-		}elseif(!$this->isJoined()){
+		
+		$this->notify();
+
+		if(!$this->isJoined()){
 			if(!$this->isTerminated()){
 				$this->join();
-			}else{
-				$this->kill();
-				$this->detach();
 			}
-		}else{
-			$this->detach();
 		}
 
 		ThreadManager::getInstance()->remove($this);

@@ -2109,8 +2109,8 @@ class Server{
 	 */
 	public function shutdown(){
 		if($this->isRunning){
-			$killer = new ServerKiller(90);
-			$killer->start();
+			//$killer = new ServerKiller(90);
+			//$killer->start();
 			//$killer->detach();
 		}
 		$this->isRunning = \false;

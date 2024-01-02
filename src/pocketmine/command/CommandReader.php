@@ -25,7 +25,7 @@ use pocketmine\Thread;
 
 class CommandReader extends Thread{
 	private $readline;
-
+	public $killed = false;
 	/** @var \Threaded */
 	protected $buffer;
 
@@ -70,6 +70,7 @@ class CommandReader extends Thread{
 
 		$lastLine = \microtime(\true);
 		while(\true){
+			if($this->killed) break;
 			if(($line = $this->readLine()) !== ""){
 				$this->buffer[] = \preg_replace("#\\x1b\\x5b([^\\x1b]*\\x7e|[\\x40-\\x50])#", "", $line);
 			}elseif((\microtime(\true) - $lastLine) <= 0.1){ //Non blocking! Sleep to save CPU
@@ -79,7 +80,11 @@ class CommandReader extends Thread{
 			$lastLine = \microtime(\true);
 		}
 	}
-
+	
+	public function kill(){
+		$this->killed = true;
+	}
+	
 	public function getThreadName(){
 		return "Console";
 	}

@@ -17,6 +17,7 @@ namespace raklib\server;
 
 
 class RakLibServer extends \Thread{
+	public $running = true;
 	public $port;
 	public $interface;
 	/** @var \ThreadedLogger */
@@ -82,7 +83,7 @@ class RakLibServer extends \Thread{
 			$this->addDependency($loadPaths, $interface);
 		}
 	}
-
+	
 	public function isShutdown(){
 		return $this->shutdown === \true;
 	}
