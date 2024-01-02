@@ -1747,12 +1747,12 @@ class Server{
 		$this->pluginManager->registerInterface(PharPluginLoader::class);
 		$this->pluginManager->registerInterface(ScriptPluginLoader::class);
 
-		\set_exception_handler([$this, "exceptionHandler"]);
+		//\set_exception_handler([$this, "exceptionHandler"]); //TODO except. handler
 		\register_shutdown_function([$this, "crashDump"]);
 
 		$this->queryRegenerateTask = new QueryRegenerateEvent($this, 5);
 
-		$this->network->registerInterface(new RakLibInterface($this));
+		$this->network->registerInterface(new RakLibInterface($this)); //TODO fix weird serialization exception
 
 		$this->pluginManager->loadPlugins($this->pluginPath);
 

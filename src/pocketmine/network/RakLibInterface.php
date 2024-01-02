@@ -56,7 +56,9 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 
 	/** @var ServerHandler */
 	private $interface;
-
+	
+	public $channelCounts;
+	
 	public function __construct(Server $server){
 
 		$this->server = $server;

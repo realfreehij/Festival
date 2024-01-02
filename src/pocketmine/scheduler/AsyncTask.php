@@ -28,7 +28,7 @@ use pocketmine\Server;
  *
  * WARNING: Do not call PocketMine-MP API methods, or save objects from/on other Threads!!
  */
-abstract class AsyncTask extends \Collectable{
+abstract class AsyncTask extends \Threaded{
 
 	/** @var AsyncWorker $worker */
 	public $worker = \null;
@@ -38,8 +38,12 @@ abstract class AsyncTask extends \Collectable{
 	private $cancelRun = \false;
 	/** @var int */
 	private $taskId = \null;
-
+	private $isGarbage = false;
+	
+	private $data;
+	
 	public function run(){
+		$this->data = [];
 		$this->result = \null;
 
 		if($this->cancelRun !== \true){
@@ -57,7 +61,14 @@ abstract class AsyncTask extends \Collectable{
 	public function isFinished(){
 		return $this->isGarbage();
 	}
+	
+	public function isGarbage(): bool{
+		return $this->isGarbage;
+	}
 
+	public function setGarbage(){
+		$this->isGarbage = true;
+	}
 	/**
 	 * @return mixed
 	 */
@@ -143,9 +154,10 @@ abstract class AsyncTask extends \Collectable{
 	}
 
 	public function cleanObject(){
-		foreach($this as $p => $v){
-			$this->{$p} = \null;
-		}
+		//foreach($this as $p => $v){
+		//	$this->{$p} = \null;
+		//}
+		
 	}
 
 }

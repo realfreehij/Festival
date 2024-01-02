@@ -459,9 +459,9 @@ class PluginManager{
 			$subs = [];
 			foreach($this->permSubs[$permission] as $k => $perm){
 				/** @var \WeakRef $perm */
-				if($perm->acquire()){
+				if($perm->get() != null){
 					$subs[] = $perm->get();
-					$perm->release();
+					unset($perm);
 				}else{
 					unset($this->permSubs[$permission][$k]);
 				}
@@ -507,20 +507,20 @@ class PluginManager{
 
 		if($op === \true){
 			foreach($this->defSubsOp as $k => $perm){
-				/** @var \WeakRef $perm */
-				if($perm->acquire()){
+				/** @var \WeakReference $perm */
+				if($perm->get() != null){
 					$subs[] = $perm->get();
-					$perm->release();
+					unset($perm);
 				}else{
 					unset($this->defSubsOp[$k]);
 				}
 			}
 		}else{
 			foreach($this->defSubs as $k => $perm){
-				/** @var \WeakRef $perm */
-				if($perm->acquire()){
+				/** @var \WeakReference $perm */
+				if($perm->get() != null){
 					$subs[] = $perm->get();
-					$perm->release();
+					unset($perm);
 				}else{
 					unset($this->defSubs[$k]);
 				}

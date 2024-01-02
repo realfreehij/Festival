@@ -225,7 +225,7 @@ abstract class Biome
             0xb4,
             0x97
         ]);
-        return ((int) ($c[0] << 16)) | (int) (($c[1] << 8)) | (int) ($c[2]);
+        return ((int) ((int)$c[0] << 16)) | (int) (((int)$c[1] << 8)) | (int)($c[2]);
     }
 
     private static function interpolateColor($size, $x, $z, $c1, $c2, $c3, $c4)
