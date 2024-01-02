@@ -106,18 +106,18 @@ class Chunk extends BaseFullChunk
 
     public function getBlockId($x, $y, $z)
     {
-        return \ord($this->blocks{($x << 11) | ($z << 7) | $y});
+        return \ord($this->blocks[($x << 11) | ($z << 7) | $y]);
     }
 
     public function setBlockId($x, $y, $z, $id)
     {
-        $this->blocks{($x << 11) | ($z << 7) | $y} = \chr($id);
+        $this->blocks[($x << 11) | ($z << 7) | $y] = \chr($id);
         $this->hasChanged = \true;
     }
 
     public function getBlockData($x, $y, $z)
     {
-        $m = \ord($this->data{($x << 10) | ($z << 6) | ($y >> 1)});
+        $m = \ord($this->data[($x << 10) | ($z << 6) | ($y >> 1)]);
         if (($y & 1) === 0) {
             return $m & 0x0F;
         } else {
@@ -193,7 +193,7 @@ class Chunk extends BaseFullChunk
 
     public function getBlockSkyLight($x, $y, $z)
     {
-        $sl = \ord($this->skyLight{($x << 10) | ($z << 6) | ($y >> 1)});
+        $sl = \ord($this->skyLight[($x << 10) | ($z << 6) | ($y >> 1)]);
         if (($y & 1) === 0) {
             return $sl & 0x0F;
         } else {
@@ -215,7 +215,7 @@ class Chunk extends BaseFullChunk
 
     public function getBlockLight($x, $y, $z)
     {
-        $l = \ord($this->blockLight{($x << 10) | ($z << 6) | ($y >> 1)});
+        $l = \ord($this->blockLight[($x << 10) | ($z << 6) | ($y >> 1)]);
         if (($y & 1) === 0) {
             return $l & 0x0F;
         } else {

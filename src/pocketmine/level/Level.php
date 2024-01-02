@@ -848,8 +848,8 @@ class Level implements ChunkManager, Metadatable{
 		$randRange = $randRange > $this->chunkTickRadius ? $this->chunkTickRadius : $randRange;
 
 		foreach($this->loaders as $loader){
-			$chunkX = $loader->getX() >> 4;
-			$chunkZ = $loader->getZ() >> 4;
+			$chunkX = (int)$loader->getX() >> 4;
+			$chunkZ = (int)$loader->getZ() >> 4;
 
 			$index = (\PHP_INT_SIZE === 8 ? ((($chunkX) & 0xFFFFFFFF) << 32) | (( $chunkZ) & 0xFFFFFFFF) : ($chunkX) . ":" . ( $chunkZ));
 			$existingLoaders = \max(0, isset($this->chunkTickList[$index]) ? $this->chunkTickList[$index] : 0);

@@ -78,7 +78,8 @@ class ServerHandler{
      * @return bool
      */
     public function handlePacket(){
-        if(\strlen($packet = $this->server->readThreadToMainPacket()) > 0){
+		$packet = $this->server->readThreadToMainPacket();
+        if($packet != null && \strlen($packet) > 0){
             $id = \ord($packet[0]);
             $offset = 1;
             if($id === RakLib::PACKET_ENCAPSULATED){

@@ -115,7 +115,7 @@ abstract class BaseFullChunk implements FullChunk{
 
 		for($x = 0; $x < 16; ++$x){
 			for($z = 0; $z < 16; ++$z){
-				$biome = Biome::getBiome(\ord($data{($z << 4) + $x}));
+				$biome = Biome::getBiome(\ord($data[($z << 4) + $x]));
 				$this->setBiomeId($x, $z, $biome->getId());
 				$c = $biome->getColor();
 				$this->setBiomeColor($x, $z, $c >> 16, ($c >> 8) & 0xff, $c & 0xff);
@@ -135,7 +135,7 @@ abstract class BaseFullChunk implements FullChunk{
 							continue;
 						}
 
-						if(($nbt["Pos"][0] >> 4) !== $this->x or ($nbt["Pos"][2] >> 4) !== $this->z){
+						if(((int)$nbt["Pos"][0] >> 4) !== $this->x or ((int)$nbt["Pos"][2] >> 4) !== $this->z){
 							$changed = \true;
 							continue; //Fixes entities allocated in wrong chunks.
 						}

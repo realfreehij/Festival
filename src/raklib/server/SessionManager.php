@@ -73,7 +73,9 @@ class SessionManager{
     protected $ipSec = [];
 
     public $portChecking = \false;
-
+	
+	public $serverId;
+	
     public function __construct(RakLibServer $server, UDPServerSocket $socket){
         $this->server = $server;
         $this->socket = $socket;

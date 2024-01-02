@@ -1331,14 +1331,16 @@ abstract class Entity extends Location implements Metadatable{
 	}
 
 	protected function checkChunks(){
-		if($this->chunk === \null or ($this->chunk->getX() !== ($this->x >> 4) or $this->chunk->getZ() !== ($this->z >> 4))){
+		$chunkX = (int)$this->x >> 4;
+		$chunkZ = (int)$this->z >> 4;
+		if($this->chunk === \null or ($this->chunk->getX() !== $chunkX or $this->chunk->getZ() !== $chunkZ)){
 			if($this->chunk !== \null){
 				$this->chunk->removeEntity($this);
 			}
-			$this->chunk = $this->level->getChunk($this->x >> 4, $this->z >> 4, \true);
+			$this->chunk = $this->level->getChunk($chunkX, $chunkZ, \true);
 
 			if(!$this->justCreated){
-				$newChunk = $this->level->getChunkPlayers($this->x >> 4, $this->z >> 4);
+				$newChunk = $this->level->getChunkPlayers($chunkX, $chunkZ);
 				foreach($this->hasSpawned as $player){
 					if(!isset($newChunk[$player->getLoaderId()])){
 						$this->despawnFrom($player);
