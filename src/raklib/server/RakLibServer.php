@@ -142,7 +142,7 @@ class RakLibServer extends \Thread{
 		}
 	}
 
-	public function errorHandler($errno, $errstr, $errfile, $errline, $context, $trace = \null){
+	public function errorHandler($errno, $errstr, $errfile = "", $errline = "", $context = "", $trace = \null){
 		if(\error_reporting() === 0){
 			return \false;
 		}
@@ -227,7 +227,7 @@ class RakLibServer extends \Thread{
 		\ini_set("display_errors", 1);
 		\ini_set("display_startup_errors", 1);
 
-		//\set_error_handler([$this, "errorHandler"], E_ALL); TODO reenable
+		\set_error_handler([$this, "errorHandler"], E_ALL);
 		\register_shutdown_function([$this, "shutdownHandler"]);
 
 

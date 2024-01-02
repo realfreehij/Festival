@@ -1745,79 +1745,81 @@ class Server{
 		$this->profilingTickRate = (float) $this->getProperty("settings.profile-report-trigger", 20);
 		$this->pluginManager->registerInterface(PharPluginLoader::class);
 		$this->pluginManager->registerInterface(ScriptPluginLoader::class);
-
-		//\set_exception_handler([$this, "exceptionHandler"]); //TODO except. handler
-		\register_shutdown_function([$this, "crashDump"]);
-
-		$this->queryRegenerateTask = new QueryRegenerateEvent($this, 5);
-
-		$this->network->registerInterface(new RakLibInterface($this)); //TODO fix weird serialization exception
-
-		$this->pluginManager->loadPlugins($this->pluginPath);
-
-		$this->enablePlugins(PluginLoadOrder::STARTUP);
-
-		LevelProviderManager::addProvider($this, Anvil::class);
-		LevelProviderManager::addProvider($this, McRegion::class);
-		if(\extension_loaded("leveldb")){
-			$this->logger->debug($this->getLanguage()->translateString("pocketmine.debug.enable"));
-			LevelProviderManager::addProvider($this, LevelDB::class);
-		}
-
-
-		Generator::addGenerator(Flat::class, "flat");
-		Generator::addGenerator(Normal::class, "normal");
-		Generator::addGenerator(Normal::class, "default");
-
-		foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
-			if($this->loadLevel($name) === \false){
-				$seed = $this->getProperty("worlds.$name.seed", \time());
-				$options = \explode(":", $this->getProperty("worlds.$name.generator", Generator::getGenerator("default")));
-				$generator = Generator::getGenerator(\array_shift($options));
-				if(\count($options) > 0){
-					$options = [
-						"preset" => \implode(":", $options),
-					];
-				}else{
-					$options = [];
+		try{
+			\register_shutdown_function([$this, "crashDump"]);
+	
+			$this->queryRegenerateTask = new QueryRegenerateEvent($this, 5);
+	
+			$this->network->registerInterface(new RakLibInterface($this));
+	
+			$this->pluginManager->loadPlugins($this->pluginPath);
+	
+			$this->enablePlugins(PluginLoadOrder::STARTUP);
+	
+			LevelProviderManager::addProvider($this, Anvil::class);
+			LevelProviderManager::addProvider($this, McRegion::class);
+			if(\extension_loaded("leveldb")){
+				$this->logger->debug($this->getLanguage()->translateString("pocketmine.debug.enable"));
+				LevelProviderManager::addProvider($this, LevelDB::class);
+			}
+	
+	
+			Generator::addGenerator(Flat::class, "flat");
+			Generator::addGenerator(Normal::class, "normal");
+			Generator::addGenerator(Normal::class, "default");
+	
+			foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
+				if($this->loadLevel($name) === \false){
+					$seed = $this->getProperty("worlds.$name.seed", \time());
+					$options = \explode(":", $this->getProperty("worlds.$name.generator", Generator::getGenerator("default")));
+					$generator = Generator::getGenerator(\array_shift($options));
+					if(\count($options) > 0){
+						$options = [
+							"preset" => \implode(":", $options),
+						];
+					}else{
+						$options = [];
+					}
+	
+					$this->generateLevel($name, $seed, $generator, $options);
 				}
-
-				$this->generateLevel($name, $seed, $generator, $options);
 			}
-		}
-
-		if($this->getDefaultLevel() === \null){
-			$default = $this->getConfigString("level-name", "world");
-			if(\trim($default) == ""){
-				$this->getLogger()->warning("level-name cannot be null, using default");
-				$default = "world";
-				$this->setConfigString("level-name", "world");
+	
+			if($this->getDefaultLevel() === \null){
+				$default = $this->getConfigString("level-name", "world");
+				if(\trim($default) == ""){
+					$this->getLogger()->warning("level-name cannot be null, using default");
+					$default = "world";
+					$this->setConfigString("level-name", "world");
+				}
+				if($this->loadLevel($default) === \false){
+					$seed = $this->getConfigInt("level-seed", \time());
+					$this->generateLevel($default, $seed === 0 ? \time() : $seed);
+				}
+	
+				$this->setDefaultLevel($this->getLevelByName($default));
 			}
-			if($this->loadLevel($default) === \false){
-				$seed = $this->getConfigInt("level-seed", \time());
-				$this->generateLevel($default, $seed === 0 ? \time() : $seed);
+	
+	
+			$this->properties->save(\true);
+	
+			if(!($this->getDefaultLevel() instanceof Level)){
+				$this->getLogger()->emergency($this->getLanguage()->translateString("pocketmine.level.defaultError"));
+				$this->forceShutdown();
+	
+				return;
 			}
-
-			$this->setDefaultLevel($this->getLevelByName($default));
+	
+			if($this->getProperty("ticks-per.autosave", 6000) > 0){
+				$this->autoSaveTicks = (int) $this->getProperty("ticks-per.autosave", 6000);
+			}
+	
+			$this->enablePlugins(PluginLoadOrder::POSTWORLD);
+	
+			$this->start();
+		}catch(\Exception $e){
+			$this->exceptionHandler($e);
 		}
-
-
-		$this->properties->save(\true);
-
-		if(!($this->getDefaultLevel() instanceof Level)){
-			$this->getLogger()->emergency($this->getLanguage()->translateString("pocketmine.level.defaultError"));
-			$this->forceShutdown();
-
-			return;
-		}
-
-		if($this->getProperty("ticks-per.autosave", 6000) > 0){
-			$this->autoSaveTicks = (int) $this->getProperty("ticks-per.autosave", 6000);
-		}
-
-		$this->enablePlugins(PluginLoadOrder::POSTWORLD);
-
-		$this->start();
 	}
 
 	/**
