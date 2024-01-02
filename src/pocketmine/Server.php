@@ -113,7 +113,6 @@ use pocketmine\plugin\PluginLoadOrder;
 use pocketmine\plugin\PluginManager;
 use pocketmine\plugin\ScriptPluginLoader;
 use pocketmine\scheduler\FileWriteTask;
-use pocketmine\scheduler\SendUsageTask;
 use pocketmine\scheduler\ServerScheduler;
 use pocketmine\tile\Chest;
 use pocketmine\tile\Furnace;
@@ -179,9 +178,6 @@ class Server{
 	private $useAverage = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 	private $maxTick = 20;
 	private $maxUse = 0;
-
-	private $sendUsageTicker = 0;
-
 	private $dispatchSignals = \false;
 
 	/** @var \AttachableThreadedLogger */
@@ -2125,10 +2121,6 @@ class Server{
 		}
 
 		try{
-			if(!$this->isRunning()){
-				$this->sendUsage(SendUsageTask::TYPE_CLOSE);
-			}
-
 			$this->hasStopped = \true;
 
 			$this->shutdown();
@@ -2197,12 +2189,6 @@ class Server{
 		foreach($this->getIPBans()->getEntries() as $entry){
 			$this->network->blockAddress($entry->getName(), -1);
 		}
-
-		if($this->getProperty("settings.send-usage", \true)){
-			$this->sendUsageTicker = 6000;
-			$this->sendUsage(SendUsageTask::TYPE_OPEN);
-		}
-
 
 		if($this->getProperty("network.upnp-forwarding", \false) == \true){
 			$this->logger->info("[UPnP] Trying to port forward...");
@@ -2279,9 +2265,6 @@ class Server{
 		if($this->isRunning === \false){
 			return;
 		}
-		if($this->sendUsageTicker > 0){
-			$this->sendUsage(SendUsageTask::TYPE_CLOSE);
-		}
 		$this->hasStopped = \false;
 
 		\ini_set("error_reporting", 0);
@@ -2295,38 +2278,6 @@ class Server{
 		}
 
 		$this->logger->emergency($this->getLanguage()->translateString("pocketmine.crash.submit", [$dump->getPath()]));
-
-
-		if($this->getProperty("auto-report.enabled", \true) !== \false){
-			$report = \true;
-			$plugin = $dump->getData()["plugin"];
-			if(\is_string($plugin)){
-				$p = $this->pluginManager->getPlugin($plugin);
-				if($p instanceof Plugin and !($p->getPluginLoader() instanceof PharPluginLoader)){
-					$report = \false;
-				}
-			}elseif(\Phar::running(\true) == ""){
-				$report = \false;
-			}
-			if($dump->getData()["error"]["type"] === "E_PARSE" or $dump->getData()["error"]["type"] === "E_COMPILE_ERROR"){
-				$report = \false;
-			}
-
-			if($report){
-				$reply = Utils::postURL("http://" . $this->getProperty("auto-report.host", "crash.pocketmine.net") . "/submit/api", [
-					"report" => "yes",
-					"name" => $this->getName() . " " . $this->getPocketMineVersion(),
-					"email" => "crash@pocketmine.net",
-					"reportPaste" => \base64_encode($dump->getEncodedData())
-				]);
-
-				if(($data = \json_decode($reply)) !== \false and isset($data->crashId)){
-					$reportId = $data->crashId;
-					$reportUrl = $data->crashUrl;
-					$this->logger->emergency($this->getLanguage()->translateString("pocketmine.crash.archive", [$reportUrl, $reportId]));
-				}
-			}
-		}
 
 		//$this->checkMemory();
 		//$dump .= "Memory Usage Tracking: \r\n" . chunk_split(base64_encode(gzdeflate(implode(";", $this->memoryStats), 9))) . "\r\n";
@@ -2357,9 +2308,7 @@ class Server{
 	}
 
 	public function onPlayerLogin(Player $player){
-		if($this->sendUsageTicker > 0){
-			$this->uniquePlayers[$player->getUniqueId()] = $player->getUniqueId();
-		}
+		$this->uniquePlayers[$player->getUniqueId()] = $player->getUniqueId();
 	}
 
 	public function addPlayer($identifier, Player $player){
@@ -2431,12 +2380,6 @@ class Server{
 			Timings::$worldSaveTimer->stopTiming();
 		}
 	}
-
-	public function sendUsage($type = SendUsageTask::TYPE_STATUS){
-		$this->scheduler->scheduleAsyncTask(new SendUsageTask($this, $type, $this->uniquePlayers));
-		$this->uniquePlayers = [];
-	}
-
 
 	/**
 	 * @return BaseLang
@@ -2571,11 +2514,6 @@ class Server{
 		if($this->autoSave and ++$this->autoSaveTicker >= $this->autoSaveTicks){
 			$this->autoSaveTicker = 0;
 			$this->doAutoSave();
-		}
-
-		if($this->sendUsageTicker > 0 and --$this->sendUsageTicker === 0){
-			$this->sendUsageTicker = 6000;
-			$this->sendUsage(SendUsageTask::TYPE_STATUS);
 		}
 
 		if(($this->tickCounter % 100) === 0){
