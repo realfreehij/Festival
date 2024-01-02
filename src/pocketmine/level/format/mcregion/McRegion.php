@@ -30,9 +30,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\LongTag;
 use pocketmine\nbt\tag\StringTag;
-use pocketmine\network\protocol\FullChunkDataPacket;
 use pocketmine\tile\Spawnable;
-use pocketmine\utils\Binary;
 use pocketmine\utils\ChunkException;
 
 class McRegion extends BaseLevelProvider

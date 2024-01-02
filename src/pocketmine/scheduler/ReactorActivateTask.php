@@ -3,8 +3,6 @@
 namespace pocketmine\scheduler;
 
 use pocketmine\block\NetherReactor;
-use pocketmine\block\GlowingObsidian;
-use pocketmine\math\Vector3;
 
 class ReactorActivateTask extends Task{
 	const TYPE_SPAWN_ITEMS = 0;

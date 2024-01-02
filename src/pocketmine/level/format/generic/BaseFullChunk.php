@@ -29,7 +29,6 @@ use pocketmine\level\generator\biome\Biome;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\tile\Tile;
-use pocketmine\utils\Binary;
 
 abstract class BaseFullChunk implements FullChunk{
 

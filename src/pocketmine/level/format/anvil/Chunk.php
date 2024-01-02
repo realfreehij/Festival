@@ -33,7 +33,6 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\IntArrayTag;
 use pocketmine\nbt\tag\LongTag;
 use pocketmine\Player;
-use pocketmine\utils\Binary;
 
 class Chunk extends BaseChunk{
 

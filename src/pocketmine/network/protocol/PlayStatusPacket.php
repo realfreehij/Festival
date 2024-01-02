@@ -21,18 +21,6 @@
 
 namespace pocketmine\network\protocol;
 
-use pocketmine\utils\Binary;
-
-
-
-
-
-
-
-
-
-
-
 class PlayStatusPacket extends DataPacket{
 	const NETWORK_ID = Info::PLAY_STATUS_PACKET;
 	

@@ -21,18 +21,6 @@
 
 namespace pocketmine\network\protocol;
 
-use pocketmine\utils\Binary;
-
-
-
-
-
-
-
-
-
-
-
 class TileEntityDataPacket extends DataPacket{
 	const NETWORK_ID = Info::TILE_ENTITY_DATA_PACKET;
 

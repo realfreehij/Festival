@@ -20,8 +20,6 @@
  */
 namespace pocketmine\level\generator\normal\biome;
 
-use pocketmine\block\Block;
-
 class DesertBiome extends SandyBiome
 {
 

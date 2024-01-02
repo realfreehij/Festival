@@ -66,7 +66,6 @@ namespace {
 
 namespace pocketmine {
 	use pocketmine\utils\Binary;
-	use pocketmine\utils\MainLogger;
 	use pocketmine\utils\ServerKiller;
 	use pocketmine\utils\Terminal;
 	use pocketmine\utils\Utils;
@@ -137,7 +136,7 @@ namespace pocketmine {
 
 	//Logger has a dependency on timezone, so we'll set it to UTC until we can get the actual timezone.
 	\date_default_timezone_set("UTC");
-	$logger = new MainLogger(\pocketmine\DATA . "server.log", \pocketmine\ANSI);
+	$logger = new \pocketmine\utils\MainLogger(\pocketmine\DATA . "server.log", \pocketmine\ANSI);
 
 	if(!\ini_get("date.timezone")){
 		if(($timezone = detect_system_timezone()) and \date_default_timezone_set($timezone)){

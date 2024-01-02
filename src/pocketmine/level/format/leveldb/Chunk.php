@@ -24,7 +24,6 @@ use pocketmine\level\format\generic\BaseFullChunk;
 use pocketmine\level\format\LevelProvider;
 use pocketmine\nbt\NBT;
 use pocketmine\Player;
-use pocketmine\utils\Binary;
 
 class Chunk extends BaseFullChunk
 {

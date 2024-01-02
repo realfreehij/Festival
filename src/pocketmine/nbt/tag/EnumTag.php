@@ -22,7 +22,6 @@ namespace pocketmine\nbt\tag;
 
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\EnumTag as TagEnum;
-use pocketmine\utils\Binary;
 
 class EnumTag extends NamedTag implements \ArrayAccess, \Countable
 {

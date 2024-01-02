@@ -118,7 +118,6 @@ use pocketmine\tile\Chest;
 use pocketmine\tile\Furnace;
 use pocketmine\tile\Sign;
 use pocketmine\tile\Tile;
-use pocketmine\utils\Binary;
 use pocketmine\utils\Config;
 use pocketmine\utils\LevelException;
 use pocketmine\utils\MainLogger;
@@ -2110,7 +2109,7 @@ class Server{
 		if($this->isRunning){
 			$killer = new ServerKiller(90);
 			$killer->start();
-			$killer->detach();
+			//$killer->detach();
 		}
 		$this->isRunning = \false;
 	}

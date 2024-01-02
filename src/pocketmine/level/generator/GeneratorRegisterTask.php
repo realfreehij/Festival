@@ -21,12 +21,10 @@
 namespace pocketmine\level\generator;
 
 use pocketmine\block\Block;
-use pocketmine\level\format\FullChunk;
 use pocketmine\level\generator\biome\Biome;
 use pocketmine\level\Level;
 use pocketmine\level\SimpleChunkManager;
 use pocketmine\scheduler\AsyncTask;
-use pocketmine\Server;
 use pocketmine\utils\Random;
 
 class GeneratorRegisterTask extends AsyncTask

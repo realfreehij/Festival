@@ -26,7 +26,6 @@
 namespace pocketmine\network\query;
 
 use pocketmine\Server;
-use pocketmine\utils\Binary;
 use pocketmine\utils\Utils;
 
 class QueryHandler{
