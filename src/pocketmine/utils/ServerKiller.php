@@ -33,7 +33,7 @@ class ServerKiller extends Thread{
 
 	public function run(){
 		\sleep($this->time);
-		echo "\nTook to long to stop, server was killed forcefully!\n";
+		echo "\nForce killed PMMP!\n";
 		@\pocketmine\kill(\getmypid());
 	}
 

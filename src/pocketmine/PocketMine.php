@@ -466,15 +466,15 @@ namespace pocketmine {
 		$logger->debug("Stopping " . (new \ReflectionClass($thread))->getShortName() . " thread");
 		$thread->quit();
 	}
-
-	$killer = new ServerKiller(8);
-	$killer->start();
-
+	
 	$logger->shutdown();
 	$logger->join();
+	
+	$killer = new ServerKiller(1);
+	$killer->start();
 
 	echo Terminal::$FORMAT_RESET . "\n";
-
+	
 	exit(0);
 
 }
