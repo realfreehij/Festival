@@ -1,6 +1,12 @@
 network-improvements:
  #String shown as version in minecraft menu
- main-menu-info: 0.11.1
+ main-menu-info: "0.11.1"
+ #Message that will be sent to a player if he joined to server
+ #Previously it was located at server.properties and named "player-motd"
+ player-motd: "Welcome @player to this server!"
+ #Message that will be shown to a player as server name when he will try to connect to the server
+ #Previously it was located at server.properties and named "motd"
+ server-motd: "Minecraft: PE Server"
 
 level-improvements:
  #Enable or disable nether reactor
