@@ -3,13 +3,13 @@ worlds/*
 plugins/*
 logs/*
 bin/*
+eclipse/*
 *.log
 *.txt
-*.yml
 *.properties
 *.dll
 *.exe
-
+cachegrind.*
 
 ############
 ## Windows
