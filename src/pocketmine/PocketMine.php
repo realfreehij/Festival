@@ -371,8 +371,8 @@ namespace pocketmine {
 
 	$errors = 0;
 
-	if(\version_compare("5.6.0", PHP_VERSION) > 0){
-		$logger->critical("You must use PHP >= 5.6");
+	if(\version_compare("8.0.0", PHP_VERSION) > 0){
+		$logger->critical("You must use PHP >= 8.0");
 		++$errors;
 	}
 
@@ -390,8 +390,8 @@ namespace pocketmine {
 	if(\substr_count($pthreads_version, ".") < 2){
 		$pthreads_version = "0.$pthreads_version";
 	}
-	if(\version_compare($pthreads_version, "2.0.9") < 0){
-		$logger->critical("pthreads >= 2.0.9 is required, while you have $pthreads_version.");
+	if(\version_compare($pthreads_version, "3.0.0") < 0){
+		$logger->critical("pthreads >= 3.0.0 is required, while you have $pthreads_version.");
 		++$errors;
 	}
 
@@ -405,13 +405,6 @@ namespace pocketmine {
 			++$errors;
 		}elseif(\version_compare(\phpversion("pocketmine"), "0.0.4") > 0){
 			$logger->critical("You have the native PocketMine extension, but your version is higher than 0.0.4.");
-			++$errors;
-		}
-	}
-	
-	if (version_compare(PHP_VERSION, '8.0.0') < 0) {
-		if(!\extension_loaded("Weakref") and !\extension_loaded("weakref")){
-			$logger->critical("Unable to find the Weakref extension.");
 			++$errors;
 		}
 	}
