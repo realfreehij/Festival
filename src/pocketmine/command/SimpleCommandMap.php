@@ -22,6 +22,7 @@
 namespace pocketmine\command;
 
 use pocketmine\command\defaults\BanCommand;
+use pocketmine\command\defaults\GetPosCommand;
 use pocketmine\command\defaults\BanIpCommand;
 use pocketmine\command\defaults\BanListCommand;
 use pocketmine\command\defaults\DefaultGamemodeCommand;
@@ -116,6 +117,10 @@ class SimpleCommandMap implements CommandMap{
 		$this->register("pocketmine", new ReloadCommand("reload"));
 		$this->register("pocketmine", new StatusCommand("status"));
 		$this->register("pocketmine", new GarbageCollectorCommand("gc"));
+		
+		$this->register("festival", new GetPosCommand("getpos"));
+		$this->register("festival", new GetPosCommand("xyz"));
+		$this->register("festival", new GetPosCommand("loc"));
 	}
 
 
