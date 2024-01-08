@@ -214,11 +214,7 @@ class Normal extends Generator
 
                 $biome = $this->pickBiome($chunkX * 16 + $x, $chunkZ * 16 + $z);
                 $chunk->setBiomeId($x, $z, $biome->getId());
-                $color = [
-                    0,
-                    0,
-                    0
-                ];
+                $color = [0, 0, 0];
 
                 for ($sx = - self::$SMOOTH_SIZE; $sx <= self::$SMOOTH_SIZE; ++ $sx) {
                     for ($sz = - self::$SMOOTH_SIZE; $sz <= self::$SMOOTH_SIZE; ++ $sz) {
