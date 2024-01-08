@@ -85,9 +85,9 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		}
 
 		if($this->rakLib->isTerminated()){
-			$info = $this->rakLib->getTerminationInfo();
 			$this->network->unregisterInterface($this);
-			\ExceptionHandler::handler(E_ERROR, "RakLib Thread crashed [".$info["scope"]."]: " . (isset($info["message"]) ? $info["message"] : ""), $info["file"], $info["line"]);
+			
+			throw new \Exception("RakLib Thread crashed");
 		}
 
 		return $work;

@@ -145,7 +145,7 @@ class Network{
 		foreach($this->interfaces as $interface){
 			try {
 				$interface->process();
-			}catch(\Exception $e){
+			}catch(\Throwable $e){
 				$logger = $this->server->getLogger();
 				if(\pocketmine\DEBUG > 1){
 					if($logger instanceof MainLogger){
