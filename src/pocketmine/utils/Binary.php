@@ -405,9 +405,10 @@ class Binary{
 	}
 
 	public static function writeLong($value){
+		$value = (int)$value;
 		if(\PHP_INT_SIZE === 8){
-			return \pack("NN", $value >> 32, $value & 0xFFFFFFFF);
-		}else{
+			return \pack("NN", $value >> 32, $value & 0xFFFFFFFF); //TODO use internal
+		}else{ //TODO remove
 			$x = "";
 
 			if(bccomp($value, "0") == -1){
