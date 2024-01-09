@@ -159,7 +159,6 @@ abstract class Entity extends Location implements Metadatable{
 	public $eyeHeight = \null;
 
 	public $width;
-	public $length; //TODO remove
 
 	/** @var int */
 	private $health = 20;

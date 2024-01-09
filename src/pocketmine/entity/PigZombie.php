@@ -31,7 +31,6 @@ class PigZombie extends Zombie{
 	const NETWORK_ID = 36;
 
 	public $width = 0.3;
-	public $length = 0.3;
 	public $height = 1.95;
 
 	public function getName(){

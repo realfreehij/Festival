@@ -29,7 +29,6 @@ class Pig extends Animal implements Rideable{
 	const NETWORK_ID = 12;
 	
 	public $width = 0.9;
-	public $length = 0.9;
 	public $height = 0.9;
 
 	protected function initEntity(){

@@ -31,7 +31,6 @@ class Creeper extends Monster implements Explosive{
 	const NETWORK_ID = 33;
 	
 	public $width = 0.6;
-	public $length = 0.6;
 	public $height = 1.7;
 
 	protected function initEntity(){

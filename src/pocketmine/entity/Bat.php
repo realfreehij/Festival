@@ -30,7 +30,6 @@ class Bat extends Animal{ //TODO class Neutral
 	const NETWORK_ID = 19;
 	
 	public $width = 0.25; //todo vanilla?
-	public $length = 0.25;
 	public $height = 0.25;
 	
 	public function __construct(FullChunk $chunk, CompoundTag $nbt){

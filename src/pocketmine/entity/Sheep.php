@@ -30,7 +30,6 @@ class Sheep extends Animal implements Colorable{
 	const NETWORK_ID = 13;
 	
 	public $width = 0.9;
-	public $length = 0.9;
 	public $height = 0.9;
 
 	protected function initEntity(){

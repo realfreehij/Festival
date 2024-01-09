@@ -28,7 +28,6 @@ use pocketmine\Player;
 class Skeleton extends Monster implements ProjectileSource{
 	const NETWORK_ID = 34;
 	public $width = 0.6;
-	public $length = 0.6;
 	public $height = 1.99;
 
 	protected function initEntity(){

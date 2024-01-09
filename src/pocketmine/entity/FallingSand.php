@@ -40,7 +40,6 @@ class FallingSand extends Entity{
 	const DATA_BLOCK_INFO = 20;
 
 	public $width = 0.98;
-	public $length = 0.98;
 	public $height = 0.98;
 
 	protected $gravity = 0.04;

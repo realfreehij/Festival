@@ -29,7 +29,6 @@ class Chicken extends Animal{
 	const NETWORK_ID = 10;
 	
 	public $width = 0.3;
-	public $length = 0.3;
 	public $height = 0.4;
 	
 	protected function initEntity(){

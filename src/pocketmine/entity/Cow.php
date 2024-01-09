@@ -29,7 +29,6 @@ class Cow extends Animal{
 	const NETWORK_ID = 11;
 	
 	public $width = 0.9;
-	public $length = 0.9;
 	public $height = 0.9;
 	
 	protected function initEntity(){

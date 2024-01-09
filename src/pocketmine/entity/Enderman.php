@@ -30,7 +30,6 @@ class Enderman extends Monster implements InventoryHolder{
 	const NETWORK_ID = 38;
 	
 	public $width = 0.6;
-	public $length = 0.6;
 	public $height = 2.9;
 
 	protected function initEntity(){

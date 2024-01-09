@@ -31,7 +31,6 @@ class Mooshroom extends Animal{ //TODO in 1.5 it extends Cow
 	const NETWORK_ID = 16;
 	
 	public $width = 0.9;
-	public $length = 0.9;
 	public $height = 0.9;
 	
 	protected function initEntity(){

@@ -31,7 +31,6 @@ class Egg extends Projectile{
 	const NETWORK_ID = 82;
 
 	public $width = 0.25;
-	public $length = 0.25;
 	public $height = 0.25;
 
 	protected $gravity = 0.03;

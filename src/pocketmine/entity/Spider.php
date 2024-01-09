@@ -28,7 +28,6 @@ use pocketmine\Player;
 class Spider extends Monster{
 	const NETWORK_ID = 35;
 	public $width = 1.4;
-	public $length = 1.4;
 	public $height = 0.9;
 
 	protected function initEntity(){

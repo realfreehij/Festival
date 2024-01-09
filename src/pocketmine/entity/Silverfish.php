@@ -28,7 +28,6 @@ class Silverfish extends Monster{
 	const NETWORK_ID = 39;
 	
 	public $width = 0.3;
-	public $length = 0.3;
 	public $height = 0.7;
 
 	protected function initEntity(){

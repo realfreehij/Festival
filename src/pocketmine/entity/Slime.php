@@ -28,7 +28,6 @@ use pocketmine\Player;
 class Slime extends Monster{
 	const NETWORK_ID = 37;
 	public $width = 1;
-	public $length = 1;
 	public $height = 1; //TODO correct size
 
 	protected function initEntity(){

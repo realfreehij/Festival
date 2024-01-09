@@ -28,7 +28,6 @@ use pocketmine\Player;
 class CaveSpider extends Monster{ //TODO should extend SPIDER
 	const NETWORK_ID = 40;
 	public $width = 0.7; //from newer pocketmine
-	public $length = 0.7;
 	public $height = 0.5;
 
 	protected function initEntity(){
