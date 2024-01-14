@@ -109,7 +109,8 @@ class AsyncPool{
 			if(!$force and ($task->isRunning() or !$task->isGarbage())){
 				return;
 			}
-			$this->workers[$w = $this->taskWorkers[$task->getTaskId()]]->unstack($task);
+			$w = $this->taskWorkers[$task->getTaskId()];
+			//$this->workers[$w]->unstack($task); TODO do something?
 			$this->workerUsage[$w]--;
 		}
 

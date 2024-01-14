@@ -21,18 +21,6 @@
 
 namespace pocketmine\network\protocol;
 
-use pocketmine\utils\Binary;
-
-
-
-
-
-
-
-
-
-
-
 class TileEventPacket extends DataPacket{
 	const NETWORK_ID = Info::TILE_EVENT_PACKET;
 

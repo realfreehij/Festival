@@ -54,13 +54,17 @@ class ShapedRecipe implements Recipe{
 			$this->rows[] = $row;
 			$len = \strlen($row);
 			for($i = 0; $i < $len; ++$i){
-				$this->ingredients[$row{$i}] = \null;
+				$this->ingredients[$row[$i]] = \null;
 			}
 		}
 
 		$this->output = clone $result;
 	}
-
+    
+	public function getResult(){
+	    return $this->output;
+	}
+	
 	/**
 	 * @param string $key
 	 * @param Item   $item

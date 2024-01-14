@@ -25,6 +25,8 @@ abstract class ExceptionHandler{
 	 * @return \Exception
 	 */
 	public static function handler($errno, $errstr, $errfile, $errline){
+		return false; //TODO remove later
+		
 		if(\error_reporting() === 0){
 			return \false;
 		}
@@ -32,7 +34,7 @@ abstract class ExceptionHandler{
 		$exception = \null;
 
 		if(self::errorStarts($errstr, "Undefined offset: ")){
-			$exception = new ArrayOutOfBoundsException($errstr, $errno);
+			$exception = new ArrayOutOfBoundsException($errstr, $errno); 
 		}elseif(self::errorStarts($errstr, "Undefined index: ")){
 			$exception = new ArrayOutOfBoundsException($errstr, $errno);
 		}elseif(self::errorStarts($errstr, "Uninitialized string offset: ")){

@@ -21,7 +21,6 @@
 
 namespace pocketmine\entity;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
@@ -32,7 +31,6 @@ class PigZombie extends Zombie{
 	const NETWORK_ID = 36;
 
 	public $width = 0.3;
-	public $length = 0.3;
 	public $height = 1.95;
 
 	public function getName(){

@@ -20,8 +20,6 @@
 */
 
 namespace pocketmine\entity;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
@@ -32,7 +30,6 @@ class Enderman extends Monster implements InventoryHolder{
 	const NETWORK_ID = 38;
 	
 	public $width = 0.6;
-	public $length = 0.6;
 	public $height = 2.9;
 
 	protected function initEntity(){

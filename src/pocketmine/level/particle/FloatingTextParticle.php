@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
+ * ____ _ _ __ __ _ __ __ ____
+ * | _ \ ___ ___| | _____| |_| \/ (_)_ __ ___ | \/ | _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
+ * | __/ (_) | (__| < __/ |_| | | | | | | | __/_____| | | | __/
+ * |_| \___/ \___|_|\_\___|\__|_| |_|_|_| |_|\___| |_| |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,85 +17,104 @@
  * @link http://www.pocketmine.net/
  *
  *
-*/
-
+ */
 namespace pocketmine\level\particle;
 
 use pocketmine\entity\Entity;
 use pocketmine\entity\Item as ItemEntity;
 use pocketmine\math\Vector3;
 use pocketmine\network\protocol\AddEntityPacket;
-use pocketmine\network\protocol\AddPlayerPacket;
 use pocketmine\network\protocol\RemoveEntityPacket;
-use pocketmine\network\protocol\RemovePlayerPacket;
 
-class FloatingTextParticle extends Particle{
-	//TODO: HACK!
+class FloatingTextParticle extends Particle
+{
 
-	protected $text;
-	protected $title;
-	protected $entityId;
-	protected $invisible = \false;
+    // TODO: HACK!
+    protected $text;
 
-	public function __construct(Vector3 $pos, $text, $title = ""){
-		parent::__construct($pos->x, $pos->y, $pos->z);
-		$this->text = $text;
-		$this->title = $title;
-	}
+    protected $title;
 
-	public function setText($text){
-		$this->text = $text;
-	}
+    protected $entityId;
 
-	public function setTitle($title){
-		$this->title = $title;
-	}
-	
-	public function isInvisible(){
-		return $this->invisible;
-	}
-	
-	public function setInvisible($value = \true){
-		$this->invisible = (bool) $value;
-	}
+    protected $invisible = \false;
 
-	public function encode(){
-		$p = [];
+    public function __construct(Vector3 $pos, $text, $title = "")
+    {
+        parent::__construct($pos->x, $pos->y, $pos->z);
+        $this->text = $text;
+        $this->title = $title;
+    }
 
-		if($this->entityId === \null){
-			$this->entityId = bcadd("1095216660480", \mt_rand(0, 0x7fffffff)); //No conflict with other things
-		}else{
-			$pk0 = new RemoveEntityPacket();
-			$pk0->eid = $this->entityId;
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
 
-			$p[] = $pk0;
-		}
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
 
-		if(!$this->invisible){
-			
-			$pk = new AddEntityPacket();
-			$pk->eid = $this->entityId;
-			$pk->type = ItemEntity::NETWORK_ID;
-			$pk->x = $this->x;
-			$pk->y = $this->y - 0.75;
-			$pk->z = $this->z;
-			$pk->speedX = 0;
-			$pk->speedY = 0;
-			$pk->speedZ = 0;
-			$pk->yaw = 0;
-			$pk->pitch = 0;
-			$pk->item = 0;
-			$pk->meta = 0;
-			$pk->metadata = [
-				Entity::DATA_FLAGS => [Entity::DATA_TYPE_BYTE, 1 << Entity::DATA_FLAG_INVISIBLE],
-				Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $this->title . ($this->text !== "" ? "\n" . $this->text : "")],
-				Entity::DATA_SHOW_NAMETAG => [Entity::DATA_TYPE_BYTE, 1],
-				Entity::DATA_NO_AI => [Entity::DATA_TYPE_BYTE, 1]
+    public function isInvisible()
+    {
+        return $this->invisible;
+    }
+
+    public function setInvisible($value = \true)
+    {
+        $this->invisible = (bool) $value;
+    }
+
+    public function encode()
+    {
+        $p = [];
+
+        if ($this->entityId === \null) {
+            $this->entityId = bcadd("1095216660480", \mt_rand(0, 0x7fffffff)); // No conflict with other things
+        } else {
+            $pk0 = new RemoveEntityPacket();
+            $pk0->eid = $this->entityId;
+
+            $p[] = $pk0;
+        }
+
+        if (! $this->invisible) {
+
+            $pk = new AddEntityPacket();
+            $pk->eid = $this->entityId;
+            $pk->type = ItemEntity::NETWORK_ID;
+            $pk->x = $this->x;
+            $pk->y = $this->y - 0.75;
+            $pk->z = $this->z;
+            $pk->speedX = 0;
+            $pk->speedY = 0;
+            $pk->speedZ = 0;
+            $pk->yaw = 0;
+            $pk->pitch = 0;
+            $pk->item = 0;
+            $pk->meta = 0;
+            $pk->metadata = [
+                Entity::DATA_FLAGS => [
+                    Entity::DATA_TYPE_BYTE,
+                    1 << Entity::DATA_FLAG_INVISIBLE
+                ],
+                Entity::DATA_NAMETAG => [
+                    Entity::DATA_TYPE_STRING,
+                    $this->title . ($this->text !== "" ? "\n" . $this->text : "")
+                ],
+                Entity::DATA_SHOW_NAMETAG => [
+                    Entity::DATA_TYPE_BYTE,
+                    1
+                ],
+                Entity::DATA_NO_AI => [
+                    Entity::DATA_TYPE_BYTE,
+                    1
+                ]
             ];
 
-			$p[] = $pk;
-		}
-		
-		return $p;
-	}
+            $p[] = $pk;
+        }
+
+        return $p;
+    }
 }

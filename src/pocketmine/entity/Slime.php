@@ -20,7 +20,6 @@
 */
 
 namespace pocketmine\entity;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
@@ -29,7 +28,6 @@ use pocketmine\Player;
 class Slime extends Monster{
 	const NETWORK_ID = 37;
 	public $width = 1;
-	public $length = 1;
 	public $height = 1; //TODO correct size
 
 	protected function initEntity(){

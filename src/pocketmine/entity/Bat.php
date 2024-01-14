@@ -20,22 +20,19 @@
 */
 
 namespace pocketmine\entity;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
 use pocketmine\level\format\FullChunk;
-use pocketmine\nbt\tag\Compound;
+use pocketmine\nbt\tag\CompoundTag;
 
 class Bat extends Animal{ //TODO class Neutral
 	const NETWORK_ID = 19;
 	
 	public $width = 0.25; //todo vanilla?
-	public $length = 0.25;
 	public $height = 0.25;
 	
-	public function __construct(FullChunk $chunk, Compound $nbt){
+	public function __construct(FullChunk $chunk, CompoundTag $nbt){
 		$this->setMaxHealth(6);
 		parent::__construct($chunk, $nbt);
 	}

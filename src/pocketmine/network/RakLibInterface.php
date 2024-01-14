@@ -56,7 +56,9 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 
 	/** @var ServerHandler */
 	private $interface;
-
+	
+	public $channelCounts;
+	
 	public function __construct(Server $server){
 
 		$this->server = $server;
@@ -83,9 +85,9 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 		}
 
 		if($this->rakLib->isTerminated()){
-			$info = $this->rakLib->getTerminationInfo();
 			$this->network->unregisterInterface($this);
-			\ExceptionHandler::handler(E_ERROR, "RakLib Thread crashed [".$info["scope"]."]: " . (isset($info["message"]) ? $info["message"] : ""), $info["file"], $info["line"]);
+			
+			throw new \Exception("RakLib Thread crashed");
 		}
 
 		return $work;
@@ -249,7 +251,7 @@ class RakLibInterface implements ServerInstance, AdvancedSourceInterface{
 	}
 
 	private function getPacket($buffer){
-		$pid = \ord($buffer{0});
+		$pid = \ord($buffer[0]);
 
 		if(($data = $this->network->getPacket($pid)) === \null){
 			return \null;

@@ -23,9 +23,7 @@ namespace pocketmine\event\player;
 
 use pocketmine\event\TextContainer;
 use pocketmine\Player;
-use pocketmine\command\CommandSender;
-use pocketmine\event\TranslationContainer;
-use pocketmine\utils\TextFormat;
+
 /**
  * Called when a player joins the server, after sending all the spawn packets
  */

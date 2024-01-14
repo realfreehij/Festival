@@ -137,7 +137,7 @@ interface ChunkSection{
 	 * @param int $x 0-15
 	 * @param int $z 0-15
 	 *
-	 * @return string[16]
+	 * @return string[]
 	 */
 	public function getBlockIdColumn($x, $z);
 
@@ -147,7 +147,7 @@ interface ChunkSection{
 	 * @param int $x 0-15
 	 * @param int $z 0-15
 	 *
-	 * @return string[8]
+	 * @return string[]
 	 */
 	public function getBlockDataColumn($x, $z);
 
@@ -157,7 +157,7 @@ interface ChunkSection{
 	 * @param int $x 0-15
 	 * @param int $z 0-15
 	 *
-	 * @return string[8]
+	 * @return string[]
 	 */
 	public function getBlockSkyLightColumn($x, $z);
 
@@ -167,7 +167,7 @@ interface ChunkSection{
 	 * @param int $x 0-15
 	 * @param int $z 0-15
 	 *
-	 * @return string[8]
+	 * @return string[]
 	 */
 	public function getBlockLightColumn($x, $z);
 

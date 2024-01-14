@@ -20,7 +20,6 @@
 */
 
 namespace pocketmine\entity;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
@@ -30,7 +29,6 @@ class MagmaCube extends Monster{
 	const NETWORK_ID = 42;
 	
 	public $width = 1; //todo vanilla?
-	public $length = 1;
 	public $height = 1;
 
 	protected function initEntity(){

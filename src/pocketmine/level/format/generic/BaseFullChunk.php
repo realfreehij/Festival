@@ -26,10 +26,9 @@ use pocketmine\entity\Entity;
 use pocketmine\level\format\FullChunk;
 use pocketmine\level\format\LevelProvider;
 use pocketmine\level\generator\biome\Biome;
-use pocketmine\nbt\tag\Compound;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\Player;
 use pocketmine\tile\Tile;
-use pocketmine\utils\Binary;
 
 abstract class BaseFullChunk implements FullChunk{
 
@@ -42,7 +41,7 @@ abstract class BaseFullChunk implements FullChunk{
 	/** @var Tile[] */
 	protected $tileList = [];
 
-	/** @var int[256] */
+	/** @var int[] */
 	protected $biomeColors;
 
 	protected $blocks;
@@ -115,7 +114,7 @@ abstract class BaseFullChunk implements FullChunk{
 
 		for($x = 0; $x < 16; ++$x){
 			for($z = 0; $z < 16; ++$z){
-				$biome = Biome::getBiome(\ord($data{($z << 4) + $x}));
+				$biome = Biome::getBiome(\ord($data[($z << 4) + $x]));
 				$this->setBiomeId($x, $z, $biome->getId());
 				$c = $biome->getColor();
 				$this->setBiomeColor($x, $z, $c >> 16, ($c >> 8) & 0xff, $c & 0xff);
@@ -129,13 +128,13 @@ abstract class BaseFullChunk implements FullChunk{
 			if($this->NBTentities !== \null){
 				$this->getProvider()->getLevel()->timings->syncChunkLoadEntitiesTimer->startTiming();
 				foreach($this->NBTentities as $nbt){
-					if($nbt instanceof Compound){
+					if($nbt instanceof CompoundTag){
 						if(!isset($nbt->id)){
 							$this->setChanged();
 							continue;
 						}
 
-						if(($nbt["Pos"][0] >> 4) !== $this->x or ($nbt["Pos"][2] >> 4) !== $this->z){
+						if(((int)$nbt["Pos"][0] >> 4) !== $this->x or ((int)$nbt["Pos"][2] >> 4) !== $this->z){
 							$changed = \true;
 							continue; //Fixes entities allocated in wrong chunks.
 						}
@@ -152,7 +151,7 @@ abstract class BaseFullChunk implements FullChunk{
 
 				$this->getProvider()->getLevel()->timings->syncChunkLoadTileEntitiesTimer->startTiming();
 				foreach($this->NBTtiles as $nbt){
-					if($nbt instanceof Compound){
+					if($nbt instanceof CompoundTag){
 						if(!isset($nbt->id)){
 							$changed = \true;
 							continue;
@@ -235,7 +234,7 @@ abstract class BaseFullChunk implements FullChunk{
 
 	public function setBiomeColor($x, $z, $R, $G, $B){
 		$this->hasChanged = \true;
-		$this->biomeColors[($z << 4) + $x] = ($this->biomeColors[($z << 4) + $x] & 0xFF000000) | (($R & 0xFF) << 16) | (($G & 0xFF) << 8) | ($B & 0xFF);
+		$this->biomeColors[((int)$z << 4) + $x] = ($this->biomeColors[((int)$z << 4) + $x] & 0xFF000000) | (((int)$R & 0xFF) << 16) | (((int)$G & 0xFF) << 8) | ((int)$B & 0xFF);
 	}
 
 	public function getHeightMap($x, $z){
@@ -286,7 +285,7 @@ abstract class BaseFullChunk implements FullChunk{
 
 		$column = $this->getBlockIdColumn($x, $z);
 		for($y = 127; $y >= 0; --$y){
-			if($column{$y} !== "\x00"){
+			if($column[$y] !== "\x00"){
 				$this->setHeightMap($x, $z, $y);
 				return $y;
 			}

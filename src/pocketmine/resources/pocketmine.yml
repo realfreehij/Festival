@@ -82,8 +82,6 @@ network:
 debug:
  #If > 1, it will show debug messages in the console
  level: 1
- #Enables /status, /gc
- commands: false
 
 level-settings:
  #The default format that levels will use when created
@@ -135,19 +133,6 @@ spawn-limits:
   animals: 15
   water-animals: 5
   ambient: 15
-
-auto-report:
- #Send crash reports for processing
- enabled: true
- send-code: true
- send-settings: true
- send-phpinfo: false
- host: crash.pocketmine.net
-
-anonymous-statistics:
- #Sends anonymous statistics for data aggregation, plugin usage tracking
- enabled: true
- host: stats.pocketmine.net
 
 aliases:
  #Examples:

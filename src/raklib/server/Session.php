@@ -15,7 +15,6 @@
 
 namespace raklib\server;
 
-use raklib\Binary;
 use raklib\protocol\ACK;
 use raklib\protocol\CLIENT_CONNECT_DataPacket;
 use raklib\protocol\CLIENT_DISCONNECT_DataPacket;
@@ -377,7 +376,7 @@ class Session{
 			return;
 		}
 
-		$id = \ord($packet->buffer{0});
+		$id = \ord($packet->buffer[0]);
 		if($id < 0x80){ //internal data packet
 			if($this->state === self::STATE_CONNECTING_2){
 				if($id === CLIENT_CONNECT_DataPacket::$ID){

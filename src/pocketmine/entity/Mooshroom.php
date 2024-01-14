@@ -21,7 +21,6 @@
 
 namespace pocketmine\entity;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
@@ -32,7 +31,6 @@ class Mooshroom extends Animal{ //TODO in 1.5 it extends Cow
 	const NETWORK_ID = 16;
 	
 	public $width = 0.9;
-	public $length = 0.9;
 	public $height = 0.9;
 	
 	protected function initEntity(){

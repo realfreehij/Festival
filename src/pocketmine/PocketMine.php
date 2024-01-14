@@ -66,7 +66,6 @@ namespace {
 
 namespace pocketmine {
 	use pocketmine\utils\Binary;
-	use pocketmine\utils\MainLogger;
 	use pocketmine\utils\ServerKiller;
 	use pocketmine\utils\Terminal;
 	use pocketmine\utils\Utils;
@@ -137,7 +136,7 @@ namespace pocketmine {
 
 	//Logger has a dependency on timezone, so we'll set it to UTC until we can get the actual timezone.
 	\date_default_timezone_set("UTC");
-	$logger = new MainLogger(\pocketmine\DATA . "server.log", \pocketmine\ANSI);
+	$logger = new \pocketmine\utils\MainLogger(\pocketmine\DATA . "server.log", \pocketmine\ANSI);
 
 	if(!\ini_get("date.timezone")){
 		if(($timezone = detect_system_timezone()) and \date_default_timezone_set($timezone)){
@@ -372,13 +371,13 @@ namespace pocketmine {
 
 	$errors = 0;
 
-	if(\version_compare("5.6.0", PHP_VERSION) > 0){
-		$logger->critical("You must use PHP >= 5.6");
+	if(\version_compare("8.0.0", PHP_VERSION) > 0){
+		$logger->critical("You must use PHP >= 8.0");
 		++$errors;
 	}
 
 	if(\php_sapi_name() !== "cli"){
-		$logger->critical("You must run PocketMine-MP using the CLI.");
+		$logger->critical("You must run Festival using the CLI.");
 		++$errors;
 	}
 
@@ -391,8 +390,8 @@ namespace pocketmine {
 	if(\substr_count($pthreads_version, ".") < 2){
 		$pthreads_version = "0.$pthreads_version";
 	}
-	if(\version_compare($pthreads_version, "2.0.9") < 0){
-		$logger->critical("pthreads >= 2.0.9 is required, while you have $pthreads_version.");
+	if(\version_compare($pthreads_version, "3.0.0") < 0){
+		$logger->critical("pthreads >= 3.0.0 is required, while you have $pthreads_version.");
 		++$errors;
 	}
 
@@ -408,11 +407,6 @@ namespace pocketmine {
 			$logger->critical("You have the native PocketMine extension, but your version is higher than 0.0.4.");
 			++$errors;
 		}
-	}
-
-	if(!\extension_loaded("Weakref") and !\extension_loaded("weakref")){
-		$logger->critical("Unable to find the Weakref extension.");
-		++$errors;
 	}
 
 	if(!\extension_loaded("curl")){
@@ -465,16 +459,15 @@ namespace pocketmine {
 		$logger->debug("Stopping " . (new \ReflectionClass($thread))->getShortName() . " thread");
 		$thread->quit();
 	}
-
-	$killer = new ServerKiller(8);
-	$killer->start();
-	$killer->detach();
-
+	
 	$logger->shutdown();
 	$logger->join();
+	
+	$killer = new ServerKiller(1);
+	$killer->start();
 
 	echo Terminal::$FORMAT_RESET . "\n";
-
+	
 	exit(0);
 
 }

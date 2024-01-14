@@ -3,13 +3,13 @@ worlds/*
 plugins/*
 logs/*
 bin/*
+eclipse/*
 *.log
 *.txt
-*.yml
 *.properties
 *.dll
 *.exe
-
+cachegrind.*
 
 ############
 ## Windows
@@ -25,3 +25,4 @@ Desktop.ini
 .DS_Store
 *.properties
 bin/php/php.ini
+/.metadata/

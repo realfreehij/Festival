@@ -20,7 +20,6 @@
 */
 
 namespace pocketmine\entity;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
@@ -30,7 +29,6 @@ class Chicken extends Animal{
 	const NETWORK_ID = 10;
 	
 	public $width = 0.3;
-	public $length = 0.3;
 	public $height = 0.4;
 	
 	protected function initEntity(){

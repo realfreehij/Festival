@@ -433,7 +433,7 @@ class PluginManager{
 		if(!isset($this->permSubs[$permission])){
 			$this->permSubs[$permission] = [];
 		}
-		$this->permSubs[$permission][\spl_object_hash($permissible)] = new \WeakRef($permissible);
+		$this->permSubs[$permission][\spl_object_hash($permissible)] = \WeakReference::create($permissible);
 	}
 
 	/**
@@ -459,9 +459,9 @@ class PluginManager{
 			$subs = [];
 			foreach($this->permSubs[$permission] as $k => $perm){
 				/** @var \WeakRef $perm */
-				if($perm->acquire()){
+				if($perm->get() != null){
 					$subs[] = $perm->get();
-					$perm->release();
+					unset($perm);
 				}else{
 					unset($this->permSubs[$permission][$k]);
 				}
@@ -479,9 +479,9 @@ class PluginManager{
 	 */
 	public function subscribeToDefaultPerms($op, Permissible $permissible){
 		if($op === \true){
-			$this->defSubsOp[\spl_object_hash($permissible)] = new \WeakRef($permissible);
+			$this->defSubsOp[\spl_object_hash($permissible)] = \WeakReference::create($permissible);
 		}else{
-			$this->defSubs[\spl_object_hash($permissible)] = new \WeakRef($permissible);
+			$this->defSubs[\spl_object_hash($permissible)] = \WeakReference::create($permissible);
 		}
 	}
 
@@ -507,20 +507,20 @@ class PluginManager{
 
 		if($op === \true){
 			foreach($this->defSubsOp as $k => $perm){
-				/** @var \WeakRef $perm */
-				if($perm->acquire()){
+				/** @var \WeakReference $perm */
+				if($perm->get() != null){
 					$subs[] = $perm->get();
-					$perm->release();
+					unset($perm);
 				}else{
 					unset($this->defSubsOp[$k]);
 				}
 			}
 		}else{
 			foreach($this->defSubs as $k => $perm){
-				/** @var \WeakRef $perm */
-				if($perm->acquire()){
+				/** @var \WeakReference $perm */
+				if($perm->get() != null){
 					$subs[] = $perm->get();
-					$perm->release();
+					unset($perm);
 				}else{
 					unset($this->defSubs[$k]);
 				}
@@ -721,17 +721,21 @@ class PluginManager{
 				}
 
 				$parameters = $method->getParameters();
-				if(\count($parameters) === 1 and $parameters[0]->getClass() instanceof \ReflectionClass and \is_subclass_of($parameters[0]->getClass()->getName(), Event::class)){
-					$class = $parameters[0]->getClass()->getName();
-					$reflection = new \ReflectionClass($class);
-					if(\strpos((string) $reflection->getDocComment(), "@deprecated") !== \false and $this->server->getProperty("settings.deprecated-verbose", \true)){
-						$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.plugin.deprecatedEvent", [
-							$plugin->getName(),
-							$class,
-							\get_class($listener) . "->" . $method->getName() . "()"
-						]));
+
+				if(\count($parameters) === 1){
+					$class = $parameters[0]->getType();
+					if($class != null && !$class->isBuiltin() && is_subclass_of($class->getName(), Event::class)){
+						$class = $class->getName();
+						$reflection = new \ReflectionClass($class);
+						if(\strpos((string) $reflection->getDocComment(), "@deprecated") !== \false and $this->server->getProperty("settings.deprecated-verbose", \true)){
+							$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.plugin.deprecatedEvent", [
+								$plugin->getName(),
+								$class,
+								\get_class($listener) . "->" . $method->getName() . "()"
+							]));
+						}
+						$this->registerEvent($class, $listener, $priority, new MethodEventExecutor($method->getName()), $plugin, $ignoreCancelled);
 					}
-					$this->registerEvent($class, $listener, $priority, new MethodEventExecutor($method->getName()), $plugin, $ignoreCancelled);
 				}
 			}
 		}

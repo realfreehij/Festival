@@ -23,7 +23,6 @@ namespace pocketmine\command;
 
 use pocketmine\event\TranslationContainer;
 use pocketmine\plugin\Plugin;
-use pocketmine\utils\TextFormat;
 
 class PluginCommand extends Command implements PluginIdentifiableCommand{
 

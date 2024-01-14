@@ -20,7 +20,6 @@
 */
 
 namespace pocketmine\entity;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
@@ -29,7 +28,6 @@ use pocketmine\Player;
 class Skeleton extends Monster implements ProjectileSource{
 	const NETWORK_ID = 34;
 	public $width = 0.6;
-	public $length = 0.6;
 	public $height = 1.99;
 
 	protected function initEntity(){

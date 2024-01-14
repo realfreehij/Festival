@@ -21,7 +21,6 @@
 
 namespace pocketmine\entity;
 
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
@@ -32,7 +31,6 @@ class Creeper extends Monster implements Explosive{
 	const NETWORK_ID = 33;
 	
 	public $width = 0.6;
-	public $length = 0.6;
 	public $height = 1.7;
 
 	protected function initEntity(){
