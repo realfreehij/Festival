@@ -20,7 +20,7 @@ Supported versions: 0.11.0-0.11.1 *& prob some builds*
 * https://github.com/pmmp/PHP-Binaries/releases/tag/php-8.2-latest (Use PM4 version)
 
 
-**Discord: https://discord.gg/JrAqt9F8vC**
+**Discord: [@eqozqq](https://github.com/eqozqq) thanks for removing it(WIP)**
 
 *wonder will someone read it?*
 
