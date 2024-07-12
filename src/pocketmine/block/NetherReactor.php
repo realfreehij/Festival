@@ -26,6 +26,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\level\generator\object\NetherReactorStructure;
 use pocketmine\scheduler\ReactorActivateTask;
+use pocketmine\event\TranslationContainer;
 use pocketmine\math\Vector3;
 use pocketmine\entity\PigZombie;
 use pocketmine\entity\Entity;
