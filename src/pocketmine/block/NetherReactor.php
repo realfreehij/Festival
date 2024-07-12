@@ -88,7 +88,8 @@ class NetherReactor extends Solid{
 	public function onActivate(Item $item, Player $player = \null){
 		if($item->isSword() && $this->isCorrect($this->x,$this->y,$this->z) && NetherReactor::$enableReactor){
 			if($this->y > 101){
-				//TODO send msg to a player
+				$translation = new TranslationContainer("tile.netherreactor.active");
+				Server::getInstance()->broadcastMessage($translation);
 				return;
 			}
 			
