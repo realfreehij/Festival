@@ -61,6 +61,7 @@ use pocketmine\entity\Bat;
 use pocketmine\entity\CaveSpider;
 use pocketmine\entity\MagmaCube;
 use pocketmine\entity\Silverfish;
+use pocketmine\entity\Ghast;
 use pocketmine\event\HandlerList;
 use pocketmine\event\level\LevelInitEvent;
 use pocketmine\event\level\LevelLoadEvent;
@@ -2583,6 +2584,7 @@ class Server{
 		Entity::registerEntity(Squid::class);
 		Entity::registerEntity(CaveSpider::class);
 		Entity::registerEntity(MagmaCube::class);
+		Entity::registerEntity(Ghast::class);
 		
 		Entity::registerEntity(Spider::class);
 		Entity::registerEntity(Creeper::class);
