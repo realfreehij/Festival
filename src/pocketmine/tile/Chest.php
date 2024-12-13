@@ -169,7 +169,10 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	}
 
 	protected function checkPairing(){
-		if(($pair = $this->getPair()) instanceof Chest){
+		if($this->isPaired() and !$this->getLevel()->isChunkLoaded($this->namedtag->pairx >> 4, $this->namedtag->pairz >> 4)){
+			//paired to a tile in an unloaded chunk
+			$this->doubleInventory = null;
+		}elseif(($pair = $this->getPair()) instanceof Chest){
 			if(!$pair->isPaired()){
 				$pair->createPair($this);
 				$pair->checkPairing();
