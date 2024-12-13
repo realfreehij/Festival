@@ -15,8 +15,8 @@ cachegrind.*
 
 # Common IDEs
 .idea/*
-!.idea/codeStyles/
-!.idea/fileTemplates/
+.idea/codeStyles/
+.idea/fileTemplates/
 nbproject/*
 
 ############
