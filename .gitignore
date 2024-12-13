@@ -10,6 +10,14 @@ eclipse/*
 *.dll
 *.exe
 cachegrind.*
+/pocketmine.yml
+/festival.yml
+
+# Common IDEs
+.idea/*
+!.idea/codeStyles/
+!.idea/fileTemplates/
+nbproject/*
 
 ############
 ## Windows
