@@ -38,14 +38,14 @@ class DeadBush extends Flowable{
 	}
 
 	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
-                $down = $this->getSide(0);
-                if($down->getId() === Block::SAND){
-                        $this->getLevel()->setBlock($block, $this, true);
-                        return true;
-                }
+				$down = $this->getSide(0);
+				if($down->getId() === Block::SAND){
+						$this->getLevel()->setBlock($block, $this, true);
+						return true;
+				}
 
-                return false;
-        }
+				return false;
+		}
 
 	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){

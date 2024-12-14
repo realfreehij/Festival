@@ -63,7 +63,7 @@ class ShapedRecipe implements Recipe{
 	}
 
 	public function getResult(){
-	    return $this->output;
+		return $this->output;
 	}
 
 	/**

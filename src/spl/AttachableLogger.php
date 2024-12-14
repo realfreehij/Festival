@@ -17,14 +17,14 @@
 
 interface AttachableLogger extends \Logger{
 
-    public function addAttachment(\LoggerAttachment $attachment);
+	public function addAttachment(\LoggerAttachment $attachment);
 
-    public function removeAttachment(\LoggerAttachment $attachment);
+	public function removeAttachment(\LoggerAttachment $attachment);
 
-    public function removeAttachments();
+	public function removeAttachments();
 
-    /**
-     * @return \LoggerAttachment[]
-     */
-    public function getAttachments();
+	/**
+	 * @return \LoggerAttachment[]
+	 */
+	public function getAttachments();
 }

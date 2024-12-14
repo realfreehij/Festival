@@ -25,8 +25,8 @@ use pocketmine\math\Vector3;
 class ExplodeParticle extends GenericParticle
 {
 
-    public function __construct(Vector3 $pos)
-    {
-        parent::__construct($pos, 4);
-    }
+	public function __construct(Vector3 $pos)
+	{
+		parent::__construct($pos, 4);
+	}
 }

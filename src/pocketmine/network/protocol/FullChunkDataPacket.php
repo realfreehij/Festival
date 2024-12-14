@@ -38,8 +38,8 @@ class FullChunkDataPacket extends DataPacket{
 
 	public function encode(){
 		$this->buffer = chr(self::NETWORK_ID); $this->offset = 0;;
-        $this->buffer .= pack("N", $this->chunkX);
-        $this->buffer .= pack("N", $this->chunkZ);
+		$this->buffer .= pack("N", $this->chunkX);
+		$this->buffer .= pack("N", $this->chunkZ);
 		$this->buffer .= pack("N", strlen($this->data));
 		$this->buffer .= $this->data;
 	}

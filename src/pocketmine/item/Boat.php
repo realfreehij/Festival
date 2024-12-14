@@ -17,29 +17,29 @@ class Boat extends Item{
 	}
 
   public function canBeActivated(){
-    return true;
+	return true;
   }
 
   public function onActivate(Level $level, Player $player, Block $block, Block $target, $face, $fx, $fy, $fz){
-    $realPos = $block->getSide($face);
+	$realPos = $block->getSide($face);
 
-    $boat = new BoatEntity($player->getLevel()->getChunk($realPos->getX() >> 4, $realPos->getZ() >> 4), new CompoundTag("", [
-    	"Pos" => new EnumTag("Pos", [
-    		new DoubleTag("", $realPos->getX()),
-    		new DoubleTag("", $realPos->getY()),
-    		new DoubleTag("", $realPos->getZ())
-    	]),
-    	"Motion" => new EnumTag("Motion", [
-    		new DoubleTag("", 0),
-    		new DoubleTag("", 0),
-    		new DoubleTag("", 0)
-    	]),
-    	"Rotation" => new EnumTag("Rotation", [
-    		new FloatTag("", 0),
-    		new FloatTag("", 0)
-    	]),
-    ]));
-    $boat->spawnToAll();
+	$boat = new BoatEntity($player->getLevel()->getChunk($realPos->getX() >> 4, $realPos->getZ() >> 4), new CompoundTag("", [
+		"Pos" => new EnumTag("Pos", [
+			new DoubleTag("", $realPos->getX()),
+			new DoubleTag("", $realPos->getY()),
+			new DoubleTag("", $realPos->getZ())
+		]),
+		"Motion" => new EnumTag("Motion", [
+			new DoubleTag("", 0),
+			new DoubleTag("", 0),
+			new DoubleTag("", 0)
+		]),
+		"Rotation" => new EnumTag("Rotation", [
+			new FloatTag("", 0),
+			new FloatTag("", 0)
+		]),
+	]));
+	$boat->spawnToAll();
 
 	if(!$player->isCreative()){
 		 $item = $player->getInventory()->getItemInHand();
@@ -53,6 +53,6 @@ class Boat extends Item{
 		$player->getInventory()->setItemInHand($item);
 	}
 
-    return true;
+	return true;
   }
 }
