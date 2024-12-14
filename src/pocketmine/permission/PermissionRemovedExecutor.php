@@ -21,11 +21,9 @@
 
 namespace pocketmine\permission;
 
-
 interface PermissionRemovedExecutor{
 
 	/**
-	 * @param PermissionAttachment $attachment
 	 *
 	 * @return void
 	 */

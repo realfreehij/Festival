@@ -22,6 +22,8 @@
 namespace pocketmine\utils;
 
 use pocketmine\Thread;
+use function getmypid;
+use function sleep;
 
 class ServerKiller extends Thread{
 
@@ -32,9 +34,9 @@ class ServerKiller extends Thread{
 	}
 
 	public function run(){
-		\sleep($this->time);
+		sleep($this->time);
 		echo "\nForce killed PMMP!\n";
-		@\pocketmine\kill(\getmypid());
+		@\pocketmine\kill(getmypid());
 	}
 
 	public function getThreadName(){

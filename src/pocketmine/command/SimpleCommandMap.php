@@ -22,7 +22,6 @@
 namespace pocketmine\command;
 
 use pocketmine\command\defaults\BanCommand;
-use pocketmine\command\defaults\GetPosCommand;
 use pocketmine\command\defaults\BanIpCommand;
 use pocketmine\command\defaults\BanListCommand;
 use pocketmine\command\defaults\DefaultGamemodeCommand;
@@ -31,6 +30,7 @@ use pocketmine\command\defaults\DifficultyCommand;
 use pocketmine\command\defaults\EffectCommand;
 use pocketmine\command\defaults\GamemodeCommand;
 use pocketmine\command\defaults\GarbageCollectorCommand;
+use pocketmine\command\defaults\GetPosCommand;
 use pocketmine\command\defaults\GiveCommand;
 use pocketmine\command\defaults\HelpCommand;
 use pocketmine\command\defaults\KickCommand;
@@ -63,6 +63,13 @@ use pocketmine\event\TranslationContainer;
 use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 use pocketmine\utils\TextFormat;
+use function array_shift;
+use function count;
+use function explode;
+use function strlen;
+use function strpos;
+use function strtolower;
+use function trim;
 
 class SimpleCommandMap implements CommandMap{
 
@@ -117,12 +124,11 @@ class SimpleCommandMap implements CommandMap{
 		$this->register("pocketmine", new ReloadCommand("reload"));
 		$this->register("pocketmine", new StatusCommand("status"));
 		$this->register("pocketmine", new GarbageCollectorCommand("gc"));
-		
+
 		$this->register("festival", new GetPosCommand("getpos"));
 		$this->register("festival", new GetPosCommand("xyz"));
 		$this->register("festival", new GetPosCommand("loc"));
 	}
-
 
 	public function registerAll($fallbackPrefix, array $commands){
 		foreach($commands as $command){
@@ -130,18 +136,18 @@ class SimpleCommandMap implements CommandMap{
 		}
 	}
 
-	public function register($fallbackPrefix, Command $command, $label = \null){
-		if($label === \null){
+	public function register($fallbackPrefix, Command $command, $label = null){
+		if($label === null){
 			$label = $command->getName();
 		}
-		$label = \strtolower(\trim($label));
-		$fallbackPrefix = \strtolower(\trim($fallbackPrefix));
+		$label = strtolower(trim($label));
+		$fallbackPrefix = strtolower(trim($fallbackPrefix));
 
-		$registered = $this->registerAlias($command, \false, $fallbackPrefix, $label);
+		$registered = $this->registerAlias($command, false, $fallbackPrefix, $label);
 
 		$aliases = $command->getAliases();
 		foreach($aliases as $index => $alias){
-			if(!$this->registerAlias($command, \true, $fallbackPrefix, $alias)){
+			if(!$this->registerAlias($command, true, $fallbackPrefix, $alias)){
 				unset($aliases[$index]);
 			}
 		}
@@ -159,11 +165,11 @@ class SimpleCommandMap implements CommandMap{
 	private function registerAlias(Command $command, $isAlias, $fallbackPrefix, $label){
 		$this->knownCommands[$fallbackPrefix . ":" . $label] = $command;
 		if(($command instanceof VanillaCommand or $isAlias) and isset($this->knownCommands[$label])){
-			return \false;
+			return false;
 		}
 
-		if(isset($this->knownCommands[$label]) and $this->knownCommands[$label]->getLabel() !== \null and $this->knownCommands[$label]->getLabel() === $label){
-			return \false;
+		if(isset($this->knownCommands[$label]) and $this->knownCommands[$label]->getLabel() !== null and $this->knownCommands[$label]->getLabel() === $label){
+			return false;
 		}
 
 		if(!$isAlias){
@@ -172,21 +178,21 @@ class SimpleCommandMap implements CommandMap{
 
 		$this->knownCommands[$label] = $command;
 
-		return \true;
+		return true;
 	}
 
 	public function dispatch(CommandSender $sender, $commandLine){
-		$args = \explode(" ", $commandLine);
+		$args = explode(" ", $commandLine);
 
-		if(\count($args) === 0){
-			return \false;
+		if(count($args) === 0){
+			return false;
 		}
 
-		$sentCommandLabel = \strtolower(\array_shift($args));
+		$sentCommandLabel = strtolower(array_shift($args));
 		$target = $this->getCommand($sentCommandLabel);
 
-		if($target === \null){
-			return \false;
+		if($target === null){
+			return false;
 		}
 
 		$target->timings->startTiming();
@@ -202,7 +208,7 @@ class SimpleCommandMap implements CommandMap{
 		}
 		$target->timings->stopTiming();
 
-		return \true;
+		return true;
 	}
 
 	public function clearCommands(){
@@ -218,7 +224,7 @@ class SimpleCommandMap implements CommandMap{
 			return $this->knownCommands[$name];
 		}
 
-		return \null;
+		return null;
 	}
 
 	/**
@@ -228,7 +234,6 @@ class SimpleCommandMap implements CommandMap{
 		return $this->knownCommands;
 	}
 
-
 	/**
 	 * @return void
 	 */
@@ -236,7 +241,7 @@ class SimpleCommandMap implements CommandMap{
 		$values = $this->server->getCommandAliases();
 
 		foreach($values as $alias => $commandStrings){
-			if(\strpos($alias, ":") !== \false or \strpos($alias, " ") !== \false){
+			if(strpos($alias, ":") !== false or strpos($alias, " ") !== false){
 				$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.command.alias.illegal", [$alias]));
 				continue;
 			}
@@ -245,11 +250,11 @@ class SimpleCommandMap implements CommandMap{
 
 			$bad = "";
 			foreach($commandStrings as $commandString){
-				$args = \explode(" ", $commandString);
+				$args = explode(" ", $commandString);
 				$command = $this->getCommand($args[0]);
 
-				if($command === \null){
-					if(\strlen($bad) > 0){
+				if($command === null){
+					if(strlen($bad) > 0){
 						$bad .= ", ";
 					}
 					$bad .= $commandString;
@@ -258,20 +263,19 @@ class SimpleCommandMap implements CommandMap{
 				}
 			}
 
-			if(\strlen($bad) > 0){
+			if(strlen($bad) > 0){
 				$this->server->getLogger()->warning($this->server->getLanguage()->translateString("pocketmine.command.alias.notFound", [$alias, $bad]));
 				continue;
 			}
 
 			//These registered commands have absolute priority
-			if(\count($targets) > 0){
-				$this->knownCommands[\strtolower($alias)] = new FormattedCommandAlias(\strtolower($alias), $targets);
+			if(count($targets) > 0){
+				$this->knownCommands[strtolower($alias)] = new FormattedCommandAlias(strtolower($alias), $targets);
 			}else{
-				unset($this->knownCommands[\strtolower($alias)]);
+				unset($this->knownCommands[strtolower($alias)]);
 			}
 
 		}
 	}
-
 
 }

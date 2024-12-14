@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,11 +15,16 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
 namespace pocketmine\math;
+
+use function abs;
+use function pow;
+use function round;
+use function sqrt;
 
 /**
  * WARNING: This class is available on the PocketMine-MP Zephir project.
@@ -75,11 +80,11 @@ class Vector2{
 	}
 
 	public function round(){
-		return new Vector2(\round($this->x), \round($this->y));
+		return new Vector2(round($this->x), round($this->y));
 	}
 
 	public function abs(){
-		return new Vector2(\abs($this->x), \abs($this->y));
+		return new Vector2(abs($this->x), abs($this->y));
 	}
 
 	public function multiply($number){
@@ -92,9 +97,9 @@ class Vector2{
 
 	public function distance($x, $y = 0){
 		if($x instanceof Vector2){
-			return \sqrt($this->distanceSquared($x->x, $x->y));
+			return sqrt($this->distanceSquared($x->x, $x->y));
 		}else{
-			return \sqrt($this->distanceSquared($x, $y));
+			return sqrt($this->distanceSquared($x, $y));
 		}
 	}
 
@@ -102,12 +107,12 @@ class Vector2{
 		if($x instanceof Vector2){
 			return $this->distanceSquared($x->x, $x->y);
 		}else{
-			return \pow($this->x - $x, 2) + \pow($this->y - $y, 2);
+			return pow($this->x - $x, 2) + pow($this->y - $y, 2);
 		}
 	}
 
 	public function length(){
-		return \sqrt($this->lengthSquared());
+		return sqrt($this->lengthSquared());
 	}
 
 	public function lengthSquared(){
@@ -117,7 +122,7 @@ class Vector2{
 	public function normalize(){
 		$len = $this->lengthSquared();
 		if($len != 0){
-			return $this->divide(\sqrt($len));
+			return $this->divide(sqrt($len));
 		}
 
 		return new Vector2(0, 0);

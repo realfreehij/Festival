@@ -28,6 +28,9 @@ use pocketmine\network\protocol\TileEventPacket;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\tile\Chest;
+use function array_merge;
+use function array_slice;
+use function count;
 
 class DoubleChestInventory extends ChestInventory implements InventoryHolder{
 	/** @var ChestInventory */
@@ -38,7 +41,7 @@ class DoubleChestInventory extends ChestInventory implements InventoryHolder{
 	public function __construct(Chest $left, Chest $right){
 		$this->left = $left->getRealInventory();
 		$this->right = $right->getRealInventory();
-		$items = \array_merge($this->left->getContents(), $this->right->getContents());
+		$items = array_merge($this->left->getContents(), $this->right->getContents());
 		BaseInventory::__construct($this, InventoryType::get(InventoryType::DOUBLE_CHEST), $items);
 	}
 
@@ -75,10 +78,9 @@ class DoubleChestInventory extends ChestInventory implements InventoryHolder{
 	 * @param Item[] $items
 	 */
 	public function setContents(array $items){
-		if(\count($items) > $this->size){
-			$items = \array_slice($items, 0, $this->size, \true);
+		if(count($items) > $this->size){
+			$items = array_slice($items, 0, $this->size, true);
 		}
-
 
 		for($i = 0; $i < $this->size; ++$i){
 			if(!isset($items[$i])){
@@ -98,7 +100,7 @@ class DoubleChestInventory extends ChestInventory implements InventoryHolder{
 	public function onOpen(Player $who){
 		parent::onOpen($who);
 
-		if(\count($this->getViewers()) === 1){
+		if(count($this->getViewers()) === 1){
 			$pk = new TileEventPacket();
 			$pk->x = $this->right->getHolder()->getX();
 			$pk->y = $this->right->getHolder()->getY();
@@ -112,7 +114,7 @@ class DoubleChestInventory extends ChestInventory implements InventoryHolder{
 	}
 
 	public function onClose(Player $who){
-		if(\count($this->getViewers()) === 1){
+		if(count($this->getViewers()) === 1){
 			$pk = new TileEventPacket();
 			$pk->x = $this->right->getHolder()->getX();
 			$pk->y = $this->right->getHolder()->getY();

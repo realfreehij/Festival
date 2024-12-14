@@ -28,19 +28,19 @@ use pocketmine\utils\Random;
 class Pond
 {
 
-    private $random;
+	private $random;
 
-    public $type;
+	public $type;
 
-    public function __construct(Random $random, Block $type)
-    {
-        $this->type = $type;
-        $this->random = $random;
-    }
+	public function __construct(Random $random, Block $type)
+	{
+		$this->type = $type;
+		$this->random = $random;
+	}
 
-    public function canPlaceObject(ChunkManager $level, Vector3 $pos)
-    {}
+	public function canPlaceObject(ChunkManager $level, Vector3 $pos)
+	{}
 
-    public function placeObject(ChunkManager $level, Vector3 $pos)
-    {}
+	public function placeObject(ChunkManager $level, Vector3 $pos)
+	{}
 }

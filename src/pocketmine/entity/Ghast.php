@@ -1,6 +1,7 @@
 <?php
 
 namespace pocketmine\entity;
+
 use pocketmine\item\Item as ItemItem;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;

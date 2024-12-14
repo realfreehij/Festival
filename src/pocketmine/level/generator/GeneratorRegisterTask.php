@@ -26,36 +26,37 @@ use pocketmine\level\Level;
 use pocketmine\level\SimpleChunkManager;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\utils\Random;
+use function get_class;
 
 class GeneratorRegisterTask extends AsyncTask
 {
 
-    public $generator;
+	public $generator;
 
-    public $settings;
+	public $settings;
 
-    public $seed;
+	public $seed;
 
-    public $levelId;
+	public $levelId;
 
-    public function __construct(Level $level, Generator $generator)
-    {
-        $this->generator = \get_class($generator);
-        $this->settings = $generator->getSettings();
-        $this->seed = $level->getSeed();
-        $this->levelId = $level->getId();
-    }
+	public function __construct(Level $level, Generator $generator)
+	{
+		$this->generator = get_class($generator);
+		$this->settings = $generator->getSettings();
+		$this->seed = $level->getSeed();
+		$this->levelId = $level->getId();
+	}
 
-    public function onRun()
-    {
-        Block::init();
-        Biome::init();
-        $manager = new SimpleChunkManager($this->seed);
-        $this->saveToThreadStore("generation.level{$this->levelId}.manager", $manager);
-        /** @var Generator $generator */
-        $generator = $this->generator;
-        $generator = new $generator($this->settings);
-        $generator->init($manager, new Random($manager->getSeed()));
-        $this->saveToThreadStore("generation.level{$this->levelId}.generator", $generator);
-    }
+	public function onRun()
+	{
+		Block::init();
+		Biome::init();
+		$manager = new SimpleChunkManager($this->seed);
+		$this->saveToThreadStore("generation.level{$this->levelId}.manager", $manager);
+		/** @var Generator $generator */
+		$generator = $this->generator;
+		$generator = new $generator($this->settings);
+		$generator->init($manager, new Random($manager->getSeed()));
+		$this->saveToThreadStore("generation.level{$this->levelId}.generator", $generator);
+	}
 }

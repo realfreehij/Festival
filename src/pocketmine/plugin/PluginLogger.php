@@ -23,6 +23,7 @@ namespace pocketmine\plugin;
 
 use LogLevel;
 use pocketmine\Server;
+use function spl_object_hash;
 
 class PluginLogger implements \AttachableLogger{
 
@@ -32,11 +33,11 @@ class PluginLogger implements \AttachableLogger{
 	private $attachments = [];
 
 	public function addAttachment(\LoggerAttachment $attachment){
-		$this->attachments[\spl_object_hash($attachment)] = $attachment;
+		$this->attachments[spl_object_hash($attachment)] = $attachment;
 	}
 
 	public function removeAttachment(\LoggerAttachment $attachment){
-		unset($this->attachments[\spl_object_hash($attachment)]);
+		unset($this->attachments[spl_object_hash($attachment)]);
 	}
 
 	public function removeAttachments(){
@@ -47,12 +48,9 @@ class PluginLogger implements \AttachableLogger{
 		return $this->attachments;
 	}
 
-	/**
-	 * @param Plugin $context
-	 */
 	public function __construct(Plugin $context){
 		$prefix = $context->getDescription()->getPrefix();
-		$this->pluginName = $prefix != \null ? "[$prefix] " : "[" . $context->getDescription()->getName() . "] ";
+		$this->pluginName = $prefix != null ? "[$prefix] " : "[" . $context->getDescription()->getName() . "] ";
 	}
 
 	public function emergency($message){

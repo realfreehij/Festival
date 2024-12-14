@@ -7,7 +7,6 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
-use pocketmine\entity\Projectile;
 
 class Fireball extends Projectile{
 	const NETWORK_ID = 94;
@@ -25,7 +24,7 @@ class Fireball extends Projectile{
 
 	public function onUpdate($currentTick){
 		if($this->closed){
-			return \false;
+			return false;
 		}
 
 		$this->timings->startTiming();
@@ -34,7 +33,7 @@ class Fireball extends Projectile{
 
 		if($this->age > 1200 or $this->isCollided){
 			$this->kill();
-			$hasUpdate = \true;
+			$hasUpdate = true;
 		}
 
 		$this->timings->stopTiming();

@@ -23,6 +23,7 @@ namespace pocketmine\inventory;
 
 use pocketmine\item\Item;
 use pocketmine\Server;
+use function count;
 
 class ShapelessRecipe implements Recipe{
 	/** @var Item */
@@ -40,14 +41,13 @@ class ShapelessRecipe implements Recipe{
 	}
 
 	/**
-	 * @param Item $item
 	 *
 	 * @returns ShapelessRecipe
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function addIngredient(Item $item){
-		if(\count($this->ingredients) >= 9){
+		if(count($this->ingredients) >= 9){
 			throw new \InvalidArgumentException("Shapeless recipes cannot have more than 9 ingredients");
 		}
 
@@ -63,7 +63,6 @@ class ShapelessRecipe implements Recipe{
 	}
 
 	/**
-	 * @param Item $item
 	 *
 	 * @return $this
 	 */
@@ -72,7 +71,7 @@ class ShapelessRecipe implements Recipe{
 			if($item->getCount() <= 0){
 				break;
 			}
-			if($ingredient->equals($item, $item->getDamage() === \null ? \false : \true)){
+			if($ingredient->equals($item, $item->getDamage() === null ? false : true)){
 				unset($this->ingredients[$index]);
 				$item->setCount($item->getCount() - 1);
 			}

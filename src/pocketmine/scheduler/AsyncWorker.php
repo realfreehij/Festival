@@ -22,13 +22,18 @@
 namespace pocketmine\scheduler;
 
 use pocketmine\Worker;
+use function gc_enable;
+use function ini_set;
+use const PTHREADS_INHERIT_CONSTANTS;
+use const PTHREADS_INHERIT_FUNCTIONS;
+use const PTHREADS_INHERIT_NONE;
 
 class AsyncWorker extends Worker{
 
 	public function run(){
 		$this->registerClassLoader();
-		\gc_enable();
-		\ini_set("memory_limit", -1);
+		gc_enable();
+		ini_set("memory_limit", -1);
 
 		global $store;
 		$store = [];

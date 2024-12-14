@@ -31,9 +31,6 @@ abstract class BlockEvent extends Event{
 	/** @var \pocketmine\block\Block */
 	protected $block;
 
-	/**
-	 * @param Block $block
-	 */
 	public function __construct(Block $block){
 		$this->block = $block;
 	}

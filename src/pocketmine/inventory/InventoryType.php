@@ -21,6 +21,8 @@
 
 namespace pocketmine\inventory;
 
+use function count;
+
 /**
  * Saves all the information regarding default inventory sizes and types
  */
@@ -40,16 +42,15 @@ class InventoryType{
 	private $typeId;
 
 	/**
-	 * @param $index
 	 *
 	 * @return InventoryType
 	 */
 	public static function get($index){
-		return isset(static::$default[$index]) ? static::$default[$index] : \null;
+		return isset(static::$default[$index]) ? static::$default[$index] : null;
 	}
 
 	public static function init(){
-		if(\count(static::$default) > 0){
+		if(count(static::$default) > 0){
 			return;
 		}
 

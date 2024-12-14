@@ -21,10 +21,13 @@
 
 namespace pocketmine\scheduler;
 
+use function gc_collect_cycles;
+use function gc_enable;
+
 class GarbageCollectionTask extends AsyncTask{
 
 	public function onRun(){
-		\gc_enable();
-		\gc_collect_cycles();
+		gc_enable();
+		gc_collect_cycles();
 	}
 }

@@ -17,24 +17,20 @@
 
 abstract class ExceptionHandler{
 	/**
-	 * @param $errno
-	 * @param $errstr
-	 * @param $errfile
-	 * @param $errline
 	 *
 	 * @return \Exception
 	 */
 	public static function handler($errno, $errstr, $errfile, $errline){
 		return false; //TODO remove later
-		
-		if(\error_reporting() === 0){
+
+		if(error_reporting() === 0){
 			return \false;
 		}
 
 		$exception = \null;
 
 		if(self::errorStarts($errstr, "Undefined offset: ")){
-			$exception = new ArrayOutOfBoundsException($errstr, $errno); 
+			$exception = new ArrayOutOfBoundsException($errstr, $errno);
 		}elseif(self::errorStarts($errstr, "Undefined index: ")){
 			$exception = new ArrayOutOfBoundsException($errstr, $errno);
 		}elseif(self::errorStarts($errstr, "Uninitialized string offset: ")){
@@ -53,7 +49,7 @@ abstract class ExceptionHandler{
 			$exception = new UndefinedConstantException($errstr, $errno);
 		}elseif(self::errorStarts($errstr, "Accessing static property ")){
 			$exception = new InvalidStateException($errstr, $errno);
-		}elseif(\strpos($errstr, " could not be converted to ") !== \false){
+		}elseif(strpos($errstr, " could not be converted to ") !== \false){
 			$exception = new ClassCastException($errstr, $errno);
 		}elseif(
 			$errstr === "Trying to get property of non-object"
@@ -61,14 +57,14 @@ abstract class ExceptionHandler{
 		){
 			$exception = new InvalidStateException($errstr, $errno);
 		}elseif(
-			\strpos($errstr, " expects parameter ") !== \false
-			or \strpos($errstr, " must be ") !== \false
+			strpos($errstr, " expects parameter ") !== \false
+			or strpos($errstr, " must be ") !== \false
 		){
 			$exception = new InvalidArgumentException($errstr, $errno);
 		}elseif(
 			self::errorStarts($errstr, "Wrong parameter count for ")
 			or self::errorStarts($errstr, "Missing argument 1 for ")
-			or \preg_match('/^.*\\(\\) expects [a-z]{1,} [0-9]{1,} parameters?, [0-9]{1,} given$/', $errstr) > 0
+			or preg_match('/^.*\\(\\) expects [a-z]{1,} [0-9]{1,} parameters?, [0-9]{1,} given$/', $errstr) > 0
 		){
 			$exception = new InvalidArgumentCountException($errstr, $errno);
 		}
@@ -89,6 +85,6 @@ abstract class ExceptionHandler{
 	}
 
 	private static function errorStarts($error, $str){
-		return \substr($error, 0, \strlen($str)) === $str;
+		return substr($error, 0, strlen($str)) === $str;
 	}
 }

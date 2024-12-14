@@ -23,6 +23,8 @@ namespace pocketmine\inventory;
 
 use pocketmine\item\Item;
 use pocketmine\Server;
+use function count;
+use function strlen;
 
 class ShapedRecipe implements Recipe{
 	/** @var Item */
@@ -35,39 +37,37 @@ class ShapedRecipe implements Recipe{
 	private $ingredients = [];
 
 	/**
-	 * @param Item     $result
 	 * @param string[] $shape
 	 *
 	 * @throws \Exception
 	 */
 	public function __construct(Item $result, array $shape = []){
-		if(\count($shape) === 0){
+		if(count($shape) === 0){
 			throw new \InvalidArgumentException("Must provide a shape");
 		}
-		if(\count($shape) > 3){
-			throw new \InvalidStateException("Crafting recipes should be 1, 2, 3 rows, not " . \count($shape));
+		if(count($shape) > 3){
+			throw new \InvalidStateException("Crafting recipes should be 1, 2, 3 rows, not " . count($shape));
 		}
 		foreach($shape as $row){
-			if(\strlen($row) === 0 or \strlen($row) > 3){
-				throw new \InvalidStateException("Crafting rows should be 1, 2, 3 characters, not " . \count($row));
+			if(strlen($row) === 0 or strlen($row) > 3){
+				throw new \InvalidStateException("Crafting rows should be 1, 2, 3 characters, not " . count($row));
 			}
 			$this->rows[] = $row;
-			$len = \strlen($row);
+			$len = strlen($row);
 			for($i = 0; $i < $len; ++$i){
-				$this->ingredients[$row[$i]] = \null;
+				$this->ingredients[$row[$i]] = null;
 			}
 		}
 
 		$this->output = clone $result;
 	}
-    
+
 	public function getResult(){
-	    return $this->output;
+		return $this->output;
 	}
-	
+
 	/**
 	 * @param string $key
-	 * @param Item   $item
 	 *
 	 * @return $this
 	 * @throws \Exception

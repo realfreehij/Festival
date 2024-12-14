@@ -26,8 +26,8 @@ use pocketmine\math\Vector3;
 class TerrainParticle extends GenericParticle
 {
 
-    public function __construct(Vector3 $pos, Block $b)
-    {
-        parent::__construct($pos, 15, ($b->getDamage() << 8) | $b->getId());
-    }
+	public function __construct(Vector3 $pos, Block $b)
+	{
+		parent::__construct($pos, 15, ($b->getDamage() << 8) | $b->getId());
+	}
 }

@@ -25,6 +25,11 @@ use pocketmine\event\plugin\PluginDisableEvent;
 use pocketmine\event\plugin\PluginEnableEvent;
 use pocketmine\Server;
 use pocketmine\utils\PluginException;
+use function class_exists;
+use function dirname;
+use function file_exists;
+use function is_dir;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Handles different types of plugins
@@ -34,9 +39,6 @@ class PharPluginLoader implements PluginLoader{
 	/** @var Server */
 	private $server;
 
-	/**
-	 * @param Server $server
-	 */
 	public function __construct(Server $server){
 		$this->server = $server;
 	}
@@ -53,15 +55,15 @@ class PharPluginLoader implements PluginLoader{
 	public function loadPlugin($file){
 		if(($description = $this->getPluginDescription($file)) instanceof PluginDescription){
 			$this->server->getLogger()->info($this->server->getLanguage()->translateString("pocketmine.plugin.load", [$description->getFullName()]));
-			$dataFolder = \dirname($file) . DIRECTORY_SEPARATOR . $description->getName();
-			if(\file_exists($dataFolder) and !\is_dir($dataFolder)){
+			$dataFolder = dirname($file) . DIRECTORY_SEPARATOR . $description->getName();
+			if(file_exists($dataFolder) and !is_dir($dataFolder)){
 				throw new \InvalidStateException("Projected dataFolder '" . $dataFolder . "' for " . $description->getName() . " exists and is not a directory");
 			}
 			$file = "phar://$file";
 			$className = $description->getMain();
 			$this->server->getLoader()->addPath("$file/src");
 
-			if(\class_exists($className, \true)){
+			if(class_exists($className, true)){
 				$plugin = new $className();
 				$this->initPlugin($plugin, $description, $dataFolder, $file);
 
@@ -71,7 +73,7 @@ class PharPluginLoader implements PluginLoader{
 			}
 		}
 
-		return \null;
+		return null;
 	}
 
 	/**
@@ -90,7 +92,7 @@ class PharPluginLoader implements PluginLoader{
 			}
 		}
 
-		return \null;
+		return null;
 	}
 
 	/**
@@ -103,8 +105,6 @@ class PharPluginLoader implements PluginLoader{
 	}
 
 	/**
-	 * @param PluginBase        $plugin
-	 * @param PluginDescription $description
 	 * @param string            $dataFolder
 	 * @param string            $file
 	 */
@@ -113,29 +113,23 @@ class PharPluginLoader implements PluginLoader{
 		$plugin->onLoad();
 	}
 
-	/**
-	 * @param Plugin $plugin
-	 */
 	public function enablePlugin(Plugin $plugin){
 		if($plugin instanceof PluginBase and !$plugin->isEnabled()){
 			$this->server->getLogger()->info($this->server->getLanguage()->translateString("pocketmine.plugin.enable", [$plugin->getDescription()->getFullName()]));
 
-			$plugin->setEnabled(\true);
+			$plugin->setEnabled(true);
 
 			$this->server->getPluginManager()->callEvent(new PluginEnableEvent($plugin));
 		}
 	}
 
-	/**
-	 * @param Plugin $plugin
-	 */
 	public function disablePlugin(Plugin $plugin){
 		if($plugin instanceof PluginBase and $plugin->isEnabled()){
 			$this->server->getLogger()->info($this->server->getLanguage()->translateString("pocketmine.plugin.disable", [$plugin->getDescription()->getFullName()]));
 
 			$this->server->getPluginManager()->callEvent(new PluginDisableEvent($plugin));
 
-			$plugin->setEnabled(\false);
+			$plugin->setEnabled(false);
 		}
 	}
 }

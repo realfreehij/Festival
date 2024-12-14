@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -42,7 +42,7 @@ class Trapdoor extends Transparent{
 	}
 
 	public function canBeActivated(){
-		return \true;
+		return true;
 	}
 
 	protected function recalculateBoundingBox(){
@@ -116,8 +116,8 @@ class Trapdoor extends Transparent{
 		return $bb;
 	}
 
-	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = \null){
-		if(($target->isTransparent() === \false or $target->getId() === self::SLAB) and $face !== 0 and $face !== 1){
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
+		if(($target->isTransparent() === false or $target->getId() === self::SLAB) and $face !== 0 and $face !== 1){
 			$faces = [
 				2 => 0,
 				3 => 1,
@@ -128,12 +128,12 @@ class Trapdoor extends Transparent{
 			if($fy > 0.5){
 				$this->meta |= 0x08;
 			}
-			$this->getLevel()->setBlock($block, $this, \true, \true);
+			$this->getLevel()->setBlock($block, $this, true, true);
 
-			return \true;
+			return true;
 		}
 
-		return \false;
+		return false;
 	}
 
 	public function getDrops(Item $item){
@@ -142,10 +142,10 @@ class Trapdoor extends Transparent{
 		];
 	}
 
-	public function onActivate(Item $item, Player $player = \null){
+	public function onActivate(Item $item, Player $player = null){
 		$this->meta ^= 0x04;
-		$this->getLevel()->setBlock($this, $this, \true);
+		$this->getLevel()->setBlock($this, $this, true);
 
-		return \true;
+		return true;
 	}
 }

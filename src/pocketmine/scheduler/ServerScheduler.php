@@ -29,6 +29,10 @@ use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 use pocketmine\utils\PluginException;
 use pocketmine\utils\ReversePriorityQueue;
+use function count;
+use function get_class;
+use function is_array;
+use function is_object;
 
 class ServerScheduler{
 	public static $WORKERS = 2;
@@ -57,7 +61,6 @@ class ServerScheduler{
 	}
 
 	/**
-	 * @param Task $task
 	 *
 	 * @return null|TaskHandler
 	 */
@@ -68,7 +71,6 @@ class ServerScheduler{
 	/**
 	 * Submits an asynchronous task to the Worker Pool
 	 *
-	 * @param AsyncTask $task
 	 *
 	 * @return void
 	 */
@@ -81,7 +83,6 @@ class ServerScheduler{
 	/**
 	 * Submits an asynchronous task to a specific Worker in the Pool
 	 *
-	 * @param AsyncTask $task
 	 * @param int       $worker
 	 *
 	 * @return void
@@ -101,7 +102,6 @@ class ServerScheduler{
 	}
 
 	/**
-	 * @param Task $task
 	 * @param int  $delay
 	 *
 	 * @return null|TaskHandler
@@ -111,7 +111,6 @@ class ServerScheduler{
 	}
 
 	/**
-	 * @param Task $task
 	 * @param int  $period
 	 *
 	 * @return null|TaskHandler
@@ -121,7 +120,6 @@ class ServerScheduler{
 	}
 
 	/**
-	 * @param Task $task
 	 * @param int  $delay
 	 * @param int  $period
 	 *
@@ -135,15 +133,12 @@ class ServerScheduler{
 	 * @param int $taskId
 	 */
 	public function cancelTask($taskId){
-		if($taskId !== \null and isset($this->tasks[$taskId])){
+		if($taskId !== null and isset($this->tasks[$taskId])){
 			$this->tasks[$taskId]->cancel();
 			unset($this->tasks[$taskId]);
 		}
 	}
 
-	/**
-	 * @param Plugin $plugin
-	 */
 	public function cancelTasks(Plugin $plugin){
 		foreach($this->tasks as $taskId => $task){
 			$ptask = $task->getTask();
@@ -174,9 +169,6 @@ class ServerScheduler{
 	}
 
 	/**
-	 * @param Task $task
-	 * @param      $delay
-	 * @param      $period
 	 *
 	 * @return null|TaskHandler
 	 *
@@ -185,15 +177,15 @@ class ServerScheduler{
 	private function addTask(Task $task, $delay, $period){
 		if($task instanceof PluginTask){
 			if(!($task->getOwner() instanceof Plugin)){
-				throw new PluginException("Invalid owner of PluginTask " . \get_class($task));
+				throw new PluginException("Invalid owner of PluginTask " . get_class($task));
 			}elseif(!$task->getOwner()->isEnabled()){
 				throw new PluginException("Plugin '" . $task->getOwner()->getName() . "' attempted to register a task while disabled");
 			}
-		}elseif($task instanceof CallbackTask and Server::getInstance()->getProperty("settings.deprecated-verbose", \true)){
+		}elseif($task instanceof CallbackTask and Server::getInstance()->getProperty("settings.deprecated-verbose", true)){
 			$callable = $task->getCallable();
-			if(\is_array($callable)){
-				if(\is_object($callable[0])){
-					$taskName = "Callback#" . \get_class($callable[0]) . "::" . $callable[1];
+			if(is_array($callable)){
+				if(is_object($callable[0])){
+					$taskName = "Callback#" . get_class($callable[0]) . "::" . $callable[1];
 				}else{
 					$taskName = "Callback#" . $callable[0] . "::" . $callable[1];
 				}
@@ -213,7 +205,7 @@ class ServerScheduler{
 			$period = 1;
 		}
 
-		return $this->handle(new TaskHandler(\get_class($task), $task, $this->nextId(), $delay, $period));
+		return $this->handle(new TaskHandler(get_class($task), $task, $this->nextId(), $delay, $period));
 	}
 
 	private function handle(TaskHandler $handler){
@@ -267,7 +259,7 @@ class ServerScheduler{
 	}
 
 	private function isReady($currentTicks){
-		return \count($this->tasks) > 0 and $this->queue->current()->getNextRun() <= $currentTicks;
+		return count($this->tasks) > 0 and $this->queue->current()->getNextRun() <= $currentTicks;
 	}
 
 	/**

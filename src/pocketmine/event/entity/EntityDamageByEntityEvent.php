@@ -32,8 +32,6 @@ class EntityDamageByEntityEvent extends EntityDamageEvent{
 	private $knockBack;
 
 	/**
-	 * @param Entity    $damager
-	 * @param Entity    $entity
 	 * @param int       $cause
 	 * @param int|int[] $damage
 	 * @param float     $knockBack

@@ -38,11 +38,7 @@ abstract class PlayerBucketEvent extends PlayerEvent implements Cancellable{
 	private $item;
 
 	/**
-	 * @param Player $who
-	 * @param Block  $blockClicked
 	 * @param int    $blockFace
-	 * @param Item   $bucket
-	 * @param Item   $itemInHand
 	 */
 	public function __construct(Player $who, Block $blockClicked, $blockFace, Item $bucket, Item $itemInHand){
 		$this->player = $who;
@@ -70,9 +66,6 @@ abstract class PlayerBucketEvent extends PlayerEvent implements Cancellable{
 		return $this->item;
 	}
 
-	/**
-	 * @param Item $item
-	 */
 	public function setItem(Item $item){
 		$this->item = $item;
 	}

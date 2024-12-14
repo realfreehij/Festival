@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -29,7 +29,19 @@ use pocketmine\command\RemoteConsoleCommandSender;
 use pocketmine\event\server\RemoteServerCommandEvent;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
-
+use function max;
+use function socket_bind;
+use function socket_close;
+use function socket_create;
+use function socket_getsockname;
+use function socket_last_error;
+use function socket_listen;
+use function socket_set_block;
+use function socket_strerror;
+use function usleep;
+use const AF_INET;
+use const SOCK_STREAM;
+use const SOL_TCP;
 
 class RCON{
 	/** @var Server */
@@ -50,10 +62,10 @@ class RCON{
 
 			return;
 		}
-		$this->threads = (int) \max(1, $threads);
-		$this->clientsPerThread = (int) \max(1, $clientsPerThread);
+		$this->threads = (int) max(1, $threads);
+		$this->clientsPerThread = (int) max(1, $clientsPerThread);
 		$this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-		if($this->socket === \false or !socket_bind($this->socket, $interface, (int) $port) or !socket_listen($this->socket)){
+		if($this->socket === false or !socket_bind($this->socket, $interface, (int) $port) or !socket_listen($this->socket)){
 			$this->server->getLogger()->critical("RCON can't be started: " . socket_strerror(socket_last_error()));
 			$this->threads = 0;
 			return;
@@ -70,7 +82,7 @@ class RCON{
 	public function stop(){
 		for($n = 0; $n < $this->threads; ++$n){
 			$this->workers[$n]->close();
-			\usleep(50000);
+			usleep(50000);
 			$this->workers[$n]->kill();
 		}
 		@socket_close($this->socket);
@@ -79,7 +91,7 @@ class RCON{
 
 	public function check(){
 		for($n = 0; $n < $this->threads; ++$n){
-			if($this->workers[$n]->isTerminated() === \true){
+			if($this->workers[$n]->isTerminated() === true){
 				$this->workers[$n] = new RCONInstance($this->socket, $this->password, $this->clientsPerThread);
 			}elseif($this->workers[$n]->isWaiting()){
 				if($this->workers[$n]->response !== ""){

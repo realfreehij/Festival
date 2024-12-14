@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -30,6 +30,7 @@ use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\EnumTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\Player;
+use function lcg_value;
 
 class SpawnEgg extends Item{
 	public function __construct($meta = 0, $count = 1){
@@ -37,15 +38,15 @@ class SpawnEgg extends Item{
 	}
 
 	public function canBeActivated(){
-		return \true;
+		return true;
 	}
 
 	public function onActivate(Level $level, Player $player, Block $block, Block $target, $face, $fx, $fy, $fz){
-		$entity = \null;
+		$entity = null;
 		$chunk = $level->getChunk($block->getX() >> 4, $block->getZ() >> 4);
 
 		if(!($chunk instanceof FullChunk)){
-			return \false;
+			return false;
 		}
 
 		$nbt = new CompoundTag("", [
@@ -60,11 +61,11 @@ class SpawnEgg extends Item{
 				new DoubleTag("", 0)
 			]),
 			"Rotation" => new EnumTag("Rotation", [
-				new FloatTag("", \lcg_value() * 360),
+				new FloatTag("", lcg_value() * 360),
 				new FloatTag("", 0)
 			]),
 		]);
-		
+
 		$entity = Entity::createEntity($this->meta, $chunk, $nbt);
 
 		if($entity instanceof Entity){
@@ -73,9 +74,9 @@ class SpawnEgg extends Item{
 			}
 			$entity->spawnToAll();
 
-			return \true;
+			return true;
 		}
 
-		return \false;
+		return false;
 	}
 }

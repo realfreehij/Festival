@@ -21,12 +21,9 @@
 
 namespace pocketmine\command;
 
-
 interface CommandExecutor{
 
 	/**
-	 * @param CommandSender $sender
-	 * @param Command       $command
 	 * @param string        $label
 	 * @param string[]      $args
 	 *

@@ -56,7 +56,6 @@ interface Inventory{
 	 * If a source Player is specified, it won't send a Inventory update to it
 	 *
 	 * @param int    $index
-	 * @param Item   $item
 	 *
 	 * @return bool
 	 */
@@ -68,7 +67,6 @@ interface Inventory{
 	 *
 	 * Returns the Items that did not fit.
 	 *
-	 * @param Item ...$item
 	 *
 	 * @return Item[]
 	 */
@@ -77,7 +75,6 @@ interface Inventory{
 	/**
 	 * Checks if a given Item can be added to the inventory
 	 *
-	 * @param Item $item
 	 *
 	 * @return bool
 	 */
@@ -87,7 +84,6 @@ interface Inventory{
 	 * Removes the given Item from the inventory.
 	 * It will return the Items that couldn't be removed.
 	 *
-	 * @param Item ...$item
 	 *
 	 * @return Item[]
 	 */
@@ -118,7 +114,6 @@ interface Inventory{
 	 * Checks if the inventory contains any Item with the same material data.
 	 * It will check id, amount, and metadata (if not null)
 	 *
-	 * @param Item $item
 	 *
 	 * @return bool
 	 */
@@ -128,7 +123,6 @@ interface Inventory{
 	 * Will return all the Items that has the same id and metadata (if not null).
 	 * Won't check amount
 	 *
-	 * @param Item $item
 	 *
 	 * @return Item[]
 	 */
@@ -138,7 +132,6 @@ interface Inventory{
 	 * Will return the first slot has the same id and metadata (if not null) as the Item.
 	 * -1 if not found, will check amount
 	 *
-	 * @param Item $item
 	 *
 	 * @return int
 	 */
@@ -154,7 +147,6 @@ interface Inventory{
 	/**
 	 * Will remove all the Items that has the same id and metadata (if not null)
 	 *
-	 * @param Item $item
 	 */
 	public function remove(Item $item);
 
@@ -190,15 +182,11 @@ interface Inventory{
 	 */
 	public function getHolder();
 
-	/**
-	 * @param Player $who
-	 */
 	public function onOpen(Player $who);
 
 	/**
 	 * Tries to open the inventory to a player
 	 *
-	 * @param Player $who
 	 *
 	 * @return bool
 	 */
@@ -206,9 +194,6 @@ interface Inventory{
 
 	public function close(Player $who);
 
-	/**
-	 * @param Player $who
-	 */
 	public function onClose(Player $who);
 
 	/**

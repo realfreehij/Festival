@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -24,6 +24,7 @@ namespace pocketmine\entity;
 use pocketmine\inventory\InventoryHolder;
 use pocketmine\inventory\PlayerInventory;
 use pocketmine\item\Item as ItemItem;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
@@ -34,7 +35,9 @@ use pocketmine\network\Network;
 use pocketmine\network\protocol\AddPlayerPacket;
 use pocketmine\network\protocol\RemovePlayerPacket;
 use pocketmine\Player;
-use  pocketmine\math\Vector3;
+use function floor;
+use function strlen;
+
 class Human extends Creature implements ProjectileSource, InventoryHolder{
 
 	const DATA_PLAYER_FLAG_SLEEP = 1;
@@ -51,7 +54,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 	public $eyeHeight = 1.62;
 
 	protected $skin;
-	protected $isSlim = \false;
+	protected $isSlim = false;
 
 	public function getSkinData(){
 		return $this->skin;
@@ -65,7 +68,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 		$x = floor($this->x);
 		$y = floor($this->y - 0.2);
 		$z = floor($this->z);
-		$block = $this->level->getBlock(new Vector3($x, $y, $z));	
+		$block = $this->level->getBlock(new Vector3($x, $y, $z));
 		if($block->getId() > 0){
 			$block->onFall($this, $fallDistance);
 		}
@@ -74,7 +77,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 	 * @param string $str
 	 * @param bool   $isSlim
 	 */
-	public function setSkin($str, $isSlim = \false){
+	public function setSkin($str, $isSlim = false){
 		$this->skin = $str;
 		$this->isSlim = (bool) $isSlim;
 	}
@@ -85,14 +88,13 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 
 	protected function initEntity(){
 
-		$this->setDataFlag(self::DATA_PLAYER_FLAGS, self::DATA_PLAYER_FLAG_SLEEP, \false);
+		$this->setDataFlag(self::DATA_PLAYER_FLAGS, self::DATA_PLAYER_FLAG_SLEEP, false);
 		$this->setDataProperty(self::DATA_PLAYER_BED_POSITION, self::DATA_TYPE_POS, [0, 0, 0]);
 
 		$this->inventory = new PlayerInventory($this);
 		if($this instanceof Player){
 			$this->addWindow($this->inventory, 0);
 		}
-
 
 		if(!($this instanceof Player)){
 			if(isset($this->namedtag->NameTag)){
@@ -125,7 +127,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 
 	public function getDrops(){
 		$drops = [];
-		if($this->inventory !== \null){
+		if($this->inventory !== null){
 			foreach($this->inventory->getContents() as $item){
 				$drops[] = $item;
 			}
@@ -138,7 +140,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 		parent::saveNBT();
 		$this->namedtag->Inventory = new EnumTag("Inventory", []);
 		$this->namedtag->Inventory->setTagType(NBT::TAG_Compound);
-		if($this->inventory !== \null){
+		if($this->inventory !== null){
 			for($slot = 0; $slot < 9; ++$slot){
 				$hotbarSlot = $this->inventory->getHotbarSlotIndex($slot);
 				if($hotbarSlot !== -1){
@@ -190,7 +192,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 			}
 		}
 
-		if(\strlen($this->getSkinData()) > 0){
+		if(strlen($this->getSkinData()) > 0){
 			$this->namedtag->Skin = new CompoundTag("Skin", [
 				"Data" => new StringTag("Data", $this->getSkinData()),
 				"Slim" => new ByteTag("Slim", $this->isSkinSlim() ? 1 : 0)
@@ -202,7 +204,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 		if($player !== $this and !isset($this->hasSpawned[$player->getLoaderId()])){
 			$this->hasSpawned[$player->getLoaderId()] = $player;
 
-			if(\strlen($this->skin) < 64 * 32 * 4){
+			if(strlen($this->skin) < 64 * 32 * 4){
 				throw new \InvalidStateException((new \ReflectionClass($this))->getShortName() . " must have a valid skin set");
 			}
 

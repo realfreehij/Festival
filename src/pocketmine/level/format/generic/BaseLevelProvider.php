@@ -30,6 +30,10 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\utils\LevelException;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function mkdir;
 
 abstract class BaseLevelProvider implements LevelProvider{
 	/** @var Level */
@@ -42,11 +46,11 @@ abstract class BaseLevelProvider implements LevelProvider{
 	public function __construct(Level $level, $path){
 		$this->level = $level;
 		$this->path = $path;
-		if(!\file_exists($this->path)){
-			\mkdir($this->path, 0777, \true);
+		if(!file_exists($this->path)){
+			mkdir($this->path, 0777, true);
 		}
 		$nbt = new NBT(NBT::BIG_ENDIAN);
-		$nbt->readCompressed(\file_get_contents($this->getPath() . "level.dat"));
+		$nbt->readCompressed(file_get_contents($this->getPath() . "level.dat"));
 		$levelData = $nbt->getData();
 		if($levelData->Data instanceof CompoundTag){
 			$this->levelData = $levelData->Data;
@@ -122,8 +126,7 @@ abstract class BaseLevelProvider implements LevelProvider{
 			"Data" => $this->levelData
 		]));
 		$buffer = $nbt->writeCompressed();
-		\file_put_contents($this->getPath() . "level.dat", $buffer);
+		file_put_contents($this->getPath() . "level.dat", $buffer);
 	}
-
 
 }

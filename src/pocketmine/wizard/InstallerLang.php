@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,12 +15,24 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
 namespace pocketmine\wizard;
 
+use function array_shift;
+use function arsort;
+use function count;
+use function explode;
+use function file_exists;
+use function file_get_contents;
+use function implode;
+use function key;
+use function reset;
+use function str_replace;
+use function substr;
+use function trim;
 
 class InstallerLang{
 	public static $languages = [
@@ -49,22 +61,22 @@ class InstallerLang{
 	private $langfile;
 
 	public function __construct($lang = ""){
-		if(\file_exists(\pocketmine\PATH . "src/pocketmine/lang/Installer/" . $lang . ".ini")){
+		if(file_exists(\pocketmine\PATH . "src/pocketmine/lang/Installer/" . $lang . ".ini")){
 			$this->lang = $lang;
 			$this->langfile = \pocketmine\PATH . "src/pocketmine/lang/Installer/" . $lang . ".ini";
 		}else{
 			$files = [];
 			foreach(new \DirectoryIterator(\pocketmine\PATH . "src/pocketmine/lang/Installer/") as $file){
-				if($file->getExtension() === "ini" and \substr($file->getFilename(), 0, 2) === $lang){
+				if($file->getExtension() === "ini" and substr($file->getFilename(), 0, 2) === $lang){
 					$files[$file->getFilename()] = $file->getSize();
 				}
 			}
 
-			if(\count($files) > 0){
-				\arsort($files);
-				\reset($files);
-				$l = \key($files);
-				$l = \substr($l, 0, -4);
+			if(count($files) > 0){
+				arsort($files);
+				reset($files);
+				$l = key($files);
+				$l = substr($l, 0, -4);
 				$this->lang = isset(self::$languages[$l]) ? $l : $lang;
 				$this->langfile = \pocketmine\PATH . "src/pocketmine/lang/Installer/" . $l . ".ini";
 			}else{
@@ -86,14 +98,14 @@ class InstallerLang{
 
 	public function loadLang($langfile, $lang = "en"){
 		$this->texts[$lang] = [];
-		$texts = \explode("\n", \str_replace(["\r", "\\/\\/"], ["", "//"], \file_get_contents($langfile)));
+		$texts = explode("\n", str_replace(["\r", "\\/\\/"], ["", "//"], file_get_contents($langfile)));
 		foreach($texts as $line){
-			$line = \trim($line);
+			$line = trim($line);
 			if($line === ""){
 				continue;
 			}
-			$line = \explode("=", $line);
-			$this->texts[$lang][\trim(\array_shift($line))] = \trim(\str_replace(["\\n", "\\N",], "\n", \implode("=", $line)));
+			$line = explode("=", $line);
+			$this->texts[$lang][trim(array_shift($line))] = trim(str_replace(["\\n", "\\N",], "\n", implode("=", $line)));
 		}
 	}
 
@@ -104,8 +116,8 @@ class InstallerLang{
 			}else{
 				return $name;
 			}
-		}elseif(\count($search) > 0){
-			return \str_replace($search, $replace, $this->texts[$this->lang][$name]);
+		}elseif(count($search) > 0){
+			return str_replace($search, $replace, $this->texts[$this->lang][$name]);
 		}else{
 			return $this->texts[$this->lang][$name];
 		}

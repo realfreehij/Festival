@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -27,6 +27,15 @@ namespace pocketmine\wizard;
 
 use pocketmine\utils\Config;
 use pocketmine\utils\Utils;
+use function base64_encode;
+use function fgets;
+use function gethostbyname;
+use function getmypid;
+use function sleep;
+use function strtolower;
+use function substr;
+use function trim;
+use const STDIN;
 
 class Installer{
 	const DEFAULT_NAME = "Minecraft: PE Server";
@@ -45,24 +54,23 @@ class Installer{
 		}
 		do{
 			echo "[?] Language (en): ";
-			$lang = \strtolower($this->getInput("en"));
+			$lang = strtolower($this->getInput("en"));
 			if(!isset(InstallerLang::$languages[$lang])){
 				echo "[!] Couldn't find the language\n";
-				$lang = \false;
+				$lang = false;
 			}
-		}while($lang == \false);
+		}while($lang == false);
 		$this->lang = new InstallerLang($lang);
-
 
 		echo "[*] " . $this->lang->language_has_been_selected . "\n";
 
 		if(!$this->showLicense()){
-			\pocketmine\kill(\getmypid());
+			\pocketmine\kill(getmypid());
 			exit(-1);
 		}
 
 		echo "[?] " . $this->lang->skip_installer . " (y/N): ";
-		if(\strtolower($this->getInput()) === "y"){
+		if(strtolower($this->getInput()) === "y"){
 			return;
 		}
 		echo "\n";
@@ -86,14 +94,14 @@ class Installer{
 
 LICENSE;
 		echo "\n[?] " . $this->lang->accept_license . " (y/N): ";
-		if(\strtolower($this->getInput("n")) != "y"){
+		if(strtolower($this->getInput("n")) != "y"){
 			echo "[!] " . $this->lang->you_have_to_accept_the_license . "\n";
-			\sleep(5);
+			sleep(5);
 
-			return \false;
+			return false;
 		}
 
-		return \true;
+		return true;
 	}
 
 	private function welcome(){
@@ -129,7 +137,7 @@ LICENSE;
 		$config->set("max-players", (int) $this->getInput(self::DEFAULT_PLAYERS));
 		echo "[*] " . $this->lang->spawn_protection_info . "\n";
 		echo "[?] " . $this->lang->spawn_protection . " (Y/n): ";
-		if(\strtolower($this->getInput("y")) == "n"){
+		if(strtolower($this->getInput("y")) == "n"){
 			$config->set("spawn-protection", -1);
 		}else{
 			$config->set("spawn-protection", 16);
@@ -140,22 +148,22 @@ LICENSE;
 	private function generateUserFiles(){
 		echo "[*] " . $this->lang->op_info . "\n";
 		echo "[?] " . $this->lang->op_who . ": ";
-		$op = \strtolower($this->getInput(""));
+		$op = strtolower($this->getInput(""));
 		if($op === ""){
 			echo "[!] " . $this->lang->op_warning . "\n";
 		}else{
 			$ops = new Config(\pocketmine\DATA . "ops.txt", Config::ENUM);
-			$ops->set($op, \true);
+			$ops->set($op, true);
 			$ops->save();
 		}
 		echo "[*] " . $this->lang->whitelist_info . "\n";
 		echo "[?] " . $this->lang->whitelist_enable . " (y/N): ";
 		$config = new Config(\pocketmine\DATA . "server.properties", Config::PROPERTIES);
-		if(\strtolower($this->getInput("n")) === "y"){
+		if(strtolower($this->getInput("n")) === "y"){
 			echo "[!] " . $this->lang->whitelist_warning . "\n";
-			$config->set("white-list", \true);
+			$config->set("white-list", true);
 		}else{
-			$config->set("white-list", \false);
+			$config->set("white-list", false);
 		}
 		$config->save();
 	}
@@ -165,21 +173,21 @@ LICENSE;
 		echo "[!] " . $this->lang->query_warning1 . "\n";
 		echo "[!] " . $this->lang->query_warning2 . "\n";
 		echo "[?] " . $this->lang->query_disable . " (y/N): ";
-		if(\strtolower($this->getInput("n")) === "y"){
-			$config->set("enable-query", \false);
+		if(strtolower($this->getInput("n")) === "y"){
+			$config->set("enable-query", false);
 		}else{
-			$config->set("enable-query", \true);
+			$config->set("enable-query", true);
 		}
 
 		echo "[*] " . $this->lang->rcon_info . "\n";
 		echo "[?] " . $this->lang->rcon_enable . " (y/N): ";
-		if(\strtolower($this->getInput("n")) === "y"){
-			$config->set("enable-rcon", \true);
-			$password = \substr(\base64_encode(@Utils::getRandomBytes(20, \false)), 3, 10);
+		if(strtolower($this->getInput("n")) === "y"){
+			$config->set("enable-rcon", true);
+			$password = substr(base64_encode(@Utils::getRandomBytes(20, false)), 3, 10);
 			$config->set("rcon.password", $password);
 			echo "[*] " . $this->lang->rcon_password . ": " . $password . "\n";
 		}else{
-			$config->set("enable-rcon", \false);
+			$config->set("enable-rcon", false);
 		}
 
 		/*echo "[*] " . $this->lang->usage_info . "\n";
@@ -191,11 +199,10 @@ LICENSE;
 		}*/
 		$config->save();
 
-
 		echo "[*] " . $this->lang->ip_get . "\n";
 
 		$externalIP = Utils::getIP();
-		$internalIP = \gethostbyname(\trim(`hostname`));
+		$internalIP = gethostbyname(trim(`hostname`));
 
 		echo "[!] " . $this->lang->get("ip_warning", ["{{EXTERNAL_IP}}", "{{INTERNAL_IP}}"], [$externalIP, $internalIP]) . "\n";
 		echo "[!] " . $this->lang->ip_confirm;
@@ -206,14 +213,13 @@ LICENSE;
 		echo "[*] " . $this->lang->you_have_finished . "\n";
 		echo "[*] " . $this->lang->pocketmine_plugins . "\n";
 		echo "[*] " . $this->lang->pocketmine_will_start . "\n\n\n";
-		\sleep(4);
+		sleep(4);
 	}
 
 	private function getInput($default = ""){
-		$input = \trim(\fgets(STDIN));
+		$input = trim(fgets(STDIN));
 
 		return $input === "" ? $default : $input;
 	}
-
 
 }

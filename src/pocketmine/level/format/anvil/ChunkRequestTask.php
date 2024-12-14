@@ -26,6 +26,10 @@ use pocketmine\nbt\NBT;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 use pocketmine\tile\Spawnable;
+use function chr;
+use function ord;
+use function pack;
+use function str_repeat;
 
 class ChunkRequestTask extends AsyncTask{
 
@@ -64,12 +68,10 @@ class ChunkRequestTask extends AsyncTask{
 		$blockLight = $chunk->getBlockLightArray();
 		$skyLight = $chunk->getBlockSkyLightArray();
 
-
 		$orderedIds = "";
 		$orderedData = "";
 		$orderedSkyLight = str_repeat("\x00", 16384);
 		$orderedLight = str_repeat("\x00", 16384);
-
 
 		for($x = 0; $x < 16; ++$x){
 			for($z = 0; $z < 16; ++$z){
@@ -80,12 +82,12 @@ class ChunkRequestTask extends AsyncTask{
 			}
 		}
 
-		$heightmap = \pack("C*", ...$chunk->getHeightMapArray());
-		$biomeColors = \pack("N*", ...$chunk->getBiomeColorArray());
+		$heightmap = pack("C*", ...$chunk->getHeightMapArray());
+		$biomeColors = pack("N*", ...$chunk->getBiomeColorArray());
 
 		$ordered = $orderedIds . $orderedData . $orderedSkyLight . $orderedLight . $heightmap . $biomeColors . $this->tiles;
 
-		$this->setResult($ordered, \false);
+		$this->setResult($ordered, false);
 	}
 
 	public function getColumn($data, $x, $z){
@@ -103,11 +105,11 @@ class ChunkRequestTask extends AsyncTask{
 		$i = ($z << 3) + ($x >> 1);
 		if(($x & 1) === 0){
 			for($y = 0; $y < 128; $y += 2){
-				$column .= ($data[($y << 7) + $i] & "\x0f") | \chr((\ord($data[(($y + 1) << 7) + $i]) & 0x0f) << 4);
+				$column .= ($data[($y << 7) + $i] & "\x0f") | chr((ord($data[(($y + 1) << 7) + $i]) & 0x0f) << 4);
 			}
 		}else{
 			for($y = 0; $y < 128; $y += 2){
-				$column .= \chr((\ord($data[($y << 7) + $i]) & 0xf0) >> 4) | ($data[(($y + 1) << 7) + $i] & "\xf0");
+				$column .= chr((ord($data[($y << 7) + $i]) & 0xf0) >> 4) | ($data[(($y + 1) << 7) + $i] & "\xf0");
 			}
 		}
 

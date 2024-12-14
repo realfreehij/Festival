@@ -21,10 +21,12 @@
 
 namespace pocketmine;
 
+use function spl_object_hash;
+
 class ThreadManager extends \Threaded{
 
 	/** @var ThreadManager */
-	private static $instance = \null;
+	private static $instance = null;
 	private $data = [];
 	public static function init(){
 		self::$instance = new ThreadManager();
@@ -42,7 +44,7 @@ class ThreadManager extends \Threaded{
 	 */
 	public function add($thread){
 		if($thread instanceof Thread or $thread instanceof Worker){
-			$this->data[\spl_object_hash($thread)] = $thread;
+			$this->data[spl_object_hash($thread)] = $thread;
 		}
 	}
 
@@ -51,7 +53,7 @@ class ThreadManager extends \Threaded{
 	 */
 	public function remove($thread){
 		if($thread instanceof Thread or $thread instanceof Worker){
-			unset($this->data[\spl_object_hash($thread)]);
+			unset($this->data[spl_object_hash($thread)]);
 		}
 	}
 

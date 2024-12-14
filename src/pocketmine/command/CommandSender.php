@@ -40,5 +40,4 @@ interface CommandSender extends Permissible{
 	 */
 	public function getName();
 
-
 }

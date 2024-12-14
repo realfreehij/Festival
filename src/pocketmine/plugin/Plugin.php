@@ -26,7 +26,6 @@ namespace pocketmine\plugin;
 
 use pocketmine\command\CommandExecutor;
 
-
 /**
  * It is recommended to use PluginBase for the actual plugin
  *
@@ -76,7 +75,7 @@ interface Plugin extends CommandExecutor{
 	 * @param string $filename
 	 * @param bool   $replace
 	 */
-	public function saveResource($filename, $replace = \false);
+	public function saveResource($filename, $replace = false);
 
 	/**
 	 * Returns all the resources incrusted in the plugin

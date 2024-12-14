@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -41,7 +41,7 @@ class Chest extends Transparent{
 	}
 
 	public function canBeActivated(){
-		return \true;
+		return true;
 	}
 
 	public function getHardness(){
@@ -63,7 +63,7 @@ class Chest extends Transparent{
 		);
 	}
 
-	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = \null){
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$faces = [
 			0 => 4,
 			1 => 2,
@@ -71,7 +71,7 @@ class Chest extends Transparent{
 			3 => 3,
 		];
 
-		$chest = \null;
+		$chest = null;
 		$this->meta = $faces[$player instanceof Player ? $player->getDirection() : 0];
 
 		for($side = 2; $side <= 5; ++$side){
@@ -90,7 +90,7 @@ class Chest extends Transparent{
 			}
 		}
 
-		$this->getLevel()->setBlock($block, $this, \true, \true);
+		$this->getLevel()->setBlock($block, $this, true, true);
 		$nbt = new CompoundTag("", [
 			new EnumTag("Items", []),
 			new StringTag("id", Tile::CHEST),
@@ -106,7 +106,7 @@ class Chest extends Transparent{
 			$tile->pairWith($chest);
 		}
 
-		return \true;
+		return true;
 	}
 
 	public function onBreak(Item $item){
@@ -114,20 +114,20 @@ class Chest extends Transparent{
 		if($t instanceof TileChest){
 			$t->unpair();
 		}
-		$this->getLevel()->setBlock($this, new Air(), \true, \true);
+		$this->getLevel()->setBlock($this, new Air(), true, true);
 
-		return \true;
+		return true;
 	}
 
-	public function onActivate(Item $item, Player $player = \null){
+	public function onActivate(Item $item, Player $player = null){
 		if($player instanceof Player){
 			$top = $this->getSide(1);
-			if($top->isTransparent() !== \true){
-				return \true;
+			if($top->isTransparent() !== true){
+				return true;
 			}
 
 			$t = $this->getLevel()->getTile($this);
-			$chest = \null;
+			$chest = null;
 			if($t instanceof TileChest){
 				$chest = $t;
 			}else{
@@ -142,14 +142,13 @@ class Chest extends Transparent{
 				$chest = Tile::createTile("Chest", $this->getLevel()->getChunk($this->x >> 4, $this->z >> 4), $nbt);
 			}
 
-
 			if($player->isCreative()){
-				return \true;
+				return true;
 			}
 			$player->addWindow($chest->getInventory());
 		}
 
-		return \true;
+		return true;
 	}
 
 	public function getDrops(Item $item){

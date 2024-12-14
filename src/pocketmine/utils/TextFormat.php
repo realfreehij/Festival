@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,18 +15,28 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
 namespace pocketmine\utils;
+
+use function is_array;
+use function json_encode;
+use function preg_replace;
+use function preg_split;
+use function str_repeat;
+use function str_replace;
+use const JSON_UNESCAPED_SLASHES;
+use const PREG_SPLIT_DELIM_CAPTURE;
+use const PREG_SPLIT_NO_EMPTY;
 
 /**
  * Class used to handle Minecraft chat format, and convert it to other formats like ANSI or HTML
  */
 abstract class TextFormat{
 	const ESCAPE = "\xc2\xa7"; //§
-	
+
 	const BLACK = TextFormat::ESCAPE . "0";
 	const DARK_BLUE = TextFormat::ESCAPE . "1";
 	const DARK_GREEN = TextFormat::ESCAPE . "2";
@@ -59,7 +69,7 @@ abstract class TextFormat{
 	 * @return array
 	 */
 	public static function tokenize($string){
-		return \preg_split("/(". TextFormat::ESCAPE ."[0123456789abcdefklmnor])/", $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+		return preg_split("/(" . TextFormat::ESCAPE . "[0123456789abcdefklmnor])/", $string, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 	}
 
 	/**
@@ -70,11 +80,11 @@ abstract class TextFormat{
 	 *
 	 * @return mixed
 	 */
-	public static function clean($string, $removeFormat = \true){
+	public static function clean($string, $removeFormat = true){
 		if($removeFormat){
-			return \str_replace(TextFormat::ESCAPE, "", \preg_replace(["/". TextFormat::ESCAPE ."[0123456789abcdefklmnor]/", "/\x1b[\\(\\][[0-9;\\[\\(]+[Bm]/"], "", $string));
+			return str_replace(TextFormat::ESCAPE, "", preg_replace(["/" . TextFormat::ESCAPE . "[0123456789abcdefklmnor]/", "/\x1b[\\(\\][[0-9;\\[\\(]+[Bm]/"], "", $string));
 		}
-		return \str_replace("\x1b", "", \preg_replace("/\x1b[\\(\\][[0-9;\\[\\(]+[Bm]/", "", $string));
+		return str_replace("\x1b", "", preg_replace("/\x1b[\\(\\][[0-9;\\[\\(]+[Bm]/", "", $string));
 	}
 
 	/**
@@ -85,17 +95,17 @@ abstract class TextFormat{
 	 * @return string
 	 */
 	public static function toJSON($string){
-		if(!\is_array($string)){
+		if(!is_array($string)){
 			$string = self::tokenize($string);
 		}
 		$newString = [];
-		$pointer =& $newString;
+		$pointer = &$newString;
 		$color = "white";
-		$bold = \false;
-		$italic = \false;
-		$underlined = \false;
-		$strikethrough = \false;
-		$obfuscated = \false;
+		$bold = false;
+		$italic = false;
+		$underlined = false;
+		$strikethrough = false;
+		$obfuscated = false;
 		$index = 0;
 
 		foreach($string as $token){
@@ -104,56 +114,56 @@ abstract class TextFormat{
 					$newString["extra"] = [];
 				}
 				$newString["extra"][$index] = [];
-				$pointer =& $newString["extra"][$index];
+				$pointer = &$newString["extra"][$index];
 				if($color !== "white"){
 					$pointer["color"] = $color;
 				}
-				if($bold !== \false){
-					$pointer["bold"] = \true;
+				if($bold !== false){
+					$pointer["bold"] = true;
 				}
-				if($italic !== \false){
-					$pointer["italic"] = \true;
+				if($italic !== false){
+					$pointer["italic"] = true;
 				}
-				if($underlined !== \false){
-					$pointer["underlined"] = \true;
+				if($underlined !== false){
+					$pointer["underlined"] = true;
 				}
-				if($strikethrough !== \false){
-					$pointer["strikethrough"] = \true;
+				if($strikethrough !== false){
+					$pointer["strikethrough"] = true;
 				}
-				if($obfuscated !== \false){
-					$pointer["obfuscated"] = \true;
+				if($obfuscated !== false){
+					$pointer["obfuscated"] = true;
 				}
 				++$index;
 			}
 			switch($token){
 				case TextFormat::BOLD:
-					if($bold === \false){
-						$pointer["bold"] = \true;
-						$bold = \true;
+					if($bold === false){
+						$pointer["bold"] = true;
+						$bold = true;
 					}
 					break;
 				case TextFormat::OBFUSCATED:
-					if($obfuscated === \false){
-						$pointer["obfuscated"] = \true;
-						$obfuscated = \true;
+					if($obfuscated === false){
+						$pointer["obfuscated"] = true;
+						$obfuscated = true;
 					}
 					break;
 				case TextFormat::ITALIC:
-					if($italic === \false){
-						$pointer["italic"] = \true;
-						$italic = \true;
+					if($italic === false){
+						$pointer["italic"] = true;
+						$italic = true;
 					}
 					break;
 				case TextFormat::UNDERLINE:
-					if($underlined === \false){
-						$pointer["underlined"] = \true;
-						$underlined = \true;
+					if($underlined === false){
+						$pointer["underlined"] = true;
+						$underlined = true;
 					}
 					break;
 				case TextFormat::STRIKETHROUGH:
-					if($strikethrough === \false){
-						$pointer["strikethrough"] = \true;
-						$strikethrough = \true;
+					if($strikethrough === false){
+						$pointer["strikethrough"] = true;
+						$strikethrough = true;
 					}
 					break;
 				case TextFormat::RESET:
@@ -161,25 +171,25 @@ abstract class TextFormat{
 						$pointer["color"] = "white";
 						$color = "white";
 					}
-					if($bold !== \false){
-						$pointer["bold"] = \false;
-						$bold = \false;
+					if($bold !== false){
+						$pointer["bold"] = false;
+						$bold = false;
 					}
-					if($italic !== \false){
-						$pointer["italic"] = \false;
-						$italic = \false;
+					if($italic !== false){
+						$pointer["italic"] = false;
+						$italic = false;
 					}
-					if($underlined !== \false){
-						$pointer["underlined"] = \false;
-						$underlined = \false;
+					if($underlined !== false){
+						$pointer["underlined"] = false;
+						$underlined = false;
 					}
-					if($strikethrough !== \false){
-						$pointer["strikethrough"] = \false;
-						$strikethrough = \false;
+					if($strikethrough !== false){
+						$pointer["strikethrough"] = false;
+						$strikethrough = false;
 					}
-					if($obfuscated !== \false){
-						$pointer["obfuscated"] = \false;
-						$obfuscated = \false;
+					if($obfuscated !== false){
+						$pointer["obfuscated"] = false;
+						$obfuscated = false;
 					}
 					break;
 
@@ -262,7 +272,7 @@ abstract class TextFormat{
 			}
 		}
 
-		return \json_encode($newString, JSON_UNESCAPED_SLASHES);
+		return json_encode($newString, JSON_UNESCAPED_SLASHES);
 	}
 
 	/**
@@ -273,7 +283,7 @@ abstract class TextFormat{
 	 * @return string
 	 */
 	public static function toHTML($string){
-		if(!\is_array($string)){
+		if(!is_array($string)){
 			$string = self::tokenize($string);
 		}
 		$newString = "";
@@ -301,7 +311,7 @@ abstract class TextFormat{
 					++$tokens;
 					break;
 				case TextFormat::RESET:
-					$newString .= \str_repeat("</span>", $tokens);
+					$newString .= str_repeat("</span>", $tokens);
 					$tokens = 0;
 					break;
 
@@ -376,7 +386,7 @@ abstract class TextFormat{
 			}
 		}
 
-		$newString .= \str_repeat("</span>", $tokens);
+		$newString .= str_repeat("</span>", $tokens);
 
 		return $newString;
 	}
@@ -384,12 +394,11 @@ abstract class TextFormat{
 	/**
 	 * Returns a string with colorized ANSI Escape codes
 	 *
-	 * @param $string
 	 *
 	 * @return string
 	 */
 	public static function toANSI($string){
-		if(!\is_array($string)){
+		if(!is_array($string)){
 			$string = self::tokenize($string);
 		}
 

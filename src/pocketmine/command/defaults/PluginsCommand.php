@@ -24,6 +24,8 @@ namespace pocketmine\command\defaults;
 use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\utils\TextFormat;
+use function count;
+use function strlen;
 
 class PluginsCommand extends VanillaCommand{
 
@@ -39,22 +41,22 @@ class PluginsCommand extends VanillaCommand{
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
 		if(!$this->testPermission($sender)){
-			return \true;
+			return true;
 		}
 		$this->sendPluginList($sender);
-		return \true;
+		return true;
 	}
 
 	private function sendPluginList(CommandSender $sender){
 		$list = "";
 		foreach(($plugins = $sender->getServer()->getPluginManager()->getPlugins()) as $plugin){
-			if(\strlen($list) > 0){
+			if(strlen($list) > 0){
 				$list .= TextFormat::WHITE . ", ";
 			}
 			$list .= $plugin->isEnabled() ? TextFormat::GREEN : TextFormat::RED;
 			$list .= $plugin->getDescription()->getFullName();
 		}
 
-		$sender->sendMessage(new TranslationContainer("pocketmine.command.plugins.success", [\count($plugins), $list]));
+		$sender->sendMessage(new TranslationContainer("pocketmine.command.plugins.success", [count($plugins), $list]));
 	}
 }

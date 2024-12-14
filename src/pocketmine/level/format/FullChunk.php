@@ -45,11 +45,7 @@ interface FullChunk{
 	 */
 	public function getProvider();
 
-	/**
-	 * @param LevelProvider $provider
-	 */
 	public function setProvider(LevelProvider $provider);
-
 
 	/**
 	 * Modifies $blockId and $meta
@@ -62,7 +58,7 @@ interface FullChunk{
 	 * @param int &$blockId
 	 * @param int &$meta
 	 */
-	public function getBlock($x, $y, $z, &$blockId, &$meta = \null);
+	public function getBlock($x, $y, $z, &$blockId, &$meta = null);
 
 	/**
 	 * Gets block and meta in one go
@@ -83,7 +79,7 @@ interface FullChunk{
 	 * @param int $meta    0-15, if null, do not change
 	 *
 	 */
-	public function setBlock($x, $y, $z, $blockId = \null, $meta = \null);
+	public function setBlock($x, $y, $z, $blockId = null, $meta = null);
 
 	/**
 	 * @param int $x 0-15
@@ -232,24 +228,12 @@ interface FullChunk{
 
 	public function setGenerated($value = 1);
 
-	/**
-	 * @param Entity $entity
-	 */
 	public function addEntity(Entity $entity);
 
-	/**
-	 * @param Entity $entity
-	 */
 	public function removeEntity(Entity $entity);
 
-	/**
-	 * @param Tile $tile
-	 */
 	public function addTile(Tile $tile);
 
-	/**
-	 * @param Tile $tile
-	 */
 	public function removeTile(Tile $tile);
 
 	/**
@@ -281,7 +265,7 @@ interface FullChunk{
 	 *
 	 * @return bool
 	 */
-	public function load($generate = \true);
+	public function load($generate = true);
 
 	/**
 	 * @param bool $save
@@ -289,7 +273,7 @@ interface FullChunk{
 	 *
 	 * @return bool
 	 */
-	public function unload($save = \true, $safe = \true);
+	public function unload($save = true, $safe = true);
 
 	public function initChunk();
 
@@ -328,31 +312,28 @@ interface FullChunk{
 	/**
 	 * @param bool $changed
 	 */
-	public function setChanged($changed = \true);
+	public function setChanged($changed = true);
 
 	/**
 	 * @param string        $data
-	 * @param LevelProvider $provider
 	 *
 	 * @return FullChunk
 	 */
-	public static function fromBinary($data, LevelProvider $provider = \null);
+	public static function fromBinary($data, LevelProvider $provider = null);
 
 	/**
 	 * @param string        $data
-	 * @param LevelProvider $provider
 	 *
 	 * @return FullChunk
 	 */
-	public static function fromFastBinary($data, LevelProvider $provider = \null);
+	public static function fromFastBinary($data, LevelProvider $provider = null);
 
 	/**
 	 * @param int           $chunkX
 	 * @param int           $chunkZ
-	 * @param LevelProvider $provider
 	 *
 	 * @return FullChunk
 	 */
-	public static function getEmptyChunk($chunkX, $chunkZ, LevelProvider $provider = \null);
+	public static function getEmptyChunk($chunkX, $chunkZ, LevelProvider $provider = null);
 
 }

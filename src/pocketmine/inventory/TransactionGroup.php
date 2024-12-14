@@ -38,9 +38,6 @@ interface TransactionGroup{
 	 */
 	function getInventories();
 
-	/**
-	 * @param Transaction $transaction
-	 */
 	function addTransaction(Transaction $transaction);
 
 	/**

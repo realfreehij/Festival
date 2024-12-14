@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -27,6 +27,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
+use function mt_rand;
 
 class Arrow extends Projectile{
 	const NETWORK_ID = 80;
@@ -41,14 +42,14 @@ class Arrow extends Projectile{
 
 	protected $isCritical;
 
-	public function __construct(FullChunk $chunk, CompoundTag $nbt, Entity $shootingEntity = \null, $critical = \false){
+	public function __construct(FullChunk $chunk, CompoundTag $nbt, Entity $shootingEntity = null, $critical = false){
 		$this->isCritical = (bool) $critical;
 		parent::__construct($chunk, $nbt, $shootingEntity);
 	}
 
 	public function onUpdate($currentTick){
 		if($this->closed){
-			return \false;
+			return false;
 		}
 
 		$this->timings->startTiming();
@@ -57,16 +58,16 @@ class Arrow extends Projectile{
 
 		if(!$this->hadCollision and $this->isCritical){
 			$this->level->addParticle(new CriticalParticle($this->add(
-				$this->width / 2 + \mt_rand(-100, 100) / 500,
-				$this->height / 2 + \mt_rand(-100, 100) / 500,
-				$this->width / 2 + \mt_rand(-100, 100) / 500)));
+				$this->width / 2 + mt_rand(-100, 100) / 500,
+				$this->height / 2 + mt_rand(-100, 100) / 500,
+				$this->width / 2 + mt_rand(-100, 100) / 500)));
 		}elseif($this->onGround){
-			$this->isCritical = \false;
+			$this->isCritical = false;
 		}
 
 		if($this->age > 1200){
 			$this->kill();
-			$hasUpdate = \true;
+			$hasUpdate = true;
 		}
 
 		$this->timings->stopTiming();

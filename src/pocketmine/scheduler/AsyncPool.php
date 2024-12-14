@@ -23,6 +23,9 @@ namespace pocketmine\scheduler;
 
 use pocketmine\event\Timings;
 use pocketmine\Server;
+use function count;
+use function mt_rand;
+use function usleep;
 
 class AsyncPool{
 
@@ -47,7 +50,7 @@ class AsyncPool{
 
 		for($i = 0; $i < $this->size; ++$i){
 			$this->workerUsage[$i] = 0;
-			$this->workers[$i] = new AsyncWorker;
+			$this->workers[$i] = new AsyncWorker();
 			$this->workers[$i]->setClassLoader($this->server->getLoader());
 			$this->workers[$i]->start();
 		}
@@ -63,7 +66,7 @@ class AsyncPool{
 			$this->size = $newSize;
 			for($i = $this->size; $i < $newSize; ++$i){
 				$this->workerUsage[$i] = 0;
-				$this->workers[$i] = new AsyncWorker;
+				$this->workers[$i] = new AsyncWorker();
 				$this->workers[$i]->setClassLoader($this->server->getLoader());
 				$this->workers[$i]->start();
 			}
@@ -92,7 +95,7 @@ class AsyncPool{
 			return;
 		}
 
-		$selectedWorker = \mt_rand(0, $this->size - 1);
+		$selectedWorker = mt_rand(0, $this->size - 1);
 		$selectedTasks = $this->workerUsage[$selectedWorker];
 		for($i = 0; $i < $this->size; ++$i){
 			if($this->workerUsage[$i] < $selectedTasks){
@@ -104,7 +107,7 @@ class AsyncPool{
 		$this->submitTaskToWorker($task, $selectedWorker);
 	}
 
-	private function removeTask(AsyncTask $task, $force = \false){
+	private function removeTask(AsyncTask $task, $force = false){
 		if(isset($this->taskWorkers[$task->getTaskId()])){
 			if(!$force and ($task->isRunning() or !$task->isGarbage())){
 				return;
@@ -127,10 +130,10 @@ class AsyncPool{
 				$this->removeTask($task);
 			}
 
-			if(\count($this->tasks) > 0){
-				\usleep(25000);
+			if(count($this->tasks) > 0){
+				usleep(25000);
 			}
-		}while(\count($this->tasks) > 0);
+		}while(count($this->tasks) > 0);
 
 		for($i = 0; $i < $this->size; ++$i){
 			$this->workerUsage[$i] = 0;
@@ -153,9 +156,9 @@ class AsyncPool{
 				$this->removeTask($task);
 			}elseif($task->isTerminated()){
 				$info = $task->getTerminationInfo();
-				$this->removeTask($task, \true);
+				$this->removeTask($task, true);
 				$this->server->getLogger()->critical("Could not execute asynchronous task " . (new \ReflectionClass($task))->getShortName() . ": " . $info["message"]);
-				$this->server->getLogger()->critical("On ".$info["scope"].", line ".$info["line"] .", ".$info["function"]."()");
+				$this->server->getLogger()->critical("On " . $info["scope"] . ", line " . $info["line"] . ", " . $info["function"] . "()");
 			}
 		}
 

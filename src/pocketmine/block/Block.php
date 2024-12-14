@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -35,7 +35,6 @@ use pocketmine\metadata\Metadatable;
 use pocketmine\metadata\MetadataValue;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
-
 
 class Block extends Position implements Metadatable{
 	const AIR = 0;
@@ -149,7 +148,6 @@ class Block extends Position implements Metadatable{
 	const GLOWSTONE = 89;
 	const GLOWSTONE_BLOCK = 89;
 
-
 	const LIT_PUMPKIN = 91;
 	const JACK_O_LANTERN = 91;
 	const CAKE_BLOCK = 92;
@@ -251,26 +249,26 @@ class Block extends Position implements Metadatable{
 	const RESERVED6 = 255;
 
 	/** @var \SplFixedArray */
-	public static $list = \null;
+	public static $list = null;
 	/** @var \SplFixedArray */
-	public static $fullList = \null;
+	public static $fullList = null;
 
 	/** @var \SplFixedArray */
-	public static $light = \null;
+	public static $light = null;
 	/** @var \SplFixedArray */
-	public static $lightFilter = \null;
+	public static $lightFilter = null;
 	/** @var \SplFixedArray */
-	public static $solid = \null;
+	public static $solid = null;
 	/** @var \SplFixedArray */
-	public static $hardness = \null;
+	public static $hardness = null;
 	/** @var \SplFixedArray */
-	public static $transparent = \null;
+	public static $transparent = null;
 
 	protected $id;
 	protected $meta = 0;
 	public $slipperiness = 0.6;
 	/** @var AxisAlignedBB */
-	public $boundingBox = \null;
+	public $boundingBox = null;
 
 	/**
 	 * Backwards-compatibility with old way to define block properties
@@ -295,11 +293,11 @@ class Block extends Position implements Metadatable{
 			"isActivable" => "canBeActivated",
 			"hasEntityCollision" => "hasEntityCollision"
 		];
-		return isset($map[$key]) ? $this->{$map[$key]}() : \null;
+		return isset($map[$key]) ? $this->{$map[$key]}() : null;
 	}
 
 	public static function init(){
-		if(self::$list === \null){
+		if(self::$list === null){
 			self::$list = new \SplFixedArray(256);
 			self::$fullList = new \SplFixedArray(4096);
 			self::$light = new \SplFixedArray(256);
@@ -464,7 +462,7 @@ class Block extends Position implements Metadatable{
 			self::$list[self::RESERVED6] = reserved6::class;
 
 			foreach(self::$list as $id => $class){
-				if($class !== \null){
+				if($class !== null){
 					/** @var Block $block */
 					$block = new $class();
 
@@ -503,14 +501,13 @@ class Block extends Position implements Metadatable{
 	/**
 	 * @param int      $id
 	 * @param int      $meta
-	 * @param Position $pos
 	 *
 	 * @return Block
 	 */
-	public static function get($id, $meta = 0, Position $pos = \null){
+	public static function get($id, $meta = 0, Position $pos = null){
 		try{
 			$block = self::$list[$id];
-			if($block !== \null){
+			if($block !== null){
 				$block = new $block($meta);
 			}else{
 				$block = new Block($id, $meta);
@@ -519,7 +516,7 @@ class Block extends Position implements Metadatable{
 			$block = new Block($id, $meta);
 		}
 
-		if($pos !== \null){
+		if($pos !== null){
 			$block->x = $pos->x;
 			$block->y = $pos->y;
 			$block->z = $pos->z;
@@ -541,9 +538,6 @@ class Block extends Position implements Metadatable{
 	/**
 	 * Places the Block, using block space and block target, and side. Returns if the block has been placed.
 	 *
-	 * @param Item   $item
-	 * @param Block  $block
-	 * @param Block  $target
 	 * @param int    $face
 	 * @param float  $fx
 	 * @param float  $fy
@@ -552,30 +546,28 @@ class Block extends Position implements Metadatable{
 	 *
 	 * @return bool
 	 */
-	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = \null){
-		return $this->getLevel()->setBlock($this, $this, \true, \true);
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
+		return $this->getLevel()->setBlock($this, $this, true, true);
 	}
 
 	/**
 	 * Returns if the item can be broken with an specific Item
 	 *
-	 * @param Item $item
 	 *
 	 * @return bool
 	 */
 	public function isBreakable(Item $item){
-		return \true;
+		return true;
 	}
 
 	/**
 	 * Do the actions needed so the block is broken with the Item
 	 *
-	 * @param Item $item
 	 *
 	 * @return mixed
 	 */
 	public function onBreak(Item $item){
-		return $this->getLevel()->setBlock($this, new Air(), \true, \true);
+		return $this->getLevel()->setBlock($this, new Air(), true, true);
 	}
 
 	/**
@@ -586,26 +578,23 @@ class Block extends Position implements Metadatable{
 	 * @return void
 	 */
 	public function onUpdate($type){}
-	
+
 	/**
 	 * Called when entity falls on the block.
 	 *
-	 * @param Entity $entity
 	 * @param float $fallDistance
 	 * @return void
 	 */
 	public function onFall(Entity $entity, $fallDistance){}
-	
+
 	/**
 	 * Do actions when activated by Item. Returns if it has done anything
 	 *
-	 * @param Item   $item
-	 * @param Player $player
 	 *
 	 * @return bool
 	 */
-	public function onActivate(Item $item, Player $player = \null){
-		return \false;
+	public function onActivate(Item $item, Player $player = null){
+		return false;
 	}
 
 	/**
@@ -642,7 +631,7 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function canBePlaced(){
-		return \true;
+		return true;
 	}
 
 	/**
@@ -651,18 +640,18 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function canBeReplaced(){
-		return \false;
+		return false;
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function isTransparent(){
-		return \false;
+		return false;
 	}
 
 	public function isSolid(){
-		return \true;
+		return true;
 	}
 
 	/**
@@ -671,7 +660,7 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function canBeFlowedInto(){
-		return \false;
+		return false;
 	}
 
 	/**
@@ -680,15 +669,15 @@ class Block extends Position implements Metadatable{
 	 * @return bool
 	 */
 	public function canBeActivated(){
-		return \false;
+		return false;
 	}
 
 	public function hasEntityCollision(){
-		return \false;
+		return false;
 	}
 
 	public function canPassThrough(){
-		return \false;
+		return false;
 	}
 
 	/**
@@ -726,20 +715,18 @@ class Block extends Position implements Metadatable{
 	/**
 	 * Sets the block position to a new Position object
 	 *
-	 * @param Position $v
 	 */
 	final public function position(Position $v){
 		$this->x = (int) $v->x;
 		$this->y = (int) $v->y;
 		$this->z = (int) $v->z;
 		$this->level = $v->level;
-		$this->boundingBox = \null;
+		$this->boundingBox = null;
 	}
 
 	/**
 	 * Returns an array of Item objects to be dropped
 	 *
-	 * @param Item $item
 	 *
 	 * @return array
 	 */
@@ -756,7 +743,6 @@ class Block extends Position implements Metadatable{
 	/**
 	 * Returns the seconds that this block takes to be broken using an specific Item
 	 *
-	 * @param Item $item
 	 *
 	 * @return float
 	 */
@@ -790,19 +776,15 @@ class Block extends Position implements Metadatable{
 	/**
 	 * Checks for collision against an AxisAlignedBB
 	 *
-	 * @param AxisAlignedBB $bb
 	 *
 	 * @return bool
 	 */
 	public function collidesWithBB(AxisAlignedBB $bb){
 		$bb2 = $this->getBoundingBox();
 
-		return $bb2 !== \null and $bb->intersectsWith($bb2);
+		return $bb2 !== null and $bb->intersectsWith($bb2);
 	}
 
-	/**
-	 * @param Entity $entity
-	 */
 	public function onEntityCollide(Entity $entity){
 
 	}
@@ -811,7 +793,7 @@ class Block extends Position implements Metadatable{
 	 * @return AxisAlignedBB
 	 */
 	public function getBoundingBox(){
-		if($this->boundingBox === \null){
+		if($this->boundingBox === null){
 			$this->boundingBox = $this->recalculateBoundingBox();
 		}
 		return $this->boundingBox;
@@ -833,8 +815,8 @@ class Block extends Position implements Metadatable{
 
 	public function calculateIntercept(Vector3 $pos1, Vector3 $pos2){
 		$bb = $this->getBoundingBox();
-		if($bb === \null){
-			return \null;
+		if($bb === null){
+			return null;
 		}
 
 		$v1 = $pos1->getIntermediateWithXValue($pos2, $bb->minX);
@@ -844,54 +826,54 @@ class Block extends Position implements Metadatable{
 		$v5 = $pos1->getIntermediateWithZValue($pos2, $bb->minZ);
 		$v6 = $pos1->getIntermediateWithZValue($pos2, $bb->maxZ);
 
-		if($v1 !== \null and !$bb->isVectorInYZ($v1)){
-			$v1 = \null;
+		if($v1 !== null and !$bb->isVectorInYZ($v1)){
+			$v1 = null;
 		}
 
-		if($v2 !== \null and !$bb->isVectorInYZ($v2)){
-			$v2 = \null;
+		if($v2 !== null and !$bb->isVectorInYZ($v2)){
+			$v2 = null;
 		}
 
-		if($v3 !== \null and !$bb->isVectorInXZ($v3)){
-			$v3 = \null;
+		if($v3 !== null and !$bb->isVectorInXZ($v3)){
+			$v3 = null;
 		}
 
-		if($v4 !== \null and !$bb->isVectorInXZ($v4)){
-			$v4 = \null;
+		if($v4 !== null and !$bb->isVectorInXZ($v4)){
+			$v4 = null;
 		}
 
-		if($v5 !== \null and !$bb->isVectorInXY($v5)){
-			$v5 = \null;
+		if($v5 !== null and !$bb->isVectorInXY($v5)){
+			$v5 = null;
 		}
 
-		if($v6 !== \null and !$bb->isVectorInXY($v6)){
-			$v6 = \null;
+		if($v6 !== null and !$bb->isVectorInXY($v6)){
+			$v6 = null;
 		}
 
 		$vector = $v1;
 
-		if($v2 !== \null and ($vector === \null or $pos1->distanceSquared($v2) < $pos1->distanceSquared($vector))){
+		if($v2 !== null and ($vector === null or $pos1->distanceSquared($v2) < $pos1->distanceSquared($vector))){
 			$vector = $v2;
 		}
 
-		if($v3 !== \null and ($vector === \null or $pos1->distanceSquared($v3) < $pos1->distanceSquared($vector))){
+		if($v3 !== null and ($vector === null or $pos1->distanceSquared($v3) < $pos1->distanceSquared($vector))){
 			$vector = $v3;
 		}
 
-		if($v4 !== \null and ($vector === \null or $pos1->distanceSquared($v4) < $pos1->distanceSquared($vector))){
+		if($v4 !== null and ($vector === null or $pos1->distanceSquared($v4) < $pos1->distanceSquared($vector))){
 			$vector = $v4;
 		}
 
-		if($v5 !== \null and ($vector === \null or $pos1->distanceSquared($v5) < $pos1->distanceSquared($vector))){
+		if($v5 !== null and ($vector === null or $pos1->distanceSquared($v5) < $pos1->distanceSquared($vector))){
 			$vector = $v5;
 		}
 
-		if($v6 !== \null and ($vector === \null or $pos1->distanceSquared($v6) < $pos1->distanceSquared($vector))){
+		if($v6 !== null and ($vector === null or $pos1->distanceSquared($v6) < $pos1->distanceSquared($vector))){
 			$vector = $v6;
 		}
 
-		if($vector === \null){
-			return \null;
+		if($vector === null){
+			return null;
 		}
 
 		$f = -1;

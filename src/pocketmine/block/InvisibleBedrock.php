@@ -21,7 +21,7 @@ class InvisibleBedrock extends Solid{
 	}
 
 	public function isBreakable(Item $item){
-		return \false;
+		return false;
 	}
 
 }

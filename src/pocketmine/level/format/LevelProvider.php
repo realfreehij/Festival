@@ -30,7 +30,6 @@ interface LevelProvider{
 	const ORDER_ZXY = 1;
 
 	/**
-	 * @param Level  $level
 	 * @param string $path
 	 */
 	public function __construct(Level $level, $path);
@@ -108,7 +107,7 @@ interface LevelProvider{
 	 *
 	 * @return FullChunk|Chunk
 	 */
-	public function getChunk($X, $Z, $create = \false);
+	public function getChunk($X, $Z, $create = false);
 
 	/**
 	 * @param $Y 0-7
@@ -134,7 +133,7 @@ interface LevelProvider{
 	 *
 	 * @return bool
 	 */
-	public function loadChunk($X, $Z, $create = \false);
+	public function loadChunk($X, $Z, $create = false);
 
 	/**
 	 * @param int  $X
@@ -143,7 +142,7 @@ interface LevelProvider{
 	 *
 	 * @return bool
 	 */
-	public function unloadChunk($X, $Z, $safe = \true);
+	public function unloadChunk($X, $Z, $safe = true);
 
 	/**
 	 * @param int $X
@@ -172,7 +171,6 @@ interface LevelProvider{
 	/**
 	 * @param int       $chunkX
 	 * @param int       $chunkZ
-	 * @param FullChunk $chunk
 	 *
 	 * @return mixed
 	 */
@@ -208,9 +206,6 @@ interface LevelProvider{
 	 */
 	public function getSpawn();
 
-	/**
-	 * @param Vector3 $pos
-	 */
 	public function setSpawn(Vector3 $pos);
 
 	/**

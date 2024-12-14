@@ -19,7 +19,6 @@
  *
 */
 
-
 namespace pocketmine\item;
 
 abstract class Armor extends Item{

@@ -28,8 +28,6 @@ class EntityCombustByEntityEvent extends EntityCombustEvent{
 	protected $combuster;
 
 	/**
-	 * @param Entity $combuster
-	 * @param Entity $combustee
 	 * @param int    $duration
 	 */
 	public function __construct(Entity $combuster, Entity $combustee, $duration){

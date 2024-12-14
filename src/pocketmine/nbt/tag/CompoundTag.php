@@ -21,6 +21,7 @@
 namespace pocketmine\nbt\tag;
 
 use pocketmine\nbt\NBT;
+use function get_class;
 
 class CompoundTag extends NamedTag implements \ArrayAccess
 {
@@ -53,7 +54,7 @@ class CompoundTag extends NamedTag implements \ArrayAccess
 			}
 		}
 
-		return \null;
+		return null;
 	}
 
 	public function offsetSet(mixed $offset, mixed $value): void
@@ -83,13 +84,13 @@ class CompoundTag extends NamedTag implements \ArrayAccess
 			if ($tag instanceof NamedTag and $tag->getName() !== "") {
 				$this->{$tag->getName()} = $tag;
 			}
-		} while (! ($tag instanceof EndTag) and ! $nbt->feof());
+		} while (!($tag instanceof EndTag) and !$nbt->feof());
 	}
 
 	public function write(NBT $nbt)
 	{
 		foreach ($this as $tag) {
-			if ($tag instanceof Tag and ! ($tag instanceof EndTag)) {
+			if ($tag instanceof Tag and !($tag instanceof EndTag)) {
 				$nbt->writeTag($tag);
 			}
 		}
@@ -98,10 +99,10 @@ class CompoundTag extends NamedTag implements \ArrayAccess
 
 	public function __toString()
 	{
-		$str = \get_class($this) . "{\n";
+		$str = get_class($this) . "{\n";
 		foreach ($this as $tag) {
 			if ($tag instanceof Tag) {
-				$str .= \get_class($tag) . ":" . $tag->__toString() . "\n";
+				$str .= get_class($tag) . ":" . $tag->__toString() . "\n";
 			}
 		}
 		return $str . "}";

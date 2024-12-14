@@ -34,3 +34,7 @@ Desktop.ini
 *.properties
 bin/php/php.ini
 /.metadata/
+
+# php-cs-fixer
+/.php_cs.cache
+/.php-cs-fixer.cache

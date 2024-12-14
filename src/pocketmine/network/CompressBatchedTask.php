@@ -23,6 +23,8 @@ namespace pocketmine\network;
 
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
+use function zlib_encode;
+use const ZLIB_ENCODING_DEFLATE;
 
 class CompressBatchedTask extends AsyncTask{
 
@@ -41,8 +43,8 @@ class CompressBatchedTask extends AsyncTask{
 
 	public function onRun(){
 		try{
-			$this->final = \zlib_encode($this->data, ZLIB_ENCODING_DEFLATE, $this->level);
-			$this->data = \null;
+			$this->final = zlib_encode($this->data, ZLIB_ENCODING_DEFLATE, $this->level);
+			$this->data = null;
 		}catch(\Exception $e){
 
 		}

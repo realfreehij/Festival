@@ -36,13 +36,12 @@ abstract class MetadataStore{
 	 *
 	 * @param mixed         $subject
 	 * @param string        $metadataKey
-	 * @param MetadataValue $newMetadataValue
 	 *
 	 * @throws \Exception
 	 */
 	public function setMetadata($subject, $metadataKey, MetadataValue $newMetadataValue){
 		$owningPlugin = $newMetadataValue->getOwningPlugin();
-		if($owningPlugin === \null){
+		if($owningPlugin === null){
 			throw new PluginException("Plugin cannot be null");
 		}
 
@@ -95,7 +94,6 @@ abstract class MetadataStore{
 	 *
 	 * @param mixed  $subject
 	 * @param string $metadataKey
-	 * @param Plugin $owningPlugin
 	 *
 	 * @throws \Exception
 	 */
@@ -114,7 +112,6 @@ abstract class MetadataStore{
 	 * given plugin. Doing this will force each invalidated metadata item to
 	 * be recalculated the next time it is accessed.
 	 *
-	 * @param Plugin $owningPlugin
 	 */
 	public function invalidateAll(Plugin $owningPlugin){
 		/** @var $values MetadataValue[] */
@@ -129,7 +126,6 @@ abstract class MetadataStore{
 	 * Creates a unique name for the object receiving metadata by combining
 	 * unique data from the subject with a metadataKey.
 	 *
-	 * @param Metadatable $subject
 	 * @param string      $metadataKey
 	 *
 	 * @return string

@@ -25,22 +25,24 @@ use pocketmine\level\format\generic\BaseChunk;
 use pocketmine\level\format\generic\EmptyChunkSection;
 use pocketmine\level\format\LevelProvider;
 use pocketmine\nbt\NBT;
-use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\ByteArrayTag;
+use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\EnumTag;
-use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\IntArrayTag;
+use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\LongTag;
 use pocketmine\Player;
+use function array_fill;
+use const ZLIB_ENCODING_DEFLATE;
 
 class Chunk extends BaseChunk{
 
 	/** @var Compound */
 	protected $nbt;
 
-	public function __construct($level, CompoundTag $nbt = \null){
-		if($nbt === \null){
+	public function __construct($level, CompoundTag $nbt = null){
+		if($nbt === null){
 			$this->provider = $level;
 			$this->nbt = new CompoundTag("Level", []);
 			return;
@@ -69,11 +71,11 @@ class Chunk extends BaseChunk{
 		}
 
 		if(!isset($this->nbt->BiomeColors) or !($this->nbt->BiomeColors instanceof IntArrayTag)){
-			$this->nbt->BiomeColors = new IntArrayTag("BiomeColors", \array_fill(0, 256, 0));
+			$this->nbt->BiomeColors = new IntArrayTag("BiomeColors", array_fill(0, 256, 0));
 		}
 
 		if(!isset($this->nbt->HeightMap) or !($this->nbt->HeightMap instanceof IntArrayTag)){
-			$this->nbt->HeightMap = new IntArrayTag("HeightMap", \array_fill(0, 256, 0));
+			$this->nbt->HeightMap = new IntArrayTag("HeightMap", array_fill(0, 256, 0));
 		}
 
 		$sections = [];
@@ -107,7 +109,7 @@ class Chunk extends BaseChunk{
 
 	public function setLightPopulated($value = 1){
 		$this->nbt->LightPopulated = new ByteTag("LightPopulated", $value);
-		$this->hasChanged = \true;
+		$this->hasChanged = true;
 	}
 
 	/**
@@ -122,7 +124,7 @@ class Chunk extends BaseChunk{
 	 */
 	public function setPopulated($value = 1){
 		$this->nbt->TerrainPopulated = new ByteTag("TerrainPopulated", $value);
-		$this->hasChanged = \true;
+		$this->hasChanged = true;
 	}
 
 	/**
@@ -137,7 +139,7 @@ class Chunk extends BaseChunk{
 	 */
 	public function setGenerated($value = 1){
 		$this->nbt->TerrainGenerated = new ByteTag("TerrainGenerated", $value);
-		$this->hasChanged = \true;
+		$this->hasChanged = true;
 	}
 
 	/**
@@ -149,11 +151,10 @@ class Chunk extends BaseChunk{
 
 	/**
 	 * @param string        $data
-	 * @param LevelProvider $provider
 	 *
 	 * @return Chunk
 	 */
-	public static function fromBinary($data, LevelProvider $provider = \null){
+	public static function fromBinary($data, LevelProvider $provider = null){
 		$nbt = new NBT(NBT::BIG_ENDIAN);
 
 		try{
@@ -161,22 +162,21 @@ class Chunk extends BaseChunk{
 			$chunk = $nbt->getData();
 
 			if(!isset($chunk->Level) or !($chunk->Level instanceof CompoundTag)){
-				return \null;
+				return null;
 			}
 
 			return new Chunk($provider instanceof LevelProvider ? $provider : Anvil::class, $chunk->Level);
 		}catch(\Exception $e){
-			return \null;
+			return null;
 		}
 	}
 
 	/**
 	 * @param string        $data
-	 * @param LevelProvider $provider
 	 *
 	 * @return Chunk
 	 */
-	public static function fromFastBinary($data, LevelProvider $provider = \null){
+	public static function fromFastBinary($data, LevelProvider $provider = null){
 		$nbt = new NBT(NBT::BIG_ENDIAN);
 
 		try{
@@ -184,12 +184,12 @@ class Chunk extends BaseChunk{
 			$chunk = $nbt->getData();
 
 			if(!isset($chunk->Level) or !($chunk->Level instanceof CompoundTag)){
-				return \null;
+				return null;
 			}
 
 			return new Chunk($provider instanceof LevelProvider ? $provider : Anvil::class, $chunk->Level);
 		}catch(\Exception $e){
-			return \null;
+			return null;
 		}
 	}
 
@@ -205,7 +205,7 @@ class Chunk extends BaseChunk{
 			if($section instanceof EmptyChunkSection){
 				continue;
 			}
-			$nbt->Sections[$section->getY()] = new CompoundTag(\null, [
+			$nbt->Sections[$section->getY()] = new CompoundTag(null, [
 				"Y" => new ByteTag("Y", $section->getY()),
 				"Blocks" => new ByteArrayTag("Blocks", $section->getIdArray()),
 				"Data" => new ByteArrayTag("Data", $section->getDataArray()),
@@ -229,7 +229,6 @@ class Chunk extends BaseChunk{
 
 		$nbt->Entities = new EnumTag("Entities", $entities);
 		$nbt->Entities->setTagType(NBT::TAG_Compound);
-
 
 		$tiles = [];
 		foreach($this->getTiles() as $tile){
@@ -258,7 +257,7 @@ class Chunk extends BaseChunk{
 			if($section instanceof EmptyChunkSection){
 				continue;
 			}
-			$nbt->Sections[$section->getY()] = new CompoundTag(\null, [
+			$nbt->Sections[$section->getY()] = new CompoundTag(null, [
 				"Y" => new ByteTag("Y", $section->getY()),
 				"Blocks" => new ByteArrayTag("Blocks", $section->getIdArray()),
 				"Data" => new ByteArrayTag("Data", $section->getDataArray()),
@@ -283,7 +282,6 @@ class Chunk extends BaseChunk{
 		$nbt->Entities = new EnumTag("Entities", $entities);
 		$nbt->Entities->setTagType(NBT::TAG_Compound);
 
-
 		$tiles = [];
 		foreach($this->getTiles() as $tile){
 			$tile->saveNBT();
@@ -302,13 +300,12 @@ class Chunk extends BaseChunk{
 	/**
 	 * @param int           $chunkX
 	 * @param int           $chunkZ
-	 * @param LevelProvider $provider
 	 *
 	 * @return Chunk
 	 */
-	public static function getEmptyChunk($chunkX, $chunkZ, LevelProvider $provider = \null){
+	public static function getEmptyChunk($chunkX, $chunkZ, LevelProvider $provider = null){
 		try{
-			$chunk = new Chunk($provider instanceof LevelProvider ? $provider : Anvil::class, \null);
+			$chunk = new Chunk($provider instanceof LevelProvider ? $provider : Anvil::class, null);
 			$chunk->x = $chunkX;
 			$chunk->z = $chunkZ;
 
@@ -316,8 +313,8 @@ class Chunk extends BaseChunk{
 				$chunk->sections[$y] = new EmptyChunkSection($y);
 			}
 
-			$chunk->heightMap = \array_fill(0, 256, 0);
-			$chunk->biomeColors = \array_fill(0, 256, 0);
+			$chunk->heightMap = array_fill(0, 256, 0);
+			$chunk->biomeColors = array_fill(0, 256, 0);
 
 			$chunk->nbt->V = new ByteTag("V", 1);
 			$chunk->nbt->InhabitedTime = new LongTag("InhabitedTime", 0);
@@ -327,7 +324,7 @@ class Chunk extends BaseChunk{
 
 			return $chunk;
 		}catch(\Exception $e){
-			return \null;
+			return null;
 		}
 	}
 }

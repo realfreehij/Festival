@@ -24,7 +24,7 @@ namespace pocketmine\command\defaults;
 use pocketmine\command\CommandSender;
 use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
-
+use function substr;
 
 class ListCommand extends VanillaCommand{
 
@@ -40,7 +40,7 @@ class ListCommand extends VanillaCommand{
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
 		if(!$this->testPermission($sender)){
-			return \true;
+			return true;
 		}
 
 		$online = "";
@@ -54,8 +54,8 @@ class ListCommand extends VanillaCommand{
 		}
 
 		$sender->sendMessage(new TranslationContainer("commands.players.list", [$onlineCount, $sender->getServer()->getMaxPlayers()]));
-		$sender->sendMessage(\substr($online, 0, -2));
+		$sender->sendMessage(substr($online, 0, -2));
 
-		return \true;
+		return true;
 	}
 }

@@ -32,13 +32,10 @@ use pocketmine\entity\Vehicle;
  * Called when a entity is spawned
  */
 class EntitySpawnEvent extends EntityEvent{
-	public static $handlerList = \null;
+	public static $handlerList = null;
 
 	private $entityType;
 
-	/**
-	 * @param Entity $entity
-	 */
 	public function __construct(Entity $entity){
 		$this->entity = $entity;
 		$this->entityType = $entity::NETWORK_ID;

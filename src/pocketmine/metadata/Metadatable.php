@@ -29,7 +29,6 @@ interface Metadatable{
 	 * Sets a metadata value in the implementing object's metadata store.
 	 *
 	 * @param string        $metadataKey
-	 * @param MetadataValue $newMetadataValue
 	 *
 	 * @return void
 	 */
@@ -60,7 +59,6 @@ interface Metadatable{
 	 * metadata store.
 	 *
 	 * @param string $metadataKey
-	 * @param Plugin $owningPlugin
 	 *
 	 * @return void
 	 */

@@ -24,7 +24,6 @@
  */
 namespace pocketmine\math;
 
-
 abstract class Math{
 
 	public static function floorFloat($n){

@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,15 +15,22 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
 namespace pocketmine\network\protocol;
 
-use pocketmine\utils\Binary;
 use pocketmine\item\Item;
-
+use pocketmine\utils\Binary;
+use function chr;
+use function ord;
+use function pack;
+use function strlen;
+use function strrev;
+use function substr;
+use function unpack;
+use const PHP_INT_SIZE;
 
 abstract class DataPacket extends \stdClass{
 
@@ -31,7 +38,7 @@ abstract class DataPacket extends \stdClass{
 
 	public $offset = 0;
 	public $buffer = "";
-	public $isEncoded = \false;
+	public $isEncoded = false;
 	private $channel = 0;
 
 	public function pid(){
@@ -43,7 +50,7 @@ abstract class DataPacket extends \stdClass{
 	abstract public function decode();
 
 	protected function reset(){
-		$this->buffer = \chr($this::NETWORK_ID);
+		$this->buffer = chr($this::NETWORK_ID);
 		$this->offset = 0;
 	}
 
@@ -56,7 +63,7 @@ abstract class DataPacket extends \stdClass{
 		return $this->channel;
 	}
 
-	public function setBuffer($buffer = \null, $offset = 0){
+	public function setBuffer($buffer = null, $offset = 0){
 		$this->buffer = $buffer;
 		$this->offset = (int) $offset;
 	}
@@ -71,13 +78,13 @@ abstract class DataPacket extends \stdClass{
 
 	protected function get($len){
 		if($len < 0){
-			$this->offset = \strlen($this->buffer) - 1;
+			$this->offset = strlen($this->buffer) - 1;
 			return "";
-		}elseif($len === \true){
-			return \substr($this->buffer, $this->offset);
+		}elseif($len === true){
+			return substr($this->buffer, $this->offset);
 		}
 
-		return $len === 1 ? $this->buffer[$this->offset++] : \substr($this->buffer, ($this->offset += $len) - $len, $len);
+		return $len === 1 ? $this->buffer[$this->offset++] : substr($this->buffer, ($this->offset += $len) - $len, $len);
 	}
 
 	protected function put($str){
@@ -93,58 +100,57 @@ abstract class DataPacket extends \stdClass{
 	}
 
 	protected function getInt(){
-		return (\PHP_INT_SIZE === 8 ? \unpack("N", $this->get(4))[1] << 32 >> 32 : \unpack("N", $this->get(4))[1]);
+		return (PHP_INT_SIZE === 8 ? unpack("N", $this->get(4))[1] << 32 >> 32 : unpack("N", $this->get(4))[1]);
 	}
 
 	protected function putInt($v){
-		$this->buffer .= \pack("N", $v);
+		$this->buffer .= pack("N", $v);
 	}
 
-	protected function getShort($signed = \true){
-		return $signed ? (\PHP_INT_SIZE === 8 ? \unpack("n", $this->get(2))[1] << 48 >> 48 : \unpack("n", $this->get(2))[1] << 16 >> 16) : \unpack("n", $this->get(2))[1];
+	protected function getShort($signed = true){
+		return $signed ? (PHP_INT_SIZE === 8 ? unpack("n", $this->get(2))[1] << 48 >> 48 : unpack("n", $this->get(2))[1] << 16 >> 16) : unpack("n", $this->get(2))[1];
 	}
 
 	protected function putShort($v){
-		$this->buffer .= \pack("n", $v);
+		$this->buffer .= pack("n", $v);
 	}
 
 	protected function getFloat(){
-		return (\ENDIANNESS === 0 ? \unpack("f", $this->get(4))[1] : \unpack("f", \strrev($this->get(4)))[1]);
+		return (ENDIANNESS === 0 ? unpack("f", $this->get(4))[1] : unpack("f", strrev($this->get(4)))[1]);
 	}
 
 	protected function putFloat($v){
-		$this->buffer .= (\ENDIANNESS === 0 ? \pack("f", $v) : \strrev(\pack("f", $v)));
+		$this->buffer .= (ENDIANNESS === 0 ? pack("f", $v) : strrev(pack("f", $v)));
 	}
 
 	protected function getTriad(){
-		return \unpack("N", "\x00" . $this->get(3))[1];
+		return unpack("N", "\x00" . $this->get(3))[1];
 	}
 
 	protected function putTriad($v){
-		$this->buffer .= \substr(\pack("N", $v), 1);
+		$this->buffer .= substr(pack("N", $v), 1);
 	}
 
-
 	protected function getLTriad(){
-		return \unpack("V", $this->get(3) . "\x00")[1];
+		return unpack("V", $this->get(3) . "\x00")[1];
 	}
 
 	protected function putLTriad($v){
-		$this->buffer .= \substr(\pack("V", $v), 0, -1);
+		$this->buffer .= substr(pack("V", $v), 0, -1);
 	}
 
 	protected function getByte(){
-		return \ord($this->buffer[$this->offset++]);
+		return ord($this->buffer[$this->offset++]);
 	}
 
 	protected function putByte($v){
-		$this->buffer .= \chr($v);
+		$this->buffer .= chr($v);
 	}
 
 	protected function getDataArray($len = 10){
 		$data = [];
 		for($i = 1; $i <= $len and !$this->feof(); ++$i){
-			$data[] = $this->get(\unpack("N", "\x00" . $this->get(3))[1]);
+			$data[] = $this->get(unpack("N", "\x00" . $this->get(3))[1]);
 		}
 
 		return $data;
@@ -152,34 +158,34 @@ abstract class DataPacket extends \stdClass{
 
 	protected function putDataArray(array $data = []){
 		foreach($data as $v){
-			$this->buffer .= \substr(\pack("N", \strlen($v)), 1);
+			$this->buffer .= substr(pack("N", strlen($v)), 1);
 			$this->buffer .= $v;
 		}
 	}
 
 	protected function getSlot(){
-		$id = \unpack("n", $this->get(2))[1];
-		$cnt = \ord($this->get(1));
+		$id = unpack("n", $this->get(2))[1];
+		$cnt = ord($this->get(1));
 
 		return Item::get(
 			$id,
-			\unpack("n", $this->get(2))[1],
+			unpack("n", $this->get(2))[1],
 			$cnt
 		);
 	}
 
 	protected function putSlot(Item $item){
-		$this->buffer .= \pack("n", $item->getId());
-		$this->buffer .= \chr($item->getCount());
-		$this->buffer .= \pack("n", $item->getDamage());
+		$this->buffer .= pack("n", $item->getId());
+		$this->buffer .= chr($item->getCount());
+		$this->buffer .= pack("n", $item->getDamage());
 	}
 
 	protected function getString(){
-		return $this->get(\unpack("n", $this->get(2))[1]);
+		return $this->get(unpack("n", $this->get(2))[1]);
 	}
 
 	protected function putString($v){
-		$this->buffer .= \pack("n", \strlen($v));
+		$this->buffer .= pack("n", strlen($v));
 		$this->buffer .= $v;
 	}
 
@@ -188,8 +194,8 @@ abstract class DataPacket extends \stdClass{
 	}
 
 	public function clean(){
-		$this->buffer = \null;
-		$this->isEncoded = \false;
+		$this->buffer = null;
+		$this->isEncoded = false;
 		$this->offset = 0;
 		return $this;
 	}
