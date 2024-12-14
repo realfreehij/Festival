@@ -48,12 +48,12 @@ class TallGrass extends Populator
     {
         $this->level = $level;
         $amount = $random->nextRange(0, $this->randomAmount + 1) + $this->baseAmount;
-        for ($i = 0; $i < $amount; ++ $i) {
+        for ($i = 0; $i < $amount; ++$i) {
             $x = $random->nextRange($chunkX * 16, $chunkX * 16 + 15);
             $z = $random->nextRange($chunkZ * 16, $chunkZ * 16 + 15);
             $y = $this->getHighestWorkableBlock($x, $z);
 
-            if ($y !== - 1 and $this->canTallGrassStay($x, $y, $z)) {
+            if ($y !== -1 and $this->canTallGrassStay($x, $y, $z)) {
                 $this->level->setBlockIdAt($x, $y, $z, Block::TALL_GRASS);
                 $this->level->setBlockDataAt($x, $y, $z, 1);
             }
@@ -68,13 +68,13 @@ class TallGrass extends Populator
 
     private function getHighestWorkableBlock($x, $z)
     {
-        for ($y = 127; $y >= 0; -- $y) {
+        for ($y = 127; $y >= 0; --$y) {
             $b = $this->level->getBlockIdAt($x, $y, $z);
             if ($b !== Block::AIR and $b !== Block::LEAVES and $b !== Block::LEAVES2 and $b !== Block::SNOW_LAYER) {
                 break;
             }
         }
 
-        return $y === 0 ? - 1 : ++ $y;
+        return $y === 0 ? -1 : ++$y;
     }
 }

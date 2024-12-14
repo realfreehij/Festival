@@ -21,10 +21,9 @@
 
 namespace pocketmine\command\defaults;
 
-use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\event\TranslationContainer;
 use pocketmine\Player;
+use function round;
 
 class GetPosCommand extends VanillaCommand{
 
@@ -40,12 +39,12 @@ class GetPosCommand extends VanillaCommand{
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
 		if(!$this->testPermission($sender) || !($sender instanceof Player)){
-			return \true;
+			return true;
 		}
 		$x = round($sender->x, 2);
 		$y = round($sender->y, 2);
 		$z = round($sender->z, 2);
 		$sender->sendMessage("Position: §9X: $x Y: $y Z: $z");
-		return \true;
+		return true;
 	}
 }

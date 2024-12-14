@@ -31,18 +31,11 @@ class FurnaceRecipe implements Recipe{
 	/** @var Item */
 	private $ingredient;
 
-	/**
-	 * @param Item $result
-	 * @param Item $ingredient
-	 */
 	public function __construct(Item $result, Item $ingredient){
 		$this->output = clone $result;
 		$this->ingredient = clone $ingredient;
 	}
 
-	/**
-	 * @param Item $item
-	 */
 	public function setInput(Item $item){
 		$this->ingredient = clone $item;
 	}

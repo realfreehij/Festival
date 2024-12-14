@@ -11,13 +11,12 @@ class PoweredRail extends Flowable{
 	protected $id = self::POWERED_RAIL;
 
 	public function __construct(){
-	
+
 	}
 
 	public function getName(){
 		return "Powered Rail";
 	}
-
 
 	public function onUpdate($type){
 		if($type === Level::BLOCK_UPDATE_NORMAL){
@@ -27,16 +26,16 @@ class PoweredRail extends Flowable{
 			}
 		}
 
-		return \false;
+		return false;
 	}
 
-	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = \null){
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$down = $this->getSide(0);
 		if(!$down->isTransparent()){
-			$this->getLevel()->setBlock($block, $this, \true, \true);
-			return \true;
+			$this->getLevel()->setBlock($block, $this, true, true);
+			return true;
 		}
 
-		return \false;
+		return false;
 	}
 }

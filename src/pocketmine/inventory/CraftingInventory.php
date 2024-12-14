@@ -33,9 +33,6 @@ class CraftingInventory extends BaseInventory{
 	private $resultInventory;
 
 	/**
-	 * @param InventoryHolder $holder
-	 * @param Inventory       $resultInventory
-	 * @param InventoryType   $inventoryType
 	 *
 	 * @throws \Exception
 	 */

@@ -29,10 +29,7 @@ class EntityDamageByBlockEvent extends EntityDamageEvent{
 	/** @var Block */
 	private $damager;
 
-
 	/**
-	 * @param Block     $damager
-	 * @param Entity    $entity
 	 * @param int       $cause
 	 * @param int|int[] $damage
 	 */
@@ -47,6 +44,5 @@ class EntityDamageByBlockEvent extends EntityDamageEvent{
 	public function getDamager(){
 		return $this->damager;
 	}
-
 
 }

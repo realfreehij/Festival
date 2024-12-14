@@ -1,6 +1,5 @@
 <?php
 
-
 namespace pocketmine\level\generator;
 
 use pocketmine\level\format\FullChunk;
@@ -8,6 +7,7 @@ use pocketmine\level\Level;
 use pocketmine\level\SimpleChunkManager;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
+use function get_class;
 
 class PopulationTask extends AsyncTask
 {
@@ -39,19 +39,19 @@ class PopulationTask extends AsyncTask
 
     public function __construct(Level $level, FullChunk $chunk)
     {
-        $this->state = \true;
+        $this->state = true;
         $this->levelId = $level->getId();
         $this->chunk = $chunk->toFastBinary();
-        $this->chunkClass = \get_class($chunk);
+        $this->chunkClass = get_class($chunk);
 
-        for ($i = 0; $i < 9; ++ $i) {
+        for ($i = 0; $i < 9; ++$i) {
             if ($i === 4) {
                 continue;
             }
-            $xx = - 1 + $i % 3;
-            $zz = - 1 + (int) ($i / 3);
-            $ck = $level->getChunk($chunk->getX() + $xx, $chunk->getZ() + $zz, \false);
-            $this->{"chunk$i"} = $ck !== \null ? $ck->toFastBinary() : \null;
+            $xx = -1 + $i % 3;
+            $zz = -1 + (int) ($i / 3);
+            $ck = $level->getChunk($chunk->getX() + $xx, $chunk->getZ() + $zz, false);
+            $this->{"chunk$i"} = $ck !== null ? $ck->toFastBinary() : null;
         }
     }
 
@@ -61,8 +61,8 @@ class PopulationTask extends AsyncTask
         $manager = $this->getFromThreadStore("generation.level{$this->levelId}.manager");
         /** @var Generator $generator */
         $generator = $this->getFromThreadStore("generation.level{$this->levelId}.generator");
-        if ($manager === \null or $generator === \null) {
-            $this->state = \false;
+        if ($manager === null or $generator === null) {
+            $this->state = false;
             return;
         }
 
@@ -73,35 +73,35 @@ class PopulationTask extends AsyncTask
 
         $chunk = $chunkC::fromFastBinary($this->chunk);
 
-        for ($i = 0; $i < 9; ++ $i) {
+        for ($i = 0; $i < 9; ++$i) {
             if ($i === 4) {
                 continue;
             }
-            $xx = - 1 + $i % 3;
-            $zz = - 1 + (int) ($i / 3);
+            $xx = -1 + $i % 3;
+            $zz = -1 + (int) ($i / 3);
             $ck = $this->{"chunk$i"};
-            if ($ck === \null) {
+            if ($ck === null) {
                 $chunks[$i] = $chunkC::getEmptyChunk($chunk->getX() + $xx, $chunk->getZ() + $zz);
             } else {
                 $chunks[$i] = $chunkC::fromFastBinary($ck);
             }
         }
 
-        if ($chunk === \null) {
+        if ($chunk === null) {
             // TODO error
             return;
         }
 
         $manager->setChunk($chunk->getX(), $chunk->getZ(), $chunk);
-        if (! $chunk->isGenerated()) {
+        if (!$chunk->isGenerated()) {
             $generator->generateChunk($chunk->getX(), $chunk->getZ());
             $chunk->setGenerated();
         }
 
         foreach ($chunks as $c) {
-            if ($c !== \null) {
+            if ($c !== null) {
                 $manager->setChunk($c->getX(), $c->getZ(), $c);
-                if (! $c->isGenerated()) {
+                if (!$c->isGenerated()) {
                     $generator->generateChunk($c->getX(), $c->getZ());
                     $c = $manager->getChunk($c->getX(), $c->getZ());
                     $c->setGenerated();
@@ -118,36 +118,36 @@ class PopulationTask extends AsyncTask
         $chunk->setPopulated();
         $this->chunk = $chunk->toFastBinary();
 
-        $manager->setChunk($chunk->getX(), $chunk->getZ(), \null);
+        $manager->setChunk($chunk->getX(), $chunk->getZ(), null);
 
         foreach ($chunks as $i => $c) {
-            if ($c !== \null) {
+            if ($c !== null) {
                 $c = $chunks[$i] = $manager->getChunk($c->getX(), $c->getZ());
-                if (! $c->hasChanged()) {
-                    $chunks[$i] = \null;
+                if (!$c->hasChanged()) {
+                    $chunks[$i] = null;
                 }
             } else {
                 // This way non-changed chunks are not set
-                $chunks[$i] = \null;
+                $chunks[$i] = null;
             }
         }
 
         $manager->cleanChunks();
 
-        for ($i = 0; $i < 9; ++ $i) {
+        for ($i = 0; $i < 9; ++$i) {
             if ($i === 4) {
                 continue;
             }
 
-            $this->{"chunk$i"} = $chunks[$i] !== \null ? $chunks[$i]->toFastBinary() : \null;
+            $this->{"chunk$i"} = $chunks[$i] !== null ? $chunks[$i]->toFastBinary() : null;
         }
     }
 
     public function onCompletion(Server $server)
     {
         $level = $server->getLevel($this->levelId);
-        if ($level !== \null) {
-            if ($this->state === \false) {
+        if ($level !== null) {
+            if ($this->state === false) {
                 $level->registerGenerator();
                 return;
             }
@@ -157,17 +157,17 @@ class PopulationTask extends AsyncTask
 
             $chunk = $chunkC::fromFastBinary($this->chunk, $level->getProvider());
 
-            if ($chunk === \null) {
+            if ($chunk === null) {
                 // TODO error
                 return;
             }
 
-            for ($i = 0; $i < 9; ++ $i) {
+            for ($i = 0; $i < 9; ++$i) {
                 if ($i === 4) {
                     continue;
                 }
                 $c = $this->{"chunk$i"};
-                if ($c !== \null) {
+                if ($c !== null) {
                     $c = $chunkC::fromFastBinary($c, $level->getProvider());
                     $level->generateChunkCallback($c->getX(), $c->getZ(), $c);
                 }

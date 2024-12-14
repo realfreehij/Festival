@@ -25,6 +25,8 @@ use pocketmine\entity\Item as ItemEntity;
 use pocketmine\math\Vector3;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\network\protocol\RemoveEntityPacket;
+use function bcadd;
+use function mt_rand;
 
 class FloatingTextParticle extends Particle
 {
@@ -36,7 +38,7 @@ class FloatingTextParticle extends Particle
 
     protected $entityId;
 
-    protected $invisible = \false;
+    protected $invisible = false;
 
     public function __construct(Vector3 $pos, $text, $title = "")
     {
@@ -60,7 +62,7 @@ class FloatingTextParticle extends Particle
         return $this->invisible;
     }
 
-    public function setInvisible($value = \true)
+    public function setInvisible($value = true)
     {
         $this->invisible = (bool) $value;
     }
@@ -69,8 +71,8 @@ class FloatingTextParticle extends Particle
     {
         $p = [];
 
-        if ($this->entityId === \null) {
-            $this->entityId = bcadd("1095216660480", \mt_rand(0, 0x7fffffff)); // No conflict with other things
+        if ($this->entityId === null) {
+            $this->entityId = bcadd("1095216660480", mt_rand(0, 0x7fffffff)); // No conflict with other things
         } else {
             $pk0 = new RemoveEntityPacket();
             $pk0->eid = $this->entityId;
@@ -78,7 +80,7 @@ class FloatingTextParticle extends Particle
             $p[] = $pk0;
         }
 
-        if (! $this->invisible) {
+        if (!$this->invisible) {
 
             $pk = new AddEntityPacket();
             $pk->eid = $this->entityId;
@@ -94,22 +96,22 @@ class FloatingTextParticle extends Particle
             $pk->item = 0;
             $pk->meta = 0;
             $pk->metadata = [
-                Entity::DATA_FLAGS => [
-                    Entity::DATA_TYPE_BYTE,
-                    1 << Entity::DATA_FLAG_INVISIBLE
-                ],
-                Entity::DATA_NAMETAG => [
-                    Entity::DATA_TYPE_STRING,
-                    $this->title . ($this->text !== "" ? "\n" . $this->text : "")
-                ],
-                Entity::DATA_SHOW_NAMETAG => [
-                    Entity::DATA_TYPE_BYTE,
-                    1
-                ],
-                Entity::DATA_NO_AI => [
-                    Entity::DATA_TYPE_BYTE,
-                    1
-                ]
+            	Entity::DATA_FLAGS => [
+            		Entity::DATA_TYPE_BYTE,
+            		1 << Entity::DATA_FLAG_INVISIBLE
+            	],
+            	Entity::DATA_NAMETAG => [
+            		Entity::DATA_TYPE_STRING,
+            		$this->title . ($this->text !== "" ? "\n" . $this->text : "")
+            	],
+            	Entity::DATA_SHOW_NAMETAG => [
+            		Entity::DATA_TYPE_BYTE,
+            		1
+            	],
+            	Entity::DATA_NO_AI => [
+            		Entity::DATA_TYPE_BYTE,
+            		1
+            	]
             ];
 
             $p[] = $pk;

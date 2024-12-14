@@ -43,15 +43,15 @@ class BigTree extends Tree
 
     protected $radiusIncrease = 0;
 
-    private $addLeavesVines = \false;
+    private $addLeavesVines = false;
 
-    private $addLogVines = \false;
+    private $addLogVines = false;
 
-    private $addCocoaPlants = \false;
+    private $addCocoaPlants = false;
 
     public function canPlaceObject(ChunkManager $level, $x, $y, $z)
     {
-        return \false;
+        return false;
     }
 
     public function placeObject(ChunkManager $level, $x, $y, $z, $type)
@@ -62,7 +62,7 @@ class BigTree extends Tree
             $groupX = $leafGroup->getBlockX();
             $groupY = $leafGroup->getBlockY();
             $groupZ = $leafGroup->getBlockZ();
-            for ($yy = $groupY; $yy < $groupY + $this->leafDistanceLimit; ++ $yy) {
+            for ($yy = $groupY; $yy < $groupY + $this->leafDistanceLimit; ++$yy) {
                 $this->generateGroupLayer($level, $groupX, $yy, $groupZ, $this->getLeafGroupLayerSize($yy - $groupY));
             }
         }

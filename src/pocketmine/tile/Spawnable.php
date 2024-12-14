@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -32,7 +32,7 @@ abstract class Spawnable extends Tile{
 
 	public function spawnTo(Player $player){
 		if($this->closed){
-			return \false;
+			return false;
 		}
 
 		$nbt = new NBT(NBT::LITTLE_ENDIAN);
@@ -44,7 +44,7 @@ abstract class Spawnable extends Tile{
 		$pk->namedtag = $nbt->write();
 		$player->dataPacket($pk->setChannel(Network::CHANNEL_WORLD_EVENTS));
 
-		return \true;
+		return true;
 	}
 
 	/**
@@ -63,7 +63,7 @@ abstract class Spawnable extends Tile{
 		}
 
 		foreach($this->getLevel()->getChunkPlayers($this->chunk->getX(), $this->chunk->getZ()) as $player){
-			if($player->spawned === \true){
+			if($player->spawned === true){
 				$this->spawnTo($player);
 			}
 		}

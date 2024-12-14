@@ -24,6 +24,14 @@ use pocketmine\event\server\LowMemoryEvent;
 use pocketmine\event\Timings;
 use pocketmine\scheduler\GarbageCollectionTask;
 use pocketmine\utils\Utils;
+use function gc_collect_cycles;
+use function gc_enable;
+use function get_class;
+use function getReferenceCount;
+use function is_object;
+use function min;
+use function round;
+use function spl_object_hash;
 
 class MemoryManager
 {
@@ -39,9 +47,9 @@ class MemoryManager
 
     private $checkTicker = 0;
 
-    private $lowMemory = \false;
+    private $lowMemory = false;
 
-    private $continuousTrigger = \true;
+    private $continuousTrigger = true;
 
     private $continuousTriggerRate;
 
@@ -86,21 +94,21 @@ class MemoryManager
         $this->memoryLimit = ((int) $this->server->getProperty("memory.main-limit", 320)) * 1024 * 1024;
         $this->globalMemoryLimit = ((int) $this->server->getProperty("memory.global-limit", 512)) * 1024 * 1024;
         $this->checkRate = (int) $this->server->getProperty("memory.check-rate", 20);
-        $this->continuousTrigger = (bool) $this->server->getProperty("memory.continuous-trigger", \true);
+        $this->continuousTrigger = (bool) $this->server->getProperty("memory.continuous-trigger", true);
         $this->continuousTriggerRate = (int) $this->server->getProperty("memory.continuous-trigger-rate", 30);
 
         $this->garbageCollectionPeriod = (int) $this->server->getProperty("memory.garbage-collection.period", 36000);
-        $this->garbageCollectionTrigger = (bool) $this->server->getProperty("memory.garbage-collection.low-memory-trigger", \true);
-        $this->garbageCollectionAsync = (bool) $this->server->getProperty("memory.garbage-collection.collect-async-worker", \true);
+        $this->garbageCollectionTrigger = (bool) $this->server->getProperty("memory.garbage-collection.low-memory-trigger", true);
+        $this->garbageCollectionAsync = (bool) $this->server->getProperty("memory.garbage-collection.collect-async-worker", true);
 
         $this->chunkLimit = (int) $this->server->getProperty("memory.max-chunks.trigger-limit", 96);
-        $this->chunkCollect = (bool) $this->server->getProperty("memory.max-chunks.trigger-chunk-collect", \true);
-        $this->chunkTrigger = (bool) $this->server->getProperty("memory.max-chunks.low-memory-trigger", \true);
+        $this->chunkCollect = (bool) $this->server->getProperty("memory.max-chunks.trigger-chunk-collect", true);
+        $this->chunkTrigger = (bool) $this->server->getProperty("memory.max-chunks.low-memory-trigger", true);
 
-        $this->chunkCache = (bool) $this->server->getProperty("memory.world-caches.disable-chunk-cache", \true);
-        $this->cacheTrigger = (bool) $this->server->getProperty("memory.world-caches.low-memory-trigger", \true);
+        $this->chunkCache = (bool) $this->server->getProperty("memory.world-caches.disable-chunk-cache", true);
+        $this->cacheTrigger = (bool) $this->server->getProperty("memory.world-caches.low-memory-trigger", true);
 
-        \gc_enable();
+        gc_enable();
     }
 
     public function isLowMemory()
@@ -110,21 +118,21 @@ class MemoryManager
 
     public function canUseChunkCache()
     {
-        return ! ($this->lowMemory and $this->chunkTrigger);
+        return !($this->lowMemory and $this->chunkTrigger);
     }
 
     public function getViewDistance($distance)
     {
-        return $this->lowMemory ? \min($this->chunkLimit, $distance) : $distance;
+        return $this->lowMemory ? min($this->chunkLimit, $distance) : $distance;
     }
 
-    public function trigger($memory, $limit, $global = \false, $triggerCount = 0)
+    public function trigger($memory, $limit, $global = false, $triggerCount = 0)
     {
-        $this->server->getLogger()->debug("[Memory Manager] " . ($global ? "Global " : "") . "Low memory triggered, limit " . \round(($limit / 1024) / 1024, 2) . "MB, using " . \round(($memory / 1024) / 1024, 2) . "MB");
+        $this->server->getLogger()->debug("[Memory Manager] " . ($global ? "Global " : "") . "Low memory triggered, limit " . round(($limit / 1024) / 1024, 2) . "MB, using " . round(($memory / 1024) / 1024, 2) . "MB");
 
         if ($this->cacheTrigger) {
             foreach ($this->server->getLevels() as $level) {
-                $level->clearCache(\true);
+                $level->clearCache(true);
             }
         }
 
@@ -142,40 +150,40 @@ class MemoryManager
             $cycles = $this->triggerGarbageCollector();
         }
 
-        $this->server->getLogger()->debug("[Memory Manager] Freed " . \round(($ev->getMemoryFreed() / 1024) / 1024, 2) . "MB, $cycles cycles");
+        $this->server->getLogger()->debug("[Memory Manager] Freed " . round(($ev->getMemoryFreed() / 1024) / 1024, 2) . "MB, $cycles cycles");
     }
 
     public function check()
     {
         Timings::$memoryManagerTimer->startTiming();
 
-        if (($this->memoryLimit > 0 or $this->globalMemoryLimit > 0) and ++ $this->checkTicker >= $this->checkRate) {
+        if (($this->memoryLimit > 0 or $this->globalMemoryLimit > 0) and ++$this->checkTicker >= $this->checkRate) {
             $this->checkTicker = 0;
-            $memory = Utils::getMemoryUsage(\true);
-            $trigger = \false;
+            $memory = Utils::getMemoryUsage(true);
+            $trigger = false;
             if ($this->memoryLimit > 0 and $memory[0] > $this->memoryLimit) {
                 $trigger = 0;
             } elseif ($this->globalMemoryLimit > 0 and $memory[1] > $this->globalMemoryLimit) {
                 $trigger = 1;
             }
 
-            if ($trigger !== \false) {
+            if ($trigger !== false) {
                 if ($this->lowMemory and $this->continuousTrigger) {
-                    if (++ $this->continuousTriggerTicker >= $this->continuousTriggerRate) {
+                    if (++$this->continuousTriggerTicker >= $this->continuousTriggerRate) {
                         $this->continuousTriggerTicker = 0;
-                        $this->trigger($memory[$trigger], $this->memoryLimit, $trigger > 0, ++ $this->continuousTriggerCount);
+                        $this->trigger($memory[$trigger], $this->memoryLimit, $trigger > 0, ++$this->continuousTriggerCount);
                     }
                 } else {
-                    $this->lowMemory = \true;
+                    $this->lowMemory = true;
                     $this->continuousTriggerCount = 0;
                     $this->trigger($memory[$trigger], $this->memoryLimit, $trigger > 0);
                 }
             } else {
-                $this->lowMemory = \false;
+                $this->lowMemory = false;
             }
         }
 
-        if ($this->garbageCollectionPeriod > 0 and ++ $this->garbageCollectionTicker >= $this->garbageCollectionPeriod) {
+        if ($this->garbageCollectionPeriod > 0 and ++$this->garbageCollectionTicker >= $this->garbageCollectionPeriod) {
             $this->garbageCollectionTicker = 0;
             $this->triggerGarbageCollector();
         }
@@ -189,12 +197,12 @@ class MemoryManager
 
         if ($this->garbageCollectionAsync) {
             $size = $this->server->getScheduler()->getAsyncTaskPoolSize();
-            for ($i = 0; $i < $size; ++ $i) {
+            for ($i = 0; $i < $size; ++$i) {
                 $this->server->getScheduler()->scheduleAsyncTaskToWorker(new GarbageCollectionTask(), $i);
             }
         }
 
-        $cycles = \gc_collect_cycles();
+        $cycles = gc_collect_cycles();
 
         Timings::$garbageCollectorTimer->stopTiming();
 
@@ -209,20 +217,20 @@ class MemoryManager
      */
     public function addObjectWatcher($object)
     {
-        if (! \is_object($object)) {
+        if (!is_object($object)) {
             throw new \InvalidArgumentException("Not an object!");
         }
 
-        $identifier = \spl_object_hash($object) . ":" . \get_class($object);
+        $identifier = spl_object_hash($object) . ":" . get_class($object);
 
         if (isset($this->leakInfo[$identifier])) {
             return $this->leakInfo["id"];
         }
 
         $this->leakInfo[$identifier] = [
-            "id" => $id = Utils::dataToUUID($identifier . ":" . $this->leakSeed ++),
-            "class" => \get_class($object),
-            "hash" => $identifier
+        	"id" => $id = Utils::dataToUUID($identifier . ":" . $this->leakSeed++),
+        	"class" => get_class($object),
+        	"hash" => $identifier
         ];
         $this->leakInfo[$id] = $this->leakInfo[$identifier];
 
@@ -237,12 +245,12 @@ class MemoryManager
             return $this->leakWatch[$id]->valid();
         }
 
-        return \false;
+        return false;
     }
 
     public function removeObjectWatch($id)
     {
-        if (! isset($this->leakWatch[$id])) {
+        if (!isset($this->leakWatch[$id])) {
             return;
         }
         unset($this->leakInfo[$this->leakInfo[$id]["hash"]]);
@@ -253,37 +261,37 @@ class MemoryManager
     public function doObjectCleanup()
     {
         foreach ($this->leakWatch as $id => $w) {
-            if (! $w->valid()) {
+            if (!$w->valid()) {
                 $this->removeObjectWatch($id);
             }
         }
     }
 
-    public function getObjectInformation($id, $includeObject = \false)
+    public function getObjectInformation($id, $includeObject = false)
     {
-        if (! isset($this->leakWatch[$id])) {
-            return \null;
+        if (!isset($this->leakWatch[$id])) {
+            return null;
         }
 
-        $valid = \false;
+        $valid = false;
         $references = 0;
-        $object = \null;
+        $object = null;
 
         if ($this->leakWatch[$id]->acquire()) {
             $object = $this->leakWatch[$id]->get();
             $this->leakWatch[$id]->release();
 
-            $valid = \true;
-            $references = getReferenceCount($object, \false);
+            $valid = true;
+            $references = getReferenceCount($object, false);
         }
 
         return [
-            "id" => $id,
-            "class" => $this->leakInfo[$id]["class"],
-            "hash" => $this->leakInfo[$id]["hash"],
-            "valid" => $valid,
-            "references" => $references,
-            "object" => $includeObject ? $object : \null
+        	"id" => $id,
+        	"class" => $this->leakInfo[$id]["class"],
+        	"hash" => $this->leakInfo[$id]["hash"],
+        	"valid" => $valid,
+        	"references" => $references,
+        	"object" => $includeObject ? $object : null
         ];
     }
 }

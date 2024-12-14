@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,29 +15,30 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
 namespace pocketmine\network\protocol;
 
-
 use pocketmine\level\Level;
+use function chr;
+use function pack;
 
 class SetTimePacket extends DataPacket{
 	const NETWORK_ID = Info::SET_TIME_PACKET;
 
 	public $time;
-	public $started = \true;
+	public $started = true;
 
 	public function decode(){
 
 	}
 
 	public function encode(){
-		$this->buffer = \chr(self::NETWORK_ID); $this->offset = 0;;
-		$this->buffer .= \pack("N", (int) (($this->time / Level::TIME_FULL) * 19200));
-		$this->buffer .= \chr($this->started == \true ? 0x80 : 0x00);
+		$this->buffer = chr(self::NETWORK_ID); $this->offset = 0;;
+		$this->buffer .= pack("N", (int) (($this->time / Level::TIME_FULL) * 19200));
+		$this->buffer .= chr($this->started == true ? 0x80 : 0x00);
 	}
 
 }

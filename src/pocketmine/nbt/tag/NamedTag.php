@@ -30,10 +30,10 @@ abstract class NamedTag extends Tag
      * @param string $name
      * @param bool|float|double|int|byte|short|array|Compound|Enum|string $value
      */
-    public function __construct($name = "", $value = \null)
+    public function __construct($name = "", $value = null)
     {
-        $this->name = ($name === \null or $name === \false) ? "" : $name;
-        if ($value !== \null) {
+        $this->name = ($name === null or $name === false) ? "" : $name;
+        if ($value !== null) {
             $this->value = $value;
         }
     }

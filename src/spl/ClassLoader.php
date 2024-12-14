@@ -17,9 +17,6 @@
 
 interface ClassLoader{
 
-    /**
-     * @param ClassLoader $parent
-     */
     public function __construct(ClassLoader $parent = \null);
 
     /**
@@ -33,7 +30,6 @@ interface ClassLoader{
     /**
      * Removes a path from the lookup list
      *
-     * @param $path
      */
     public function removePath($path);
 

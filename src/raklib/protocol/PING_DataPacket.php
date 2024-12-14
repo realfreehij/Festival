@@ -23,14 +23,6 @@ namespace raklib\protocol;
 
 use raklib\Binary;
 
-
-
-
-
-
-
-
-
 class PING_DataPacket extends Packet{
     public static $ID = 0x00;
 

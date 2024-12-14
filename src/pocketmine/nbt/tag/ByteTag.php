@@ -21,6 +21,8 @@
 namespace pocketmine\nbt\tag;
 
 use pocketmine\nbt\NBT;
+use function chr;
+use function ord;
 
 class ByteTag extends NamedTag
 {
@@ -32,11 +34,11 @@ class ByteTag extends NamedTag
 
     public function read(NBT $nbt)
     {
-        $this->value = \ord($nbt->get(1));
+        $this->value = ord($nbt->get(1));
     }
 
     public function write(NBT $nbt)
     {
-        $nbt->buffer .= \chr($this->value);
+        $nbt->buffer .= chr($this->value);
     }
 }

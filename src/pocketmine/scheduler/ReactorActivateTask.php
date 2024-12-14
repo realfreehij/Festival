@@ -8,15 +8,15 @@ class ReactorActivateTask extends Task{
 	const TYPE_SPAWN_ITEMS = 0;
 	const TYPE_GLOW = 1;
 	const TYPE_DESTROY = 2;
-	
+
 	public $type, $data, $reactor;
-	
-	public function __construct(NetherReactor $reactor, $type, $data=[]){
+
+	public function __construct(NetherReactor $reactor, $type, $data = []){
 		$this->reactor = $reactor;
 		$this->type = $type;
 		$this->data = $data;
 	}
-	
+
 	public function onRun($currentTick){
 		switch($this->type){
 			case self::TYPE_GLOW:

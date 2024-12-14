@@ -26,6 +26,7 @@ use pocketmine\level\Level;
 use pocketmine\level\SimpleChunkManager;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\utils\Random;
+use function get_class;
 
 class GeneratorRegisterTask extends AsyncTask
 {
@@ -40,7 +41,7 @@ class GeneratorRegisterTask extends AsyncTask
 
     public function __construct(Level $level, Generator $generator)
     {
-        $this->generator = \get_class($generator);
+        $this->generator = get_class($generator);
         $this->settings = $generator->getSettings();
         $this->seed = $level->getSeed();
         $this->levelId = $level->getId();

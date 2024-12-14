@@ -22,7 +22,6 @@ namespace pocketmine\level\generator\biome;
 
 use pocketmine\block\Block;
 use pocketmine\level\ChunkManager;
-use pocketmine\level\generator\normal\biome\SwampBiome;
 use pocketmine\level\generator\normal\biome\DesertBiome;
 use pocketmine\level\generator\normal\biome\ForestBiome;
 use pocketmine\level\generator\normal\biome\IcePlainsBiome;
@@ -31,6 +30,7 @@ use pocketmine\level\generator\normal\biome\OceanBiome;
 use pocketmine\level\generator\normal\biome\PlainBiome;
 use pocketmine\level\generator\normal\biome\RiverBiome;
 use pocketmine\level\generator\normal\biome\SmallMountainsBiome;
+use pocketmine\level\generator\normal\biome\SwampBiome;
 use pocketmine\level\generator\normal\biome\TaigaBiome;
 use pocketmine\level\generator\populator\Populator;
 use pocketmine\utils\Random;
@@ -67,7 +67,7 @@ abstract class Biome
 
     private $id;
 
-    private $registered = \false;
+    private $registered = false;
 
     /** @var Populator[] */
     private $populators = [];
@@ -115,7 +115,7 @@ abstract class Biome
      *
      * @param
      *            $id
-     *            
+     *
      * @return Biome
      */
     public static function getBiome($id)
@@ -147,8 +147,8 @@ abstract class Biome
 
     public function setId($id)
     {
-        if (! $this->registered) {
-            $this->registered = \true;
+        if (!$this->registered) {
+            $this->registered = true;
             $this->id = $id;
         }
     }
@@ -209,23 +209,23 @@ abstract class Biome
         $x = (1 - $temperature) * 255;
         $z = (1 - $rainfall * $temperature) * 255;
         $c = self::interpolateColor(256, $x, $z, [
-            0x47,
-            0xd0,
-            0x33
+        	0x47,
+        	0xd0,
+        	0x33
         ], [
-            0x6c,
-            0xb4,
-            0x93
+        	0x6c,
+        	0xb4,
+        	0x93
         ], [
-            0xbf,
-            0xb6,
-            0x55
+        	0xbf,
+        	0xb6,
+        	0x55
         ], [
-            0x80,
-            0xb4,
-            0x97
+        	0x80,
+        	0xb4,
+        	0x97
         ]);
-        return ((int) ((int)$c[0] << 16)) | (int) (((int)$c[1] << 8)) | (int)($c[2]);
+        return ((int) ((int) $c[0] << 16)) | (int) (((int) $c[1] << 8)) | (int) ($c[2]);
     }
 
     private static function interpolateColor($size, $x, $z, $c1, $c2, $c3, $c4)
@@ -240,9 +240,9 @@ abstract class Biome
     {
         $invs = 1 - $s;
         return [
-            $a[0] * $invs + $b[0] * $s,
-            $a[1] * $invs + $b[1] * $s,
-            $a[2] * $invs + $b[2] * $s
+        	$a[0] * $invs + $b[0] * $s,
+        	$a[1] * $invs + $b[1] * $s,
+        	$a[2] * $invs + $b[2] * $s
         ];
     }
 

@@ -16,6 +16,10 @@
 namespace raklib\protocol;
 
 use raklib\RakLib;
+use function chr;
+use function ord;
+use function str_repeat;
+use function strlen;
 
 class OPEN_CONNECTION_REQUEST_1 extends Packet{
 	public static $ID = 0x05;
@@ -26,14 +30,14 @@ class OPEN_CONNECTION_REQUEST_1 extends Packet{
 	public function encode(){
 		parent::encode();
 		$this->buffer .= RakLib::MAGIC;
-		$this->buffer .= \chr($this->protocol);
-		$this->buffer .= \str_repeat(\chr(0x00), $this->mtuSize - 18);
+		$this->buffer .= chr($this->protocol);
+		$this->buffer .= str_repeat(chr(0x00), $this->mtuSize - 18);
 	}
 
 	public function decode(){
 		parent::decode();
 		$this->offset += 16; //Magic
-		$this->protocol = \ord($this->get(1));
-		$this->mtuSize = \strlen($this->get(\true)) + 18;
+		$this->protocol = ord($this->get(1));
+		$this->mtuSize = strlen($this->get(true)) + 18;
 	}
 }

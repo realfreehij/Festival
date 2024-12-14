@@ -22,6 +22,15 @@ namespace pocketmine\nbt\tag;
 
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\EnumTag as TagEnum;
+use function chr;
+use function count;
+use function get_class;
+use function ord;
+use function pack;
+use function unpack;
+use const COUNT_NORMAL;
+use const COUNT_RECURSIVE;
+use const PHP_INT_SIZE;
 
 class EnumTag extends NamedTag implements \ArrayAccess, \Countable
 {
@@ -63,7 +72,7 @@ class EnumTag extends NamedTag implements \ArrayAccess, \Countable
 			}
 		}
 
-		return \null;
+		return null;
 	}
 
 	public function offsetSet(mixed $offset, mixed $value): void
@@ -82,13 +91,13 @@ class EnumTag extends NamedTag implements \ArrayAccess, \Countable
 
 	public function count($mode = COUNT_NORMAL): int
 	{
-		for ($i = 0; \true; $i ++) {
-			if (! isset($this->{$i})) {
+		for ($i = 0; true; $i++) {
+			if (!isset($this->{$i})) {
 				return $i;
 			}
 			if ($mode === COUNT_RECURSIVE) {
 				if ($this->{$i} instanceof \Countable) {
-					$i += \count($this->{$i});
+					$i += count($this->{$i});
 				}
 			}
 		}
@@ -114,9 +123,9 @@ class EnumTag extends NamedTag implements \ArrayAccess, \Countable
 	public function read(NBT $nbt)
 	{
 		$this->value = [];
-		$this->tagType = \ord($nbt->get(1));
-		$size = $nbt->endianness === 1 ? (\PHP_INT_SIZE === 8 ? \unpack("N", $nbt->get(4))[1] << 32 >> 32 : \unpack("N", $nbt->get(4))[1]) : (\PHP_INT_SIZE === 8 ? \unpack("V", $nbt->get(4))[1] << 32 >> 32 : \unpack("V", $nbt->get(4))[1]);
-		for ($i = 0; $i < $size and ! $nbt->feof(); ++ $i) {
+		$this->tagType = ord($nbt->get(1));
+		$size = $nbt->endianness === 1 ? (PHP_INT_SIZE === 8 ? unpack("N", $nbt->get(4))[1] << 32 >> 32 : unpack("N", $nbt->get(4))[1]) : (PHP_INT_SIZE === 8 ? unpack("V", $nbt->get(4))[1] << 32 >> 32 : unpack("V", $nbt->get(4))[1]);
+		for ($i = 0; $i < $size and !$nbt->feof(); ++$i) {
 			switch ($this->tagType) {
 				case NBT::TAG_Byte:
 					$tag = new ByteTag("");
@@ -179,21 +188,21 @@ class EnumTag extends NamedTag implements \ArrayAccess, \Countable
 
 	public function write(NBT $nbt)
 	{
-		if (! isset($this->tagType)) {
-			$id = \null;
+		if (!isset($this->tagType)) {
+			$id = null;
 			foreach ($this as $tag) {
 				if ($tag instanceof Tag) {
-					if (! isset($id)) {
+					if (!isset($id)) {
 						$id = $tag->getType();
 					} elseif ($id !== $tag->getType()) {
-						return \false;
+						return false;
 					}
 				}
 			}
 			$this->tagType = $id;
 		}
 
-		$nbt->buffer .= \chr($this->tagType);
+		$nbt->buffer .= chr($this->tagType);
 
 		/** @var Tag[] $tags */
 		$tags = [];
@@ -202,7 +211,7 @@ class EnumTag extends NamedTag implements \ArrayAccess, \Countable
 				$tags[] = $tag;
 			}
 		}
-		$nbt->buffer .= $nbt->endianness === 1 ? \pack("N", \count($tags)) : \pack("V", \count($tags));
+		$nbt->buffer .= $nbt->endianness === 1 ? pack("N", count($tags)) : pack("V", count($tags));
 		foreach ($tags as $tag) {
 			$tag->write($nbt);
 		}
@@ -210,10 +219,10 @@ class EnumTag extends NamedTag implements \ArrayAccess, \Countable
 
 	public function __toString()
 	{
-		$str = \get_class($this) . "{\n";
+		$str = get_class($this) . "{\n";
 		foreach ($this as $tag) {
 			if ($tag instanceof Tag) {
-				$str .= \get_class($tag) . ":" . $tag->__toString() . "\n";
+				$str .= get_class($tag) . ":" . $tag->__toString() . "\n";
 			}
 		}
 		return $str . "}";

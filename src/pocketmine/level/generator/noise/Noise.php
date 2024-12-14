@@ -85,14 +85,14 @@ abstract class Noise
         $u = $hash < 8 ? $x : $y;
         $v = $hash < 4 ? $y : (($hash === 12 or $hash === 14) ? $x : $z);
 
-        return (($hash & 1) === 0 ? $u : - $u) + (($hash & 2) === 0 ? $v : - $v);
+        return (($hash & 1) === 0 ? $u : -$u) + (($hash & 2) === 0 ? $v : -$v);
     }
 
     abstract public function getNoise2D($x, $z);
 
     abstract public function getNoise3D($x, $y, $z);
 
-    public function noise2D($x, $z, $normalized = \false)
+    public function noise2D($x, $z, $normalized = false)
     {
         $result = 0;
         $amp = 1;
@@ -102,21 +102,21 @@ abstract class Noise
         $x *= $this->expansion;
         $z *= $this->expansion;
 
-        for ($i = 0; $i < $this->octaves; ++ $i) {
+        for ($i = 0; $i < $this->octaves; ++$i) {
             $result += $this->getNoise2D($x * $freq, $z * $freq) * $amp;
             $max += $amp;
             $freq *= 2;
             $amp *= $this->persistence;
         }
 
-        if ($normalized === \true) {
+        if ($normalized === true) {
             $result /= $max;
         }
 
         return $result;
     }
 
-    public function noise3D($x, $y, $z, $normalized = \false)
+    public function noise3D($x, $y, $z, $normalized = false)
     {
         $result = 0;
         $amp = 1;
@@ -127,14 +127,14 @@ abstract class Noise
         $y *= $this->expansion;
         $z *= $this->expansion;
 
-        for ($i = 0; $i < $this->octaves; ++ $i) {
+        for ($i = 0; $i < $this->octaves; ++$i) {
             $result += $this->getNoise3D($x * $freq, $y * $freq, $z * $freq) * $amp;
             $max += $amp;
             $freq *= 2;
             $amp *= $this->persistence;
         }
 
-        if ($normalized === \true) {
+        if ($normalized === true) {
             $result /= $max;
         }
 

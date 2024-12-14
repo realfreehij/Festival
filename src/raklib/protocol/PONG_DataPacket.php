@@ -23,14 +23,6 @@ namespace raklib\protocol;
 
 use raklib\Binary;
 
-
-
-
-
-
-
-
-
 class PONG_DataPacket extends Packet{
     public static $ID = 0x03;
 

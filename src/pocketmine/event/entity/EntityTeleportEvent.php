@@ -22,12 +22,11 @@
 namespace pocketmine\event\entity;
 
 use pocketmine\entity\Entity;
-use pocketmine\Event;
 use pocketmine\event\Cancellable;
 use pocketmine\level\Position;
 
 class EntityTeleportEvent extends EntityEvent implements Cancellable{
-	public static $handlerList = \null;
+	public static $handlerList = null;
 
 	/** @var Position */
 	private $from;
@@ -47,9 +46,6 @@ class EntityTeleportEvent extends EntityEvent implements Cancellable{
 		return $this->from;
 	}
 
-	/**
-	 * @param Position $from
-	 */
 	public function setFrom(Position $from){
 		$this->from = $from;
 	}
@@ -61,12 +57,8 @@ class EntityTeleportEvent extends EntityEvent implements Cancellable{
 		return $this->to;
 	}
 
-	/**
-	 * @param Position $to
-	 */
 	public function setTo(Position $to){
 		$this->to = $to;
 	}
-
 
 }

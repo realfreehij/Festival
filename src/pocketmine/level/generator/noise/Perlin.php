@@ -26,66 +26,66 @@ class Perlin extends Noise
 {
 
     public static $grad3 = [
-        [
-            1,
-            1,
-            0
-        ],
-        [
-            - 1,
-            1,
-            0
-        ],
-        [
-            1,
-            - 1,
-            0
-        ],
-        [
-            - 1,
-            - 1,
-            0
-        ],
-        [
-            1,
-            0,
-            1
-        ],
-        [
-            - 1,
-            0,
-            1
-        ],
-        [
-            1,
-            0,
-            - 1
-        ],
-        [
-            - 1,
-            0,
-            - 1
-        ],
-        [
-            0,
-            1,
-            1
-        ],
-        [
-            0,
-            - 1,
-            1
-        ],
-        [
-            0,
-            1,
-            - 1
-        ],
-        [
-            0,
-            - 1,
-            - 1
-        ]
+    	[
+    		1,
+    		1,
+    		0
+    	],
+    	[
+    		-1,
+    		1,
+    		0
+    	],
+    	[
+    		1,
+    		-1,
+    		0
+    	],
+    	[
+    		-1,
+    		-1,
+    		0
+    	],
+    	[
+    		1,
+    		0,
+    		1
+    	],
+    	[
+    		-1,
+    		0,
+    		1
+    	],
+    	[
+    		1,
+    		0,
+    		-1
+    	],
+    	[
+    		-1,
+    		0,
+    		-1
+    	],
+    	[
+    		0,
+    		1,
+    		1
+    	],
+    	[
+    		0,
+    		-1,
+    		1
+    	],
+    	[
+    		0,
+    		1,
+    		-1
+    	],
+    	[
+    		0,
+    		-1,
+    		-1
+    	]
     ];
 
     public function __construct(Random $random, $octaves, $persistence, $expansion = 1)
@@ -97,15 +97,15 @@ class Perlin extends Noise
         $this->offsetY = $random->nextFloat() * 256;
         $this->offsetZ = $random->nextFloat() * 256;
 
-        for ($i = 0; $i < 512; ++ $i) {
+        for ($i = 0; $i < 512; ++$i) {
             $this->perm[$i] = 0;
         }
 
-        for ($i = 0; $i < 256; ++ $i) {
+        for ($i = 0; $i < 256; ++$i) {
             $this->perm[$i] = $random->nextBoundedInt(256);
         }
 
-        for ($i = 0; $i < 256; ++ $i) {
+        for ($i = 0; $i < 256; ++$i) {
             $pos = $random->nextBoundedInt(256 - $i) + $i;
             $old = $this->perm[$i];
 

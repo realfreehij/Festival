@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -27,6 +27,8 @@ use pocketmine\item\Tool;
 use pocketmine\level\Level;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\Player;
+use function max;
+use function min;
 
 class Vine extends Transparent{
 
@@ -37,7 +39,7 @@ class Vine extends Transparent{
 	}
 
 	public function isSolid(){
-		return \false;
+		return false;
 	}
 
 	public function getName(){
@@ -48,14 +50,14 @@ class Vine extends Transparent{
 		return 1;
 	}
 	public function canBeReplaced(){
-		return \true;
+		return true;
 	}
 	public function canPassThrough(){
-		return \true;
+		return true;
 	}
 
 	public function hasEntityCollision(){
-		return \true;
+		return true;
 	}
 
 	public function onEntityCollide(Entity $entity){
@@ -74,37 +76,37 @@ class Vine extends Transparent{
 		$flag = $this->meta > 0;
 
 		if(($this->meta & 0x02) > 0){
-			$f4 = \max($f4, 0.0625);
+			$f4 = max($f4, 0.0625);
 			$f1 = 0;
 			$f2 = 0;
 			$f5 = 1;
 			$f3 = 0;
 			$f6 = 1;
-			$flag = \true;
+			$flag = true;
 		}
 
 		if(($this->meta & 0x08) > 0){
-			$f1 = \min($f1, 0.9375);
+			$f1 = min($f1, 0.9375);
 			$f4 = 1;
 			$f2 = 0;
 			$f5 = 1;
 			$f3 = 0;
 			$f6 = 1;
-			$flag = \true;
+			$flag = true;
 		}
 
 		if(($this->meta & 0x01) > 0){
-			$f3 = \min($f3, 0.9375);
+			$f3 = min($f3, 0.9375);
 			$f6 = 1;
 			$f1 = 0;
 			$f4 = 1;
 			$f2 = 0;
 			$f5 = 1;
-			$flag = \true;
+			$flag = true;
 		}
 
 		if(!$flag and $this->getSide(1)->isSolid()){
-			$f2 = \min($f2, 0.9375);
+			$f2 = min($f2, 0.9375);
 			$f5 = 1;
 			$f1 = 0;
 			$f4 = 1;
@@ -122,8 +124,7 @@ class Vine extends Transparent{
 		);
 	}
 
-
-	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = \null){
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		if(!$target->isTransparent() and $target->isSolid()){
 			$faces = [
 				0 => 0,
@@ -135,13 +136,13 @@ class Vine extends Transparent{
 			];
 			if(isset($faces[$face])){
 				$this->meta = $faces[$face];
-				$this->getLevel()->setBlock($block, $this, \true, \true);
+				$this->getLevel()->setBlock($block, $this, true, true);
 
-				return \true;
+				return true;
 			}
 		}
 
-		return \false;
+		return false;
 	}
 
 	public function getBreakTime(Item $item){
@@ -176,7 +177,7 @@ class Vine extends Transparent{
 			}*/
 		}
 
-		return \false;
+		return false;
 	}
 
 	public function getDrops(Item $item){

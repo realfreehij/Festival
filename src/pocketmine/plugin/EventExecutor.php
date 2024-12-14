@@ -27,8 +27,6 @@ use pocketmine\event\Listener;
 interface EventExecutor{
 
 	/**
-	 * @param Listener $listener
-	 * @param Event    $event
 	 *
 	 * @return void
 	 */

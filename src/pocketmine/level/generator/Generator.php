@@ -28,6 +28,10 @@ use pocketmine\level\ChunkManager;
 use pocketmine\level\generator\noise\Noise;
 use pocketmine\level\generator\normal\Normal;
 use pocketmine\utils\Random;
+use function array_fill;
+use function array_keys;
+use function is_subclass_of;
+use function strtolower;
 
 abstract class Generator
 {
@@ -36,13 +40,13 @@ abstract class Generator
 
     public static function addGenerator($object, $name)
     {
-        if (\is_subclass_of($object, Generator::class) and ! isset(Generator::$list[$name = \strtolower($name)])) {
+        if (is_subclass_of($object, Generator::class) and !isset(Generator::$list[$name = strtolower($name)])) {
             Generator::$list[$name] = $object;
 
-            return \true;
+            return true;
         }
 
-        return \false;
+        return false;
     }
 
     /**
@@ -51,19 +55,19 @@ abstract class Generator
      */
     public static function getGeneratorList()
     {
-        return \array_keys(Generator::$list);
+        return array_keys(Generator::$list);
     }
 
     /**
      *
      * @param
      *            $name
-     *            
+     *
      * @return Generator
      */
     public static function getGenerator($name)
     {
-        if (isset(Generator::$list[$name = \strtolower($name)])) {
+        if (isset(Generator::$list[$name = strtolower($name)])) {
             return Generator::$list[$name];
         }
 
@@ -83,7 +87,6 @@ abstract class Generator
 
     /**
      *
-     * @param Noise $noise
      * @param int $xSize
      * @param int $samplingRate
      * @param int $x
@@ -107,7 +110,7 @@ abstract class Generator
             $noiseArray[$xx] = $noise->noise3D($xx + $x, $y, $z);
         }
 
-        for ($xx = 0; $xx < $xSize; ++ $xx) {
+        for ($xx = 0; $xx < $xSize; ++$xx) {
             if ($xx % $samplingRate !== 0) {
                 $nx = (int) ($xx / $samplingRate) * $samplingRate;
                 $noiseArray[$xx] = Noise::linearLerp($xx, $nx, $nx + $samplingRate, $noiseArray[$nx], $noiseArray[$nx + $samplingRate]);
@@ -119,7 +122,6 @@ abstract class Generator
 
     /**
      *
-     * @param Noise $noise
      * @param int $xSize
      * @param int $zSize
      * @param int $samplingRate
@@ -150,12 +152,12 @@ abstract class Generator
             }
         }
 
-        for ($xx = 0; $xx < $xSize; ++ $xx) {
+        for ($xx = 0; $xx < $xSize; ++$xx) {
             if ($xx % $samplingRate !== 0) {
                 $noiseArray[$xx] = new \SplFixedArray($zSize + 1);
             }
 
-            for ($zz = 0; $zz < $zSize; ++ $zz) {
+            for ($zz = 0; $zz < $zSize; ++$zz) {
                 if ($xx % $samplingRate !== 0 or $zz % $samplingRate !== 0) {
                     $nx = (int) ($xx / $samplingRate) * $samplingRate;
                     $nz = (int) ($zz / $samplingRate) * $samplingRate;
@@ -169,7 +171,6 @@ abstract class Generator
 
     /**
      *
-     * @param Noise $noise
      * @param int $xSize
      * @param int $ySize
      * @param int $zSize
@@ -203,19 +204,19 @@ abstract class Generator
             throw new \InvalidArgumentCountException("ySize % ySamplingRate must return 0");
         }
 
-        $noiseArray = \array_fill(0, $xSize + 1, \array_fill(0, $zSize + 1, []));
+        $noiseArray = array_fill(0, $xSize + 1, array_fill(0, $zSize + 1, []));
 
         for ($xx = 0; $xx <= $xSize; $xx += $xSamplingRate) {
             for ($zz = 0; $zz <= $zSize; $zz += $zSamplingRate) {
                 for ($yy = 0; $yy <= $ySize; $yy += $ySamplingRate) {
-                    $noiseArray[$xx][$zz][$yy] = $noise->noise3D($x + $xx, $y + $yy, $z + $zz, \true);
+                    $noiseArray[$xx][$zz][$yy] = $noise->noise3D($x + $xx, $y + $yy, $z + $zz, true);
                 }
             }
         }
 
-        for ($xx = 0; $xx < $xSize; ++ $xx) {
-            for ($zz = 0; $zz < $zSize; ++ $zz) {
-                for ($yy = 0; $yy < $ySize; ++ $yy) {
+        for ($xx = 0; $xx < $xSize; ++$xx) {
+            for ($zz = 0; $zz < $zSize; ++$zz) {
+                for ($yy = 0; $yy < $ySize; ++$yy) {
                     if ($xx % $xSamplingRate !== 0 or $zz % $zSamplingRate !== 0 or $yy % $ySamplingRate !== 0) {
                         $nx = (int) ($xx / $xSamplingRate) * $xSamplingRate;
                         $ny = (int) ($yy / $ySamplingRate) * $ySamplingRate;

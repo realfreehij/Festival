@@ -23,12 +23,13 @@ namespace pocketmine\command\defaults;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use function substr;
 
 abstract class VanillaCommand extends Command{
 	const MAX_COORD = 2147483647;
 	const MIN_COORD = -2147483647;
 
-	public function __construct($name, $description = "", $usageMessage = \null, array $aliases = []){
+	public function __construct($name, $description = "", $usageMessage = null, array $aliases = []){
 		parent::__construct($name, $description, $usageMessage, $aliases);
 	}
 
@@ -46,7 +47,7 @@ abstract class VanillaCommand extends Command{
 
 	protected function getRelativeDouble($original, CommandSender $sender, $input, $min = self::MIN_COORD, $max = self::MAX_COORD){
 		if($input[0] === "~"){
-			$value = $this->getDouble($sender, \substr($input, 1));
+			$value = $this->getDouble($sender, substr($input, 1));
 
 			return $original + $value;
 		}

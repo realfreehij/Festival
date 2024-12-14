@@ -57,11 +57,11 @@ class Tree extends Populator
     {
         $this->level = $level;
         $amount = $random->nextRange(0, $this->randomAmount + 1) + $this->baseAmount;
-        for ($i = 0; $i < $amount; ++ $i) {
+        for ($i = 0; $i < $amount; ++$i) {
             $x = $random->nextRange($chunkX << 4, ($chunkX << 4) + 15);
             $z = $random->nextRange($chunkZ << 4, ($chunkZ << 4) + 15);
             $y = $this->getHighestWorkableBlock($x, $z);
-            if ($y === - 1) {
+            if ($y === -1) {
                 continue;
             }
             ObjectTree::growTree($this->level, $x, $y, $z, $random, $this->type);
@@ -70,15 +70,15 @@ class Tree extends Populator
 
     private function getHighestWorkableBlock($x, $z)
     {
-        for ($y = 127; $y > 0; -- $y) {
+        for ($y = 127; $y > 0; --$y) {
             $b = $this->level->getBlockIdAt($x, $y, $z);
             if ($b === Block::DIRT or $b === Block::GRASS) {
                 break;
             } elseif ($b !== 0 and $b !== Block::SNOW_LAYER) {
-                return - 1;
+                return -1;
             }
         }
 
-        return ++ $y;
+        return ++$y;
     }
 }

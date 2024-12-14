@@ -20,7 +20,6 @@
  */
 namespace pocketmine\level\generator;
 
-
 use pocketmine\level\Level;
 use pocketmine\scheduler\AsyncTask;
 
@@ -36,7 +35,7 @@ class GeneratorUnregisterTask extends AsyncTask
 
     public function onRun()
     {
-        $this->saveToThreadStore("generation.level{$this->levelId}.manager", \null);
-        $this->saveToThreadStore("generation.level{$this->levelId}.generator", \null);
+        $this->saveToThreadStore("generation.level{$this->levelId}.manager", null);
+        $this->saveToThreadStore("generation.level{$this->levelId}.generator", null);
     }
 }

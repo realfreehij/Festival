@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,11 +15,17 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
 namespace pocketmine\utils;
+
+use function function_exists;
+use function getenv;
+use function getopt;
+use function posix_ttyname;
+use const STDOUT;
 
 abstract class Terminal{
 	public static $FORMAT_BOLD = "";
@@ -47,15 +53,15 @@ abstract class Terminal{
 	public static $COLOR_YELLOW = "";
 	public static $COLOR_WHITE = "";
 
-	private static $formattingCodes = \null;
+	private static $formattingCodes = null;
 
 	public static function hasFormattingCodes(){
-		if(self::$formattingCodes === \null){
-			$opts = \getopt("", ["enable-ansi", "disable-ansi"]);
+		if(self::$formattingCodes === null){
+			$opts = getopt("", ["enable-ansi", "disable-ansi"]);
 			if(isset($opts["disable-ansi"])){
-				self::$formattingCodes = \false;
+				self::$formattingCodes = false;
 			}else{
-				self::$formattingCodes = ((Utils::getOS() !== "win" and \getenv("TERM") != "" and (!\function_exists("posix_ttyname") or \posix_ttyname(STDOUT) !== \false)) or isset($opts["enable-ansi"]));
+				self::$formattingCodes = ((Utils::getOS() !== "win" and getenv("TERM") != "" and (!function_exists("posix_ttyname") or posix_ttyname(STDOUT) !== false)) or isset($opts["enable-ansi"]));
 			}
 		}
 

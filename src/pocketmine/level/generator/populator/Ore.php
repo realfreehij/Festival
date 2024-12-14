@@ -33,7 +33,7 @@ class Ore extends Populator
     {
         foreach ($this->oreTypes as $type) {
             $ore = new ObjectOre($random, $type);
-            for ($i = 0; $i < $ore->type->clusterCount; ++ $i) {
+            for ($i = 0; $i < $ore->type->clusterCount; ++$i) {
                 $x = $random->nextRange($chunkX << 4, ($chunkX << 4) + 15);
                 $y = $random->nextRange($ore->type->minHeight, $ore->type->maxHeight);
                 $z = $random->nextRange($chunkZ << 4, ($chunkZ << 4) + 15);

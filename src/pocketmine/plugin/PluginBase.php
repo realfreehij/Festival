@@ -26,6 +26,19 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\Server;
 use pocketmine\utils\Config;
+use function fclose;
+use function file_exists;
+use function fopen;
+use function is_dir;
+use function mkdir;
+use function rtrim;
+use function str_replace;
+use function stream_copy_to_stream;
+use function stream_get_contents;
+use function strtolower;
+use function substr;
+use function trim;
+use function yaml_parse;
 
 abstract class PluginBase implements Plugin{
 
@@ -36,10 +49,10 @@ abstract class PluginBase implements Plugin{
 	private $server;
 
 	/** @var bool */
-	private $isEnabled = \false;
+	private $isEnabled = false;
 
 	/** @var bool */
-	private $initialized = \false;
+	private $initialized = false;
 
 	/** @var PluginDescription */
 	private $description;
@@ -73,16 +86,16 @@ abstract class PluginBase implements Plugin{
 	 * @return bool
 	 */
 	public final function isEnabled(){
-		return $this->isEnabled === \true;
+		return $this->isEnabled === true;
 	}
 
 	/**
 	 * @param bool $boolean
 	 */
-	public final function setEnabled($boolean = \true){
+	public final function setEnabled($boolean = true){
 		if($this->isEnabled !== $boolean){
 			$this->isEnabled = $boolean;
-			if($this->isEnabled === \true){
+			if($this->isEnabled === true){
 				$this->onEnable();
 			}else{
 				$this->onDisable();
@@ -94,7 +107,7 @@ abstract class PluginBase implements Plugin{
 	 * @return bool
 	 */
 	public final function isDisabled(){
-		return $this->isEnabled === \false;
+		return $this->isEnabled === false;
 	}
 
 	public final function getDataFolder(){
@@ -106,13 +119,13 @@ abstract class PluginBase implements Plugin{
 	}
 
 	public final function init(PluginLoader $loader, Server $server, PluginDescription $description, $dataFolder, $file){
-		if($this->initialized === \false){
-			$this->initialized = \true;
+		if($this->initialized === false){
+			$this->initialized = true;
 			$this->loader = $loader;
 			$this->server = $server;
 			$this->description = $description;
-			$this->dataFolder = \rtrim($dataFolder, "\\/") . "/";
-			$this->file = \rtrim($file, "\\/") . "/";
+			$this->dataFolder = rtrim($dataFolder, "\\/") . "/";
+			$this->file = rtrim($file, "\\/") . "/";
 			$this->configFile = $this->dataFolder . "config.yml";
 			$this->logger = new PluginLogger($this);
 		}
@@ -139,34 +152,31 @@ abstract class PluginBase implements Plugin{
 	 */
 	public function getCommand($name){
 		$command = $this->getServer()->getPluginCommand($name);
-		if($command === \null or $command->getPlugin() !== $this){
-			$command = $this->getServer()->getPluginCommand(\strtolower($this->description->getName()) . ":" . $name);
+		if($command === null or $command->getPlugin() !== $this){
+			$command = $this->getServer()->getPluginCommand(strtolower($this->description->getName()) . ":" . $name);
 		}
 
 		if($command instanceof PluginIdentifiableCommand and $command->getPlugin() === $this){
 			return $command;
 		}else{
-			return \null;
+			return null;
 		}
 	}
 
 	/**
-	 * @param CommandSender $sender
-	 * @param Command       $command
 	 * @param string        $label
-	 * @param array         $args
 	 *
 	 * @return bool
 	 */
 	public function onCommand(CommandSender $sender, Command $command, $label, array $args){
-		return \false;
+		return false;
 	}
 
 	/**
 	 * @return bool
 	 */
 	protected function isPhar(){
-		return \substr($this->file, 0, 7) === "phar://";
+		return substr($this->file, 0, 7) === "phar://";
 	}
 
 	/**
@@ -178,12 +188,12 @@ abstract class PluginBase implements Plugin{
 	 * @return resource Resource data, or null
 	 */
 	public function getResource($filename){
-		$filename = \rtrim(\str_replace("\\", "/", $filename), "/");
-		if(\file_exists($this->file . "resources/" . $filename)){
-			return \fopen($this->file . "resources/" . $filename, "rb");
+		$filename = rtrim(str_replace("\\", "/", $filename), "/");
+		if(file_exists($this->file . "resources/" . $filename)){
+			return fopen($this->file . "resources/" . $filename, "rb");
 		}
 
-		return \null;
+		return null;
 	}
 
 	/**
@@ -192,27 +202,27 @@ abstract class PluginBase implements Plugin{
 	 *
 	 * @return bool
 	 */
-	public function saveResource($filename, $replace = \false){
-		if(\trim($filename) === ""){
-			return \false;
+	public function saveResource($filename, $replace = false){
+		if(trim($filename) === ""){
+			return false;
 		}
 
-		if(($resource = $this->getResource($filename)) === \null){
-			return \false;
+		if(($resource = $this->getResource($filename)) === null){
+			return false;
 		}
 
 		$out = $this->dataFolder . $filename;
-		if(!\file_exists($this->dataFolder)){
-			\mkdir($this->dataFolder, 0755, \true);
+		if(!file_exists($this->dataFolder)){
+			mkdir($this->dataFolder, 0755, true);
 		}
 
-		if(\file_exists($out) and $replace !== \true){
-			return \false;
+		if(file_exists($out) and $replace !== true){
+			return false;
 		}
 
-		$ret = \stream_copy_to_stream($resource, $fp = \fopen($out, "wb")) > 0;
-		\fclose($fp);
-		\fclose($resource);
+		$ret = stream_copy_to_stream($resource, $fp = fopen($out, "wb")) > 0;
+		fclose($fp);
+		fclose($resource);
 		return $ret;
 	}
 
@@ -223,7 +233,7 @@ abstract class PluginBase implements Plugin{
 	 */
 	public function getResources(){
 		$resources = [];
-		if(\is_dir($this->file . "resources/")){
+		if(is_dir($this->file . "resources/")){
 			foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->file . "resources/")) as $resource){
 				$resources[] = $resource;
 			}
@@ -244,22 +254,22 @@ abstract class PluginBase implements Plugin{
 	}
 
 	public function saveConfig(){
-		if($this->getConfig()->save() === \false){
+		if($this->getConfig()->save() === false){
 			$this->getLogger()->critical("Could not save config to " . $this->configFile);
 		}
 	}
 
 	public function saveDefaultConfig(){
-		if(!\file_exists($this->configFile)){
-			$this->saveResource("config.yml", \false);
+		if(!file_exists($this->configFile)){
+			$this->saveResource("config.yml", false);
 		}
 	}
 
 	public function reloadConfig(){
 		$this->config = new Config($this->configFile);
-		if(($configStream = $this->getResource("config.yml")) !== \null){
-			$this->config->setDefaults(yaml_parse(config::fixYAMLIndexes(\stream_get_contents($configStream))));
-			\fclose($configStream);
+		if(($configStream = $this->getResource("config.yml")) !== null){
+			$this->config->setDefaults(yaml_parse(config::fixYAMLIndexes(stream_get_contents($configStream))));
+			fclose($configStream);
 		}
 	}
 

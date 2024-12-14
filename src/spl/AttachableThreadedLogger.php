@@ -20,9 +20,6 @@ abstract class AttachableThreadedLogger extends \ThreadedLogger{
     /** @var \ThreadedLoggerAttachment */
     protected $attachment = \null;
 
-    /**
-     * @param ThreadedLoggerAttachment $attachment
-     */
     public function addAttachment(\ThreadedLoggerAttachment $attachment){
         if($this->attachment instanceof \ThreadedLoggerAttachment){
             $this->attachment->addAttachment($attachment);
@@ -31,9 +28,6 @@ abstract class AttachableThreadedLogger extends \ThreadedLogger{
         }
     }
 
-    /**
-     * @param ThreadedLoggerAttachment $attachment
-     */
     public function removeAttachment(\ThreadedLoggerAttachment $attachment){
         if($this->attachment instanceof \ThreadedLoggerAttachment){
             if($this->attachment === $attachment){

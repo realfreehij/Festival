@@ -22,6 +22,7 @@
 namespace pocketmine\inventory;
 
 use pocketmine\item\Item;
+use function microtime;
 
 class BaseTransaction implements Transaction{
 	/** @var Inventory */
@@ -36,17 +37,14 @@ class BaseTransaction implements Transaction{
 	protected $creationTime;
 
 	/**
-	 * @param Inventory $inventory
 	 * @param int       $slot
-	 * @param Item      $sourceItem
-	 * @param Item      $targetItem
 	 */
 	public function __construct(Inventory $inventory, $slot, Item $sourceItem, Item $targetItem){
 		$this->inventory = $inventory;
 		$this->slot = (int) $slot;
 		$this->sourceItem = clone $sourceItem;
 		$this->targetItem = clone $targetItem;
-		$this->creationTime = \microtime(\true);
+		$this->creationTime = microtime(true);
 	}
 
 	public function getCreationTime(){

@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,31 +23,38 @@
  * All the Item classes
  */
 namespace pocketmine\item;
-use pocketmine\entity\Creeper;
-use pocketmine\entity\Skeleton;
-use pocketmine\entity\Spider;
+
 use pocketmine\block\Block;
 use pocketmine\block\Flower;
+use pocketmine\entity\Bat;
+use pocketmine\entity\CaveSpider;
+use pocketmine\entity\Chicken;
+use pocketmine\entity\Cow;
+use pocketmine\entity\Creeper;
+use pocketmine\entity\Enderman;
 use pocketmine\entity\Entity;
+use pocketmine\entity\MagmaCube;
+use pocketmine\entity\Mooshroom;
+use pocketmine\entity\Pig;
+use pocketmine\entity\PigZombie;
+use pocketmine\entity\Sheep;
+use pocketmine\entity\Silverfish;
+use pocketmine\entity\Skeleton;
+use pocketmine\entity\Slime;
+use pocketmine\entity\Spider;
 use pocketmine\entity\Squid;
 use pocketmine\entity\Villager;
-use pocketmine\entity\Zombie;
-use pocketmine\entity\Chicken;
-use pocketmine\entity\Sheep;
-use pocketmine\entity\Pig;
 use pocketmine\entity\Wolf;
-use pocketmine\entity\Cow;
-use pocketmine\entity\Mooshroom;
+use pocketmine\entity\Zombie;
 use pocketmine\inventory\Fuel;
 use pocketmine\level\Level;
 use pocketmine\Player;
-use pocketmine\entity\PigZombie;
-use pocketmine\entity\Slime;
-use pocketmine\entity\Enderman;
-use pocketmine\entity\Bat;
-use pocketmine\entity\CaveSpider;
-use pocketmine\entity\MagmaCube;
-use pocketmine\entity\Silverfish;
+use function constant;
+use function defined;
+use function explode;
+use function str_replace;
+use function strtoupper;
+use function trim;
 class Item{
 	//All Block IDs are here too
 	const AIR = 0;
@@ -271,7 +278,7 @@ class Item{
 	const GOLDEN_PICKAXE = 285;
 	const GOLDEN_AXE = 286;
 	const STRING = 287;
-	const FEATHER = 288; 
+	const FEATHER = 288;
 	const GUNPOWDER = 289;
 	const WOODEN_HOE = 290;
 	const STONE_HOE = 291;
@@ -370,7 +377,7 @@ class Item{
 	const BEETROOT_SOUP = 459;
 
 	/** @var \SplFixedArray */
-	public static $list = \null;
+	public static $list = null;
 	protected $block;
 	protected $id;
 	protected $meta;
@@ -379,13 +386,13 @@ class Item{
 	protected $name;
 
 	public function canBeActivated(){
-		return \false;
+		return false;
 	}
 
 	public static function init(){
-		if(self::$list === \null){
+		if(self::$list === null){
 			self::$list = new \SplFixedArray(65536);
-			
+
 			self::$list[self::EGG] = Egg::class;
 			self::$list[self::SUGARCANE] = Sugarcane::class;
 			self::$list[self::WHEAT_SEEDS] = WheatSeeds::class;
@@ -469,12 +476,12 @@ class Item{
 			self::$list[self::MAGMA_CREAM] = MagmaCream::class;
 			self::$list[self::BOAT] = Boat::class;
 			for($i = 0; $i < 256; ++$i){
-				if(Block::$list[$i] !== \null){
+				if(Block::$list[$i] !== null){
 					self::$list[$i] = Block::$list[$i];
 				}
 			}
 		}
-		
+
 		self::initCreativeItems();
 	}
 
@@ -640,12 +647,12 @@ class Item{
 		self::addCreativeItem(Item::get(Item::DOUBLE_PLANT, 5));
 		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM, 0));
 		self::addCreativeItem(Item::get(Item::RED_MUSHROOM, 0));
-		
+
 		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM_BLOCK, 14));
 		self::addCreativeItem(Item::get(Item::RED_MUSHROOM_BLOCK, 14));
 		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM_BLOCK, 0));
 		self::addCreativeItem(Item::get(Item::BROWN_MUSHROOM_BLOCK, 15));
-		
+
 		self::addCreativeItem(Item::get(Item::CACTUS, 0));
 		self::addCreativeItem(Item::get(Item::MELON_BLOCK, 0));
 		self::addCreativeItem(Item::get(Item::PUMPKIN, 0));
@@ -823,23 +830,21 @@ class Item{
 	public static function isCreativeItem(Item $item){
 		foreach(Item::$creative as $i => $d){
 			if($item->equals($d, !$item->isTool())){
-				return \true;
+				return true;
 			}
 		}
 
-		return \false;
+		return false;
 	}
 
 	/**
-	 * @param $index
 	 * @return Item
 	 */
 	public static function getCreativeItem($index){
-		return isset(Item::$creative[$index]) ? Item::$creative[$index] : \null;
+		return isset(Item::$creative[$index]) ? Item::$creative[$index] : null;
 	}
 
 	/**
-	 * @param Item $item
 	 * @return int
 	 */
 	public static function getCreativeItemIndex(Item $item){
@@ -855,7 +860,7 @@ class Item{
 	public static function get($id, $meta = 0, $count = 1){
 		try{
 			$class = self::$list[$id];
-			if($class === \null){
+			if($class === null){
 				return new Item($id, $meta, $count);
 			}elseif($id < 256){
 				return new ItemBlock(new $class($meta), $meta, $count);
@@ -867,25 +872,25 @@ class Item{
 		}
 	}
 
-	public static function fromString($str, $multiple = \false){
-		if($multiple === \true){
+	public static function fromString($str, $multiple = false){
+		if($multiple === true){
 			$blocks = [];
-			foreach(\explode(",", $str) as $b){
-				$blocks[] = self::fromString($b, \false);
+			foreach(explode(",", $str) as $b){
+				$blocks[] = self::fromString($b, false);
 			}
 
 			return $blocks;
 		}else{
-			$b = \explode(":", \str_replace(" ", "_", \trim($str)));
+			$b = explode(":", str_replace(" ", "_", trim($str)));
 			if(!isset($b[1])){
 				$meta = 0;
 			}else{
 				$meta = $b[1] & 0xFFFF;
 			}
 
-			if(\defined(Item::class . "::" . \strtoupper($b[0]))){
-				$item = self::get(\constant(Item::class . "::" . \strtoupper($b[0])), $meta);
-				if($item->getId() === self::AIR and \strtoupper($b[0]) !== "AIR"){
+			if(defined(Item::class . "::" . strtoupper($b[0]))){
+				$item = self::get(constant(Item::class . "::" . strtoupper($b[0])), $meta);
+				if($item->getId() === self::AIR and strtoupper($b[0]) !== "AIR"){
 					$item = self::get($b[0] & 0xFFFF, $meta);
 				}
 			}else{
@@ -898,7 +903,7 @@ class Item{
 
 	public function __construct($id, $meta = 0, $count = 1, $name = "Unknown"){
 		$this->id = $id & 0xffff;
-		$this->meta = $meta !== \null ? $meta & 0xffff : \null;
+		$this->meta = $meta !== null ? $meta & 0xffff : null;
 		$this->count = (int) $count;
 		$this->name = $name;
 		if(!isset($this->block) and $this->id <= 0xff and isset(Block::$list[$this->id])){
@@ -906,7 +911,6 @@ class Item{
 			$this->name = $this->block->getName();
 		}
 	}
-
 
 	public function getCount(){
 		return $this->count;
@@ -921,7 +925,7 @@ class Item{
 	}
 
 	final public function isPlaceable(){
-		return (($this->block instanceof Block) and $this->block->isPlaceable === \true);
+		return (($this->block instanceof Block) and $this->block->isPlaceable === true);
 	}
 
 	public function getBlock(){
@@ -941,7 +945,7 @@ class Item{
 	}
 
 	public function setDamage($meta){
-		$this->meta = $meta !== \null ? $meta & 0xFFFF : \null;
+		$this->meta = $meta !== null ? $meta & 0xFFFF : null;
 	}
 
 	public function getMaxStackSize(){
@@ -950,13 +954,13 @@ class Item{
 
 	final public function getFuelTime(){
 		if(!isset(Fuel::$duration[$this->id])){
-			return \null;
+			return null;
 		}
 		if($this->id !== self::BUCKET or $this->meta === 10){
 			return Fuel::$duration[$this->id];
 		}
 
-		return \null;
+		return null;
 	}
 
 	/**
@@ -965,49 +969,49 @@ class Item{
 	 * @return bool
 	 */
 	public function useOn($object){
-		return \false;
+		return false;
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function isTool(){
-		return \false;
+		return false;
 	}
 
 	/**
 	 * @return int|bool
 	 */
 	public function getMaxDurability(){
-		return \false;
+		return false;
 	}
 
 	public function isPickaxe(){
-		return \false;
+		return false;
 	}
 
 	public function isAxe(){
-		return \false;
+		return false;
 	}
 
 	public function isSword(){
-		return \false;
+		return false;
 	}
 
 	public function isShovel(){
-		return \false;
+		return false;
 	}
 
 	public function isHoe(){
-		return \false;
+		return false;
 	}
 
 	public function isShears(){
-		return \false;
+		return false;
 	}
 
 	final public function __toString(){
-		return "Item " . $this->name . " (" . $this->id . ":" . ($this->meta === \null ? "?" : $this->meta) . ")x" . $this->count;
+		return "Item " . $this->name . " (" . $this->id . ":" . ($this->meta === null ? "?" : $this->meta) . ")x" . $this->count;
 	}
 
 	public function getDestroySpeed(Block $block, Player $player){
@@ -1015,11 +1019,11 @@ class Item{
 	}
 
 	public function onActivate(Level $level, Player $player, Block $block, Block $target, $face, $fx, $fy, $fz){
-		return \false;
+		return false;
 	}
 
-	public final function equals(Item $item, $checkDamage = \false){
-		return $this->id === $item->getId() and ($checkDamage === \false or $this->getDamage() === $item->getDamage());
+	public final function equals(Item $item, $checkDamage = false){
+		return $this->id === $item->getId() and ($checkDamage === false or $this->getDamage() === $item->getDamage());
 	}
 
 }

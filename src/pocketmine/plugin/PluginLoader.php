@@ -52,18 +52,15 @@ interface PluginLoader{
 	public function getPluginFilters();
 
 	/**
-	 * @param Plugin $plugin
 	 *
 	 * @return void
 	 */
 	public function enablePlugin(Plugin $plugin);
 
 	/**
-	 * @param Plugin $plugin
 	 *
 	 * @return void
 	 */
 	public function disablePlugin(Plugin $plugin);
-
 
 }

@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,20 +15,22 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
 namespace pocketmine\entity;
+
 use pocketmine\item\Item as ItemItem;
+use pocketmine\nbt\tag\ByteTag;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
-use pocketmine\nbt\tag\ByteTag;
+use function mt_rand;
 
 class Sheep extends Animal implements Colorable{
 	const NETWORK_ID = 13;
-	
+
 	public $width = 0.9;
 	public $height = 0.9;
 
@@ -40,7 +42,7 @@ class Sheep extends Animal implements Colorable{
 		}
 		$this->setDataProperty(Entity::DATA_AUX_VAL, Entity::DATA_TYPE_BYTE, $this->namedtag->Color->getValue() & 0xf);
 	}
-	
+
 	public function getRandomColor(){
 		$c = mt_rand(0,100);
 		if($c <= 4){
@@ -60,7 +62,7 @@ class Sheep extends Animal implements Colorable{
 		}
 		return 0x6;
 	}
-	
+
 	public function getName(){
 		return "Sheep";
 	}
@@ -70,7 +72,7 @@ class Sheep extends Animal implements Colorable{
 			ItemItem::get(ItemItem::WOOL, $this->namedtag->Color->getValue(), 1)
 		];
 	}
-	
+
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->eid = $this->getId();

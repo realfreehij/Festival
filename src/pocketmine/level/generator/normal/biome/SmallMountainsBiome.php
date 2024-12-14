@@ -20,7 +20,6 @@
  */
 namespace pocketmine\level\generator\normal\biome;
 
-
 class SmallMountainsBiome extends MountainsBiome
 {
 

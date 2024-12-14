@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -23,6 +23,8 @@
  * Event related classes
  */
 namespace pocketmine\event;
+
+use function get_class;
 
 abstract class Event{
 
@@ -36,14 +38,14 @@ abstract class Event{
 	 * Not doing so will deny the proper event initialization
 	 */
 
-	protected $eventName = \null;
-	private $isCancelled = \false;
+	protected $eventName = null;
+	private $isCancelled = false;
 
 	/**
 	 * @return string
 	 */
 	final public function getEventName(){
-		return $this->eventName === \null ? \get_class($this) : $this->eventName;
+		return $this->eventName === null ? get_class($this) : $this->eventName;
 	}
 
 	/**
@@ -57,7 +59,7 @@ abstract class Event{
 		}
 
 		/** @var Event $this */
-		return $this->isCancelled === \true;
+		return $this->isCancelled === true;
 	}
 
 	/**
@@ -67,7 +69,7 @@ abstract class Event{
 	 *
 	 * @throws \BadMethodCallException
 	 */
-	public function setCancelled($value = \true){
+	public function setCancelled($value = true){
 		if(!($this instanceof Cancellable)){
 			throw new \BadMethodCallException("Event is not Cancellable");
 		}
@@ -80,7 +82,7 @@ abstract class Event{
 	 * @return HandlerList
 	 */
 	public function getHandlers(){
-		if(static::$handlerList === \null){
+		if(static::$handlerList === null){
 			static::$handlerList = new HandlerList();
 		}
 

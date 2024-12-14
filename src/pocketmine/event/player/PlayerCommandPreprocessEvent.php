@@ -33,14 +33,12 @@ use pocketmine\Player;
  * The message contains a slash at the start
  */
 class PlayerCommandPreprocessEvent extends PlayerEvent implements Cancellable{
-	public static $handlerList = \null;
+	public static $handlerList = null;
 
 	/** @var string */
 	protected $message;
 
-
 	/**
-	 * @param Player $player
 	 * @param string $message
 	 */
 	public function __construct(Player $player, $message){
@@ -62,9 +60,6 @@ class PlayerCommandPreprocessEvent extends PlayerEvent implements Cancellable{
 		$this->message = $message;
 	}
 
-	/**
-	 * @param Player $player
-	 */
 	public function setPlayer(Player $player){
 		$this->player = $player;
 	}

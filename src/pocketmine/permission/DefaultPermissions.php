@@ -27,14 +27,12 @@ abstract class DefaultPermissions{
 	const ROOT = "pocketmine";
 
 	/**
-	 * @param Permission $perm
-	 * @param Permission $parent
 	 *
 	 * @return Permission
 	 */
-	public static function registerPermission(Permission $perm, Permission $parent = \null){
+	public static function registerPermission(Permission $perm, Permission $parent = null){
 		if($parent instanceof Permission){
-			$parent->getChildren()[$perm->getName()] = \true;
+			$parent->getChildren()[$perm->getName()] = true;
 
 			return self::registerPermission($perm);
 		}
@@ -121,11 +119,10 @@ abstract class DefaultPermissions{
 		self::registerPermission(new Permission(self::ROOT . ".command.spawnpoint", "Allows the user to change player's spawnpoint", Permission::DEFAULT_OP), $commands);
 		self::registerPermission(new Permission(self::ROOT . ".command.setworldspawn", "Allows the user to change the world spawn", Permission::DEFAULT_OP), $commands);
 		self::registerPermission(new Permission("festival.command.getpos", "Allows the user to get their player position", Permission::DEFAULT_TRUE), $commands);
-		
+
 		$commands->recalculatePermissibles();
 
 		$parent->recalculatePermissibles();
-		
-		
+
 	}
 }

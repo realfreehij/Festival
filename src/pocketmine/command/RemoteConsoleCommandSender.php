@@ -21,8 +21,8 @@
 
 namespace pocketmine\command;
 
-
 use pocketmine\event\TextContainer;
+use function trim;
 
 class RemoteConsoleCommandSender extends ConsoleCommandSender{
 
@@ -36,7 +36,7 @@ class RemoteConsoleCommandSender extends ConsoleCommandSender{
 			$message = $this->getServer()->getLanguage()->translateString($message);
 		}
 
-		$this->messages .= \trim($message, "\r\n") . "\n";
+		$this->messages .= trim($message, "\r\n") . "\n";
 	}
 
 	public function getMessage(){
@@ -46,6 +46,5 @@ class RemoteConsoleCommandSender extends ConsoleCommandSender{
 	public function getName(){
 		return "Rcon";
 	}
-
 
 }

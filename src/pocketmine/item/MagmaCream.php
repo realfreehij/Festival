@@ -1,4 +1,5 @@
 <?php
+
 namespace pocketmine\item;
 
 class MagmaCream extends Item{

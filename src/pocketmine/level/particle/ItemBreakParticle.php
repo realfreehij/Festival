@@ -20,8 +20,8 @@
  */
 namespace pocketmine\level\particle;
 
-use pocketmine\math\Vector3;
 use pocketmine\item\Item;
+use pocketmine\math\Vector3;
 
 class ItemBreakParticle extends GenericParticle
 {

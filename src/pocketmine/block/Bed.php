@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -36,7 +36,7 @@ class Bed extends Transparent{
 	}
 
 	public function canBeActivated(){
-		return \true;
+		return true;
 	}
 
 	public function getHardness(){
@@ -58,7 +58,7 @@ class Bed extends Transparent{
 		);
 	}
 
-	public function onActivate(Item $item, Player $player = \null){
+	public function onActivate(Item $item, Player $player = null){
 
 		$time = $this->getLevel()->getTime() % Level::TIME_FULL;
 
@@ -66,7 +66,7 @@ class Bed extends Transparent{
 
 		if($player instanceof Player and !$isNight){
 			$player->sendMessage(TextFormat::GRAY . "You can only sleep at night");
-			return \true;
+			return true;
 		}
 
 		$blockNorth = $this->getSide(2); //Gets the blocks around them
@@ -89,20 +89,20 @@ class Bed extends Transparent{
 					$player->sendMessage(TextFormat::GRAY . "This bed is incomplete");
 				}
 
-				return \true;
+				return true;
 			}
 		}
 
-		if($player instanceof Player and $player->sleepOn($b) === \false){
+		if($player instanceof Player and $player->sleepOn($b) === false){
 			$player->sendMessage(TextFormat::GRAY . "This bed is occupied");
 		}
 
-		return \true;
+		return true;
 	}
 
-	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = \null){
+	public function place(Item $item, Block $block, Block $target, $face, $fx, $fy, $fz, Player $player = null){
 		$down = $this->getSide(0);
-		if($down->isTransparent() === \false){
+		if($down->isTransparent() === false){
 			$faces = [
 				0 => 3,
 				1 => 4, //affected
@@ -112,16 +112,16 @@ class Bed extends Transparent{
 			$d = $player instanceof Player ? $player->getDirection() : 0;
 			$next = $this->getSide($faces[(($d + 3) % 4)]);
 			$downNext = $next->getSide(0);
-			if($next->canBeReplaced() === \true and $downNext->isTransparent() === \false){
+			if($next->canBeReplaced() === true and $downNext->isTransparent() === false){
 				$meta = (($d + 3) % 4) & 0x03;
-				$this->getLevel()->setBlock($block, Block::get($this->id, $meta), \true, \true);
-				$this->getLevel()->setBlock($next, Block::get($this->id, $meta | 0x08), \true, \true);
+				$this->getLevel()->setBlock($block, Block::get($this->id, $meta), true, true);
+				$this->getLevel()->setBlock($next, Block::get($this->id, $meta | 0x08), true, true);
 
-				return \true;
+				return true;
 			}
 		}
 
-		return \false;
+		return false;
 	}
 
 	public function onBreak(Item $item){
@@ -133,37 +133,37 @@ class Bed extends Transparent{
 		if(($this->meta & 0x08) === 0x08){ //This is the Top part of bed
 			switch($this->meta & 0x7){
 				case 0:
-					if($blockNorth->getId() === $this->id) $this->getLevel()->setBlock($blockNorth, new Air(), \true, \true);
+					if($blockNorth->getId() === $this->id) $this->getLevel()->setBlock($blockNorth, new Air(), true, true);
 					break;
 				case 1:
-					if($blockEast->getId() === $this->id) $this->getLevel()->setBlock($blockEast, new Air(), \true, \true);
+					if($blockEast->getId() === $this->id) $this->getLevel()->setBlock($blockEast, new Air(), true, true);
 					break;
 				case 2:
-					if($blockSouth->getId() === $this->id) $this->getLevel()->setBlock($blockSouth, new Air(), \true, \true);
+					if($blockSouth->getId() === $this->id) $this->getLevel()->setBlock($blockSouth, new Air(), true, true);
 					break;
 				case 3:
-					if($blockWest->getId() === $this->id) $this->getLevel()->setBlock($blockWest, new Air(), \true, \true);
+					if($blockWest->getId() === $this->id) $this->getLevel()->setBlock($blockWest, new Air(), true, true);
 					break;
 			}
 		}else{ //Bottom Part of Bed
 			switch($this->meta & 0x7){
 				case 0:
-					if($blockSouth->getId() === $this->id) $this->getLevel()->setBlock($blockSouth, new Air(), \true, \true);
+					if($blockSouth->getId() === $this->id) $this->getLevel()->setBlock($blockSouth, new Air(), true, true);
 					break;
 				case 1:
-					if($blockWest->getId() === $this->id) $this->getLevel()->setBlock($blockWest, new Air(), \true, \true);
+					if($blockWest->getId() === $this->id) $this->getLevel()->setBlock($blockWest, new Air(), true, true);
 					break;
 				case 2:
-					if($blockNorth->getId() === $this->id) $this->getLevel()->setBlock($blockNorth, new Air(), \true, \true);
+					if($blockNorth->getId() === $this->id) $this->getLevel()->setBlock($blockNorth, new Air(), true, true);
 					break;
 				case 3:
-					if($blockEast->getId() === $this->id) $this->getLevel()->setBlock($blockEast, new Air(), \true, \true);
+					if($blockEast->getId() === $this->id) $this->getLevel()->setBlock($blockEast, new Air(), true, true);
 					break;
 			}
 		}
-		$this->getLevel()->setBlock($this, new Air(), \true, \true);
+		$this->getLevel()->setBlock($this, new Air(), true, true);
 
-		return \true;
+		return true;
 	}
 
 	public function getDrops(Item $item){

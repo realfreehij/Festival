@@ -40,7 +40,7 @@ class ReloadCommand extends VanillaCommand{
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
 		if(!$this->testPermission($sender)){
-			return \true;
+			return true;
 		}
 
 		Command::broadcastCommandMessage($sender, new TranslationContainer(TextFormat::YELLOW . "%pocketmine.command.reload.reloading"));
@@ -48,6 +48,6 @@ class ReloadCommand extends VanillaCommand{
 		$sender->getServer()->reload();
 		Command::broadcastCommandMessage($sender, new TranslationContainer(TextFormat::YELLOW . "%pocketmine.command.reload.reloaded"));
 
-		return \true;
+		return true;
 	}
 }

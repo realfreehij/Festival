@@ -25,6 +25,11 @@ use pocketmine\level\format\Chunk;
 use pocketmine\level\format\ChunkSection;
 use pocketmine\level\format\LevelProvider;
 use pocketmine\utils\ChunkException;
+use function array_fill;
+use function count;
+use function substr_count;
+use function unpack;
+use const PHP_INT_SIZE;
 
 abstract class BaseChunk extends BaseFullChunk implements Chunk{
 
@@ -59,23 +64,23 @@ abstract class BaseChunk extends BaseFullChunk implements Chunk{
 			}
 		}
 
-		if(\count($biomeColors) === 256){
+		if(count($biomeColors) === 256){
 			$this->biomeColors = $biomeColors;
 		}else{
-			$this->biomeColors = \array_fill(0, 256, (\PHP_INT_SIZE === 8 ? \unpack("N", "\xff\x00\x00\x00")[1] << 32 >> 32 : \unpack("N", "\xff\x00\x00\x00")[1]));
+			$this->biomeColors = array_fill(0, 256, (PHP_INT_SIZE === 8 ? unpack("N", "\xff\x00\x00\x00")[1] << 32 >> 32 : unpack("N", "\xff\x00\x00\x00")[1]));
 		}
 
-		if(\count($heightMap) === 256){
+		if(count($heightMap) === 256){
 			$this->heightMap = $heightMap;
 		}else{
-			$this->heightMap = \array_fill(0, 256, 127);
+			$this->heightMap = array_fill(0, 256, 127);
 		}
 
 		$this->NBTtiles = $tiles;
 		$this->NBTentities = $entities;
 	}
 
-	public function getBlock($x, $y, $z, &$blockId, &$meta = \null){
+	public function getBlock($x, $y, $z, &$blockId, &$meta = null){
 		$full = $this->sections[$y >> 4]->getFullBlock($x, $y & 0x0f, $z);
 		$blockId = $full >> 4;
 		$meta = $full & 0x0f;
@@ -85,9 +90,9 @@ abstract class BaseChunk extends BaseFullChunk implements Chunk{
 		return $this->sections[$y >> 4]->getFullBlock($x, $y & 0x0f, $z);
 	}
 
-	public function setBlock($x, $y, $z, $blockId = \null, $meta = \null){
+	public function setBlock($x, $y, $z, $blockId = null, $meta = null){
 		try{
-			$this->hasChanged = \true;
+			$this->hasChanged = true;
 			return $this->sections[$y >> 4]->setBlock($x, $y & 0x0f, $z, $blockId & 0xff, $meta & 0x0f);
 		}catch(ChunkException $e){
 			$level = $this->getProvider();
@@ -103,7 +108,7 @@ abstract class BaseChunk extends BaseFullChunk implements Chunk{
 	public function setBlockId($x, $y, $z, $id){
 		try{
 			$this->sections[$y >> 4]->setBlockId($x, $y & 0x0f, $z, $id);
-			$this->hasChanged = \true;
+			$this->hasChanged = true;
 		}catch(ChunkException $e){
 			$level = $this->getProvider();
 			$this->setInternalSection($Y = $y >> 4, $level::createChunkSection($Y));
@@ -118,7 +123,7 @@ abstract class BaseChunk extends BaseFullChunk implements Chunk{
 	public function setBlockData($x, $y, $z, $data){
 		try{
 			$this->sections[$y >> 4]->setBlockData($x, $y & 0x0f, $z, $data);
-			$this->hasChanged = \true;
+			$this->hasChanged = true;
 		}catch(ChunkException $e){
 			$level = $this->getProvider();
 			$this->setInternalSection($Y = $y >> 4, $level::createChunkSection($Y));
@@ -133,7 +138,7 @@ abstract class BaseChunk extends BaseFullChunk implements Chunk{
 	public function setBlockSkyLight($x, $y, $z, $data){
 		try{
 			$this->sections[$y >> 4]->setBlockSkyLight($x, $y & 0x0f, $z, $data);
-			$this->hasChanged = \true;
+			$this->hasChanged = true;
 		}catch(ChunkException $e){
 			$level = $this->getProvider();
 			$this->setInternalSection($Y = $y >> 4, $level::createChunkSection($Y));
@@ -148,7 +153,7 @@ abstract class BaseChunk extends BaseFullChunk implements Chunk{
 	public function setBlockLight($x, $y, $z, $data){
 		try{
 			$this->sections[$y >> 4]->setBlockLight($x, $y & 0x0f, $z, $data);
-			$this->hasChanged = \true;
+			$this->hasChanged = true;
 		}catch(ChunkException $e){
 			$level = $this->getProvider();
 			$this->setInternalSection($Y = $y >> 4, $level::createChunkSection($Y));
@@ -201,21 +206,21 @@ abstract class BaseChunk extends BaseFullChunk implements Chunk{
 	}
 
 	public function setSection($fY, ChunkSection $section){
-		if(\substr_count($section->getIdArray(), "\x00") === 4096 and \substr_count($section->getDataArray(), "\x00") === 2048){
+		if(substr_count($section->getIdArray(), "\x00") === 4096 and substr_count($section->getDataArray(), "\x00") === 2048){
 			$this->sections[(int) $fY] = new EmptyChunkSection($fY);
 		}else{
 			$this->sections[(int) $fY] = $section;
 		}
-		$this->hasChanged = \true;
+		$this->hasChanged = true;
 	}
 
 	private function setInternalSection($fY, ChunkSection $section){
 		$this->sections[(int) $fY] = $section;
-		$this->hasChanged = \true;
+		$this->hasChanged = true;
 	}
 
-	public function load($generate = \true){
-		return $this->getProvider() === \null ? \false : $this->getProvider()->getChunk($this->getX(), $this->getZ(), \true) instanceof Chunk;
+	public function load($generate = true){
+		return $this->getProvider() === null ? false : $this->getProvider()->getChunk($this->getX(), $this->getZ(), true) instanceof Chunk;
 	}
 
 	public function getBlockIdArray(){

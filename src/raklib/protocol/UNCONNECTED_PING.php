@@ -17,15 +17,6 @@ namespace raklib\protocol;
 
 use raklib\Binary;
 
-
-
-
-
-
-
-
-
-
 use raklib\RakLib;
 
 class UNCONNECTED_PING extends Packet{

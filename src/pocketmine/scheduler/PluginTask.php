@@ -31,9 +31,6 @@ abstract class PluginTask extends Task{
 	/** @var Plugin */
 	protected $owner;
 
-	/**
-	 * @param Plugin $owner
-	 */
 	public function __construct(Plugin $owner){
 		$this->owner = $owner;
 	}

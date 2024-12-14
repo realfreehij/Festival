@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -40,7 +40,7 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	/** @var ChestInventory */
 	protected $inventory;
 	/** @var DoubleChestInventory */
-	protected $doubleInventory = \null;
+	protected $doubleInventory = null;
 
 	public function __construct(FullChunk $chunk, CompoundTag $nbt){
 		parent::__construct($chunk, $nbt);
@@ -57,7 +57,7 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	}
 
 	public function close(){
-		if($this->closed === \false){
+		if($this->closed === false){
 			foreach($this->getInventory()->getViewers() as $player){
 				$player->removeWindow($this->getInventory());
 			}
@@ -85,7 +85,6 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	}
 
 	/**
-	 * @param $index
 	 *
 	 * @return int
 	 */
@@ -119,7 +118,6 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 	 * This method should not be used by plugins, use the Inventory
 	 *
 	 * @param int  $index
-	 * @param Item $item
 	 *
 	 * @return bool
 	 */
@@ -148,14 +146,14 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 			$this->namedtag->Items[$i] = $d;
 		}
 
-		return \true;
+		return true;
 	}
 
 	/**
 	 * @return ChestInventory|DoubleChestInventory
 	 */
 	public function getInventory(){
-		if($this->isPaired() and $this->doubleInventory === \null){
+		if($this->isPaired() and $this->doubleInventory === null){
 			$this->checkPairing();
 		}
 		return $this->doubleInventory instanceof DoubleChestInventory ? $this->doubleInventory : $this->inventory;
@@ -177,7 +175,7 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 				$pair->createPair($this);
 				$pair->checkPairing();
 			}
-			if($this->doubleInventory === \null){
+			if($this->doubleInventory === null){
 				if(($pair->x + ($pair->z << 15)) > ($this->x + ($this->z << 15))){ //Order them correctly
 					$this->doubleInventory = new DoubleChestInventory($pair, $this);
 				}else{
@@ -185,17 +183,17 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 				}
 			}
 		}else{
-			$this->doubleInventory = \null;
+			$this->doubleInventory = null;
 			unset($this->namedtag->pairx, $this->namedtag->pairz);
 		}
 	}
 
 	public function isPaired(){
 		if(!isset($this->namedtag->pairx) or !isset($this->namedtag->pairz)){
-			return \false;
+			return false;
 		}
 
-		return \true;
+		return true;
 	}
 
 	/**
@@ -209,12 +207,12 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 			}
 		}
 
-		return \null;
+		return null;
 	}
 
 	public function pairWith(Chest $tile){
 		if($this->isPaired() or $tile->isPaired()){
-			return \false;
+			return false;
 		}
 
 		$this->createPair($tile);
@@ -223,7 +221,7 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 		$tile->spawnToAll();
 		$this->checkPairing();
 
-		return \true;
+		return true;
 	}
 
 	private function createPair(Chest $tile){
@@ -236,7 +234,7 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 
 	public function unpair(){
 		if(!$this->isPaired()){
-			return \false;
+			return false;
 		}
 
 		$tile = $this->getPair();
@@ -251,7 +249,7 @@ class Chest extends Spawnable implements InventoryHolder, Container{
 		}
 		$this->checkPairing();
 
-		return \true;
+		return true;
 	}
 
 	public function getSpawnCompound(){

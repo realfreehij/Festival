@@ -2,15 +2,15 @@
 
 namespace pocketmine\item;
 
-use pocketmine\level\Level;
 use pocketmine\block\Block;
-use pocketmine\Player;
+use pocketmine\entity\Boat as BoatEntity;
+use pocketmine\level\Level;
 use pocketmine\nbt\tag\CompoundTag;
-use pocketmine\nbt\tag\EnumTag;
 use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\EnumTag;
 use pocketmine\nbt\tag\FloatTag;
 
-use pocketmine\entity\Boat as BoatEntity;
+use pocketmine\Player;
 
 class Boat extends Item{
   public function __construct($meta = 0, $count = 1){
@@ -25,23 +25,23 @@ class Boat extends Item{
     $realPos = $block->getSide($face);
 
     $boat = new BoatEntity($player->getLevel()->getChunk($realPos->getX() >> 4, $realPos->getZ() >> 4), new CompoundTag("", [
-  			"Pos" => new EnumTag("Pos", [
-  				new DoubleTag("", $realPos->getX()),
-  				new DoubleTag("", $realPos->getY()),
-  				new DoubleTag("", $realPos->getZ())
-  			]),
-  			"Motion" => new EnumTag("Motion", [
-  				new DoubleTag("", 0),
-  				new DoubleTag("", 0),
-  				new DoubleTag("", 0)
-  			]),
-  			"Rotation" => new EnumTag("Rotation", [
-  				new FloatTag("", 0),
-  				new FloatTag("", 0)
-  			]),
-  	]));
+    	"Pos" => new EnumTag("Pos", [
+    		new DoubleTag("", $realPos->getX()),
+    		new DoubleTag("", $realPos->getY()),
+    		new DoubleTag("", $realPos->getZ())
+    	]),
+    	"Motion" => new EnumTag("Motion", [
+    		new DoubleTag("", 0),
+    		new DoubleTag("", 0),
+    		new DoubleTag("", 0)
+    	]),
+    	"Rotation" => new EnumTag("Rotation", [
+    		new FloatTag("", 0),
+    		new FloatTag("", 0)
+    	]),
+    ]));
     $boat->spawnToAll();
-	
+
 	if(!$player->isCreative()){
 		 $item = $player->getInventory()->getItemInHand();
 		$count = $item->getCount();
@@ -53,7 +53,7 @@ class Boat extends Item{
 		$item->setCount($count);
 		$player->getInventory()->setItemInHand($item);
 	}
-   
+
     return true;
   }
 }

@@ -25,6 +25,7 @@ use pocketmine\level\Level;
 use pocketmine\level\SimpleChunkManager;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
+use function get_class;
 
 class GenerationTask extends AsyncTask
 {
@@ -39,10 +40,10 @@ class GenerationTask extends AsyncTask
 
     public function __construct(Level $level, FullChunk $chunk)
     {
-        $this->state = \true;
+        $this->state = true;
         $this->levelId = $level->getId();
         $this->chunk = $chunk->toFastBinary();
-        $this->chunkClass = \get_class($chunk);
+        $this->chunkClass = get_class($chunk);
     }
 
     public function onRun()
@@ -51,15 +52,15 @@ class GenerationTask extends AsyncTask
         $manager = $this->getFromThreadStore("generation.level{$this->levelId}.manager");
         /** @var Generator $generator */
         $generator = $this->getFromThreadStore("generation.level{$this->levelId}.generator");
-        if ($manager === \null or $generator === \null) {
-            $this->state = \false;
+        if ($manager === null or $generator === null) {
+            $this->state = false;
             return;
         }
 
         /** @var FullChunk $chunk */
         $chunk = $this->chunkClass;
         $chunk = $chunk::fromFastBinary($this->chunk);
-        if ($chunk === \null) {
+        if ($chunk === null) {
             // TODO error
             return;
         }
@@ -72,21 +73,21 @@ class GenerationTask extends AsyncTask
         $chunk->setGenerated();
         $this->chunk = $chunk->toFastBinary();
 
-        $manager->setChunk($chunk->getX(), $chunk->getZ(), \null);
+        $manager->setChunk($chunk->getX(), $chunk->getZ(), null);
     }
 
     public function onCompletion(Server $server)
     {
         $level = $server->getLevel($this->levelId);
-        if ($level !== \null) {
-            if ($this->state === \false) {
+        if ($level !== null) {
+            if ($this->state === false) {
                 $level->registerGenerator();
                 return;
             }
             /** @var FullChunk $chunk */
             $chunk = $this->chunkClass;
             $chunk = $chunk::fromFastBinary($this->chunk, $level->getProvider());
-            if ($chunk === \null) {
+            if ($chunk === null) {
                 // TODO error
                 return;
             }

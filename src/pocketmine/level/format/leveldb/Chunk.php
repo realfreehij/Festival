@@ -24,60 +24,70 @@ use pocketmine\level\format\generic\BaseFullChunk;
 use pocketmine\level\format\LevelProvider;
 use pocketmine\nbt\NBT;
 use pocketmine\Player;
+use function chr;
+use function count;
+use function is_array;
+use function ord;
+use function pack;
+use function str_repeat;
+use function strlen;
+use function substr;
+use function unpack;
+use const PHP_INT_SIZE;
 
 class Chunk extends BaseFullChunk
 {
 
     const DATA_LENGTH = 16384 * (2 + 1 + 1 + 1) + 256 + 1024;
 
-    protected $isLightPopulated = \false;
+    protected $isLightPopulated = false;
 
-    protected $isPopulated = \false;
+    protected $isPopulated = false;
 
-    protected $isGenerated = \false;
+    protected $isGenerated = false;
 
-    public function __construct($level, $chunkX, $chunkZ, $terrain, array $entityData = \null, array $tileData = \null)
+    public function __construct($level, $chunkX, $chunkZ, $terrain, array $entityData = null, array $tileData = null)
     {
         $offset = 0;
 
-        $blocks = \substr($terrain, $offset, 32768);
+        $blocks = substr($terrain, $offset, 32768);
         $offset += 32768;
-        $data = \substr($terrain, $offset, 16384);
+        $data = substr($terrain, $offset, 16384);
         $offset += 16384;
-        $skyLight = \substr($terrain, $offset, 16384);
+        $skyLight = substr($terrain, $offset, 16384);
         $offset += 16384;
-        $blockLight = \substr($terrain, $offset, 16384);
+        $blockLight = substr($terrain, $offset, 16384);
         $offset += 16384;
 
         $heightMap = [];
-        foreach (\unpack("C*", \substr($terrain, $offset, 256)) as $c) {
+        foreach (unpack("C*", substr($terrain, $offset, 256)) as $c) {
             $heightMap[] = $c;
         }
         $offset += 256;
 
         $biomeColors = [];
-        foreach (\unpack("N*", \substr($terrain, $offset, 1024)) as $c) {
+        foreach (unpack("N*", substr($terrain, $offset, 1024)) as $c) {
             $biomeColors[] = $c;
         }
         $offset += 1024;
 
-        parent::__construct($level, $chunkX, $chunkZ, $blocks, $data, $skyLight, $blockLight, $biomeColors, $heightMap, $entityData === \null ? [] : $entityData, $tileData === \null ? [] : $tileData);
+        parent::__construct($level, $chunkX, $chunkZ, $blocks, $data, $skyLight, $blockLight, $biomeColors, $heightMap, $entityData === null ? [] : $entityData, $tileData === null ? [] : $tileData);
     }
 
     public function getBlockId($x, $y, $z)
     {
-        return \ord($this->blocks[($x << 11) | ($z << 7) | $y]);
+        return ord($this->blocks[($x << 11) | ($z << 7) | $y]);
     }
 
     public function setBlockId($x, $y, $z, $id)
     {
-        $this->blocks[($x << 11) | ($z << 7) | $y] = \chr($id);
-        $this->hasChanged = \true;
+        $this->blocks[($x << 11) | ($z << 7) | $y] = chr($id);
+        $this->hasChanged = true;
     }
 
     public function getBlockData($x, $y, $z)
     {
-        $m = \ord($this->data[($x << 10) | ($z << 6) | ($y >> 1)]);
+        $m = ord($this->data[($x << 10) | ($z << 6) | ($y >> 1)]);
         if (($y & 1) === 0) {
             return $m & 0x0F;
         } else {
@@ -88,64 +98,64 @@ class Chunk extends BaseFullChunk
     public function setBlockData($x, $y, $z, $data)
     {
         $i = ($x << 10) | ($z << 6) | ($y >> 1);
-        $old_m = \ord($this->data[$i]);
+        $old_m = ord($this->data[$i]);
         if (($y & 1) === 0) {
-            $this->data[$i] = \chr(($old_m & 0xf0) | ($data & 0x0f));
+            $this->data[$i] = chr(($old_m & 0xf0) | ($data & 0x0f));
         } else {
-            $this->data[$i] = \chr((($data & 0x0f) << 4) | ($old_m & 0x0f));
+            $this->data[$i] = chr((($data & 0x0f) << 4) | ($old_m & 0x0f));
         }
-        $this->hasChanged = \true;
+        $this->hasChanged = true;
     }
 
     public function getFullBlock($x, $y, $z)
     {
         $i = ($x << 11) | ($z << 7) | $y;
         if (($y & 1) === 0) {
-            return (\ord($this->blocks[$i]) << 4) | (\ord($this->data[$i >> 1]) & 0x0F);
+            return (ord($this->blocks[$i]) << 4) | (ord($this->data[$i >> 1]) & 0x0F);
         } else {
-            return (\ord($this->blocks[$i]) << 4) | (\ord($this->data[$i >> 1]) >> 4);
+            return (ord($this->blocks[$i]) << 4) | (ord($this->data[$i >> 1]) >> 4);
         }
     }
 
-    public function getBlock($x, $y, $z, &$blockId, &$meta = \null)
+    public function getBlock($x, $y, $z, &$blockId, &$meta = null)
     {
         $full = $this->getFullBlock($x, $y, $z);
         $blockId = $full >> 4;
         $meta = $full & 0x0f;
     }
 
-    public function setBlock($x, $y, $z, $blockId = \null, $meta = \null)
+    public function setBlock($x, $y, $z, $blockId = null, $meta = null)
     {
         $i = ($x << 11) | ($z << 7) | $y;
 
-        $changed = \false;
+        $changed = false;
 
-        if ($blockId !== \null) {
-            $blockId = \chr($blockId);
+        if ($blockId !== null) {
+            $blockId = chr($blockId);
             if ($this->blocks[$i] !== $blockId) {
                 $this->blocks[$i] = $blockId;
-                $changed = \true;
+                $changed = true;
             }
         }
 
-        if ($meta !== \null) {
+        if ($meta !== null) {
             $i >>= 1;
-            $old_m = \ord($this->data[$i]);
+            $old_m = ord($this->data[$i]);
             if (($y & 1) === 0) {
-                $this->data[$i] = \chr(($old_m & 0xf0) | ($meta & 0x0f));
+                $this->data[$i] = chr(($old_m & 0xf0) | ($meta & 0x0f));
                 if (($old_m & 0x0f) !== $meta) {
-                    $changed = \true;
+                    $changed = true;
                 }
             } else {
-                $this->data[$i] = \chr((($meta & 0x0f) << 4) | ($old_m & 0x0f));
+                $this->data[$i] = chr((($meta & 0x0f) << 4) | ($old_m & 0x0f));
                 if ((($old_m & 0xf0) >> 4) !== $meta) {
-                    $changed = \true;
+                    $changed = true;
                 }
             }
         }
 
         if ($changed) {
-            $this->hasChanged = \true;
+            $this->hasChanged = true;
         }
 
         return $changed;
@@ -153,7 +163,7 @@ class Chunk extends BaseFullChunk
 
     public function getBlockSkyLight($x, $y, $z)
     {
-        $sl = \ord($this->skyLight[($x << 10) | ($z << 6) | ($y >> 1)]);
+        $sl = ord($this->skyLight[($x << 10) | ($z << 6) | ($y >> 1)]);
         if (($y & 1) === 0) {
             return $sl & 0x0F;
         } else {
@@ -164,18 +174,18 @@ class Chunk extends BaseFullChunk
     public function setBlockSkyLight($x, $y, $z, $level)
     {
         $i = ($x << 10) | ($z << 6) | ($y >> 1);
-        $old_sl = \ord($this->skyLight[$i]);
+        $old_sl = ord($this->skyLight[$i]);
         if (($y & 1) === 0) {
-            $this->skyLight[$i] = \chr(($old_sl & 0xf0) | ($level & 0x0f));
+            $this->skyLight[$i] = chr(($old_sl & 0xf0) | ($level & 0x0f));
         } else {
-            $this->skyLight[$i] = \chr((($level & 0x0f) << 4) | ($old_sl & 0x0f));
+            $this->skyLight[$i] = chr((($level & 0x0f) << 4) | ($old_sl & 0x0f));
         }
-        $this->hasChanged = \true;
+        $this->hasChanged = true;
     }
 
     public function getBlockLight($x, $y, $z)
     {
-        $l = \ord($this->blockLight[($x << 10) | ($z << 6) | ($y >> 1)]);
+        $l = ord($this->blockLight[($x << 10) | ($z << 6) | ($y >> 1)]);
         if (($y & 1) === 0) {
             return $l & 0x0F;
         } else {
@@ -186,33 +196,33 @@ class Chunk extends BaseFullChunk
     public function setBlockLight($x, $y, $z, $level)
     {
         $i = ($x << 10) | ($z << 6) | ($y >> 1);
-        $old_l = \ord($this->blockLight[$i]);
+        $old_l = ord($this->blockLight[$i]);
         if (($y & 1) === 0) {
-            $this->blockLight[$i] = \chr(($old_l & 0xf0) | ($level & 0x0f));
+            $this->blockLight[$i] = chr(($old_l & 0xf0) | ($level & 0x0f));
         } else {
-            $this->blockLight[$i] = \chr((($level & 0x0f) << 4) | ($old_l & 0x0f));
+            $this->blockLight[$i] = chr((($level & 0x0f) << 4) | ($old_l & 0x0f));
         }
-        $this->hasChanged = \true;
+        $this->hasChanged = true;
     }
 
     public function getBlockIdColumn($x, $z)
     {
-        return \substr($this->blocks, ($x << 11) + ($z << 7), 128);
+        return substr($this->blocks, ($x << 11) + ($z << 7), 128);
     }
 
     public function getBlockDataColumn($x, $z)
     {
-        return \substr($this->data, ($x << 10) + ($z << 6), 64);
+        return substr($this->data, ($x << 10) + ($z << 6), 64);
     }
 
     public function getBlockSkyLightColumn($x, $z)
     {
-        return \substr($this->skyLight, ($x << 10) + ($z << 6), 64);
+        return substr($this->skyLight, ($x << 10) + ($z << 6), 64);
     }
 
     public function getBlockLightColumn($x, $z)
     {
-        return \substr($this->blockLight, ($x << 10) + ($z << 6), 64);
+        return substr($this->blockLight, ($x << 10) + ($z << 6), 64);
     }
 
     /**
@@ -269,7 +279,7 @@ class Chunk extends BaseFullChunk
         $this->isGenerated = (bool) $value;
     }
 
-    public static function fromFastBinary($data, LevelProvider $provider = \null)
+    public static function fromFastBinary($data, LevelProvider $provider = null)
     {
         return self::fromBinary($data, $provider);
     }
@@ -277,42 +287,41 @@ class Chunk extends BaseFullChunk
     /**
      *
      * @param string $data
-     * @param LevelProvider $provider
      *
      * @return Chunk
      */
-    public static function fromBinary($data, LevelProvider $provider = \null)
+    public static function fromBinary($data, LevelProvider $provider = null)
     {
         try {
-            $chunkX = (\PHP_INT_SIZE === 8 ? \unpack("V", \substr($data, 0, 4))[1] << 32 >> 32 : \unpack("V", \substr($data, 0, 4))[1]);
-            $chunkZ = (\PHP_INT_SIZE === 8 ? \unpack("V", \substr($data, 4, 4))[1] << 32 >> 32 : \unpack("V", \substr($data, 4, 4))[1]);
-            $chunkData = \substr($data, 8, - 1);
+            $chunkX = (PHP_INT_SIZE === 8 ? unpack("V", substr($data, 0, 4))[1] << 32 >> 32 : unpack("V", substr($data, 0, 4))[1]);
+            $chunkZ = (PHP_INT_SIZE === 8 ? unpack("V", substr($data, 4, 4))[1] << 32 >> 32 : unpack("V", substr($data, 4, 4))[1]);
+            $chunkData = substr($data, 8, -1);
 
-            $flags = \ord(\substr($data, - 1));
+            $flags = ord(substr($data, -1));
 
-            $entities = \null;
-            $tiles = \null;
+            $entities = null;
+            $tiles = null;
 
             if ($provider instanceof LevelDB) {
                 $nbt = new NBT(NBT::LITTLE_ENDIAN);
 
-                $entityData = $provider->getDatabase()->get(\substr($data, 0, 8) . LevelDB::ENTRY_ENTITIES);
-                if ($entityData !== \false and \strlen($entityData) > 0) {
-                    $nbt->read($entityData, \true);
+                $entityData = $provider->getDatabase()->get(substr($data, 0, 8) . LevelDB::ENTRY_ENTITIES);
+                if ($entityData !== false and strlen($entityData) > 0) {
+                    $nbt->read($entityData, true);
                     $entities = $nbt->getData();
-                    if (! \is_array($entities)) {
+                    if (!is_array($entities)) {
                         $entities = [
-                            $entities
+                        	$entities
                         ];
                     }
                 }
-                $tileData = $provider->getDatabase()->get(\substr($data, 0, 8) . LevelDB::ENTRY_TILES);
-                if ($tileData !== \false and \strlen($tileData) > 0) {
-                    $nbt->read($tileData, \true);
+                $tileData = $provider->getDatabase()->get(substr($data, 0, 8) . LevelDB::ENTRY_TILES);
+                if ($tileData !== false and strlen($tileData) > 0) {
+                    $nbt->read($tileData, true);
                     $tiles = $nbt->getData();
-                    if (! \is_array($tiles)) {
+                    if (!is_array($tiles)) {
                         $tiles = [
-                            $tiles
+                        	$tiles
                         ];
                     }
                 }
@@ -330,16 +339,16 @@ class Chunk extends BaseFullChunk
             }
             return $chunk;
         } catch (\Exception $e) {
-            return \null;
+            return null;
         }
     }
 
     public function toFastBinary()
     {
-        return $this->toBinary(\false);
+        return $this->toBinary(false);
     }
 
-    public function toBinary($saveExtra = \false)
+    public function toBinary($saveExtra = false)
     {
         $chunkIndex = LevelDB::chunkIndex($this->getX(), $this->getZ());
 
@@ -349,13 +358,13 @@ class Chunk extends BaseFullChunk
             $entities = [];
 
             foreach ($this->getEntities() as $entity) {
-                if (! ($entity instanceof Player) and ! $entity->closed) {
+                if (!($entity instanceof Player) and !$entity->closed) {
                     $entity->saveNBT();
                     $entities[] = $entity->namedtag;
                 }
             }
 
-            if (\count($entities) > 0) {
+            if (count($entities) > 0) {
                 $nbt->setData($entities);
                 $provider->getDatabase()->put($chunkIndex . LevelDB::ENTRY_ENTITIES, $nbt->write());
             } else {
@@ -365,13 +374,13 @@ class Chunk extends BaseFullChunk
             $tiles = [];
 
             foreach ($this->getTiles() as $tile) {
-                if (! $tile->closed) {
+                if (!$tile->closed) {
                     $tile->saveNBT();
                     $tiles[] = $tile->namedtag;
                 }
             }
 
-            if (\count($tiles) > 0) {
+            if (count($tiles) > 0) {
                 $nbt->setData($tiles);
                 $provider->getDatabase()->put($chunkIndex . LevelDB::ENTRY_TILES, $nbt->write());
             } else {
@@ -379,28 +388,27 @@ class Chunk extends BaseFullChunk
             }
         }
 
-        $heightmap = \pack("C*", ...$this->getHeightMapArray());
-        $biomeColors = \pack("N*", ...$this->getBiomeColorArray());
+        $heightmap = pack("C*", ...$this->getHeightMapArray());
+        $biomeColors = pack("N*", ...$this->getBiomeColorArray());
 
-        return $chunkIndex . $this->getBlockIdArray() . $this->getBlockDataArray() . $this->getBlockSkyLightArray() . $this->getBlockLightArray() . $heightmap . $biomeColors . \chr(($this->isLightPopulated() ? 0x04 : 0) | ($this->isPopulated() ? 0x02 : 0) | ($this->isGenerated() ? 0x01 : 0));
+        return $chunkIndex . $this->getBlockIdArray() . $this->getBlockDataArray() . $this->getBlockSkyLightArray() . $this->getBlockLightArray() . $heightmap . $biomeColors . chr(($this->isLightPopulated() ? 0x04 : 0) | ($this->isPopulated() ? 0x02 : 0) | ($this->isGenerated() ? 0x01 : 0));
     }
 
     /**
      *
      * @param int $chunkX
      * @param int $chunkZ
-     * @param LevelProvider $provider
      *
      * @return Chunk
      */
-    public static function getEmptyChunk($chunkX, $chunkZ, LevelProvider $provider = \null)
+    public static function getEmptyChunk($chunkX, $chunkZ, LevelProvider $provider = null)
     {
         try {
-            $chunk = new Chunk($provider instanceof LevelProvider ? $provider : LevelDB::class, $chunkX, $chunkZ, \str_repeat("\x00", self::DATA_LENGTH));
-            $chunk->skyLight = \str_repeat("\xff", 16384);
+            $chunk = new Chunk($provider instanceof LevelProvider ? $provider : LevelDB::class, $chunkX, $chunkZ, str_repeat("\x00", self::DATA_LENGTH));
+            $chunk->skyLight = str_repeat("\xff", 16384);
             return $chunk;
         } catch (\Exception $e) {
-            return \null;
+            return null;
         }
     }
 }

@@ -22,6 +22,17 @@
 namespace pocketmine\command;
 
 use pocketmine\Thread;
+use function extension_loaded;
+use function fgets;
+use function fopen;
+use function getopt;
+use function is_resource;
+use function microtime;
+use function preg_replace;
+use function readline;
+use function readline_add_history;
+use function stream_set_blocking;
+use function trim;
 
 class CommandReader extends Thread{
 	private $readline;
@@ -30,7 +41,7 @@ class CommandReader extends Thread{
 	private $shutdown = false;
 
 	public function __construct(){
-		$this->buffer = new \Threaded;
+		$this->buffer = new \Threaded();
 		$this->start();
 	}
 
@@ -60,8 +71,7 @@ class CommandReader extends Thread{
 		//https://github.com/krakjoe/pthreads/issues/708 -> Thread::kill
 		// > The method was removed because it was not safe to perform.
 		// Thanks krakjoe, now i cant force stop the thread (i hate you why did u remove it)
-		
-		
+
 		//Do nothing
 	}
 	/**

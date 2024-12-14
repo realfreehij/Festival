@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,12 +15,11 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
 namespace pocketmine\entity;
-
 
 use pocketmine\block\Block;
 use pocketmine\block\Liquid;
@@ -33,6 +32,7 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
 use pocketmine\Player;
+use function abs;
 
 class FallingSand extends Entity{
 	const NETWORK_ID = 66;
@@ -47,7 +47,7 @@ class FallingSand extends Entity{
 	protected $blockId = 0;
 	protected $damage;
 
-	public $canCollide = \false;
+	public $canCollide = false;
 
 	protected function initEntity(){
 		parent::initEntity();
@@ -71,7 +71,7 @@ class FallingSand extends Entity{
 	}
 
 	public function canCollideWith(Entity $entity){
-		return \false;
+		return false;
 	}
 
 	public function attack($damage, EntityDamageEvent $source){
@@ -83,30 +83,30 @@ class FallingSand extends Entity{
 	public function onUpdate($currentTick){
 
 		if($this->closed){
-			return \false;
+			return false;
 		}
 
 		$this->timings->startTiming();
 
 		$tickDiff = $currentTick - $this->lastUpdate;
 		if($tickDiff <= 0 and !$this->justCreated){
-			return \true;
+			return true;
 		}
 		$this->lastUpdate = $currentTick;
 
 		$hasUpdate = $this->entityBaseTick($tickDiff);
 		if($this->isAlive()){
 			$pos = (new Vector3($this->x - 0.5, $this->y, $this->z - 0.5))->floor();
-			
+
 			$savdMotionY = $this->motionY;
 			$this->motionY -= $this->gravity;
-			
+
 			$this->move($this->motionX, $this->motionY, $this->motionZ);
-			
+
 			if($savdMotionY == $this->motionY) {
 				$this->onGround = true;
 			}else $this->onGround = false;
-			
+
 			$friction = 1 - $this->drag;
 
 			$this->motionX *= $friction;
@@ -123,16 +123,16 @@ class FallingSand extends Entity{
 				}else{
 					$this->server->getPluginManager()->callEvent($ev = new EntityBlockChangeEvent($this, $block, Block::get($this->getBlock(), $this->getDamage())));
 					if(!$ev->isCancelled()){
-						$this->getLevel()->setBlock($pos, $ev->getTo(), \true);
+						$this->getLevel()->setBlock($pos, $ev->getTo(), true);
 					}
 				}
-				$hasUpdate = \true;
+				$hasUpdate = true;
 			}
 
 			$this->updateMovement();
 		}
 
-		return $hasUpdate or !$this->onGround or \abs($this->motionX) > 0.00001 or \abs($this->motionY) > 0.00001 or \abs($this->motionZ) > 0.00001;
+		return $hasUpdate or !$this->onGround or abs($this->motionX) > 0.00001 or abs($this->motionY) > 0.00001 or abs($this->motionZ) > 0.00001;
 	}
 
 	public function getBlock(){
