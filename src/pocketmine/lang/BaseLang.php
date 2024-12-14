@@ -54,27 +54,8 @@ class BaseLang{
 	}
 
 	protected function loadLang($path, array &$d){
-		if(\file_exists($path) and \strlen($content = \file_get_contents($path)) > 0){
-			foreach(\explode("\n", $content) as $line){
-				$line = \trim($line);
-				if($line === "" or $line[0] === "#"){
-					continue;
-				}
-
-				$t = \explode("=", $line);
-				if(\count($t) < 2){
-					continue;
-				}
-
-				$key = \trim(\array_shift($t));
-				$value = \trim(\implode("=", $t));
-
-				if($value === ""){
-					continue;
-				}
-
-				$d[$key] = $value;
-			}
+		if(file_exists($path) and strlen(file_get_contents($path)) > 0){
+			$d = parse_ini_file($path, false, INI_SCANNER_RAW);
 		}
 	}
 
