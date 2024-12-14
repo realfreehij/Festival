@@ -34,9 +34,10 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddPlayerPacket;
 use pocketmine\network\protocol\RemovePlayerPacket;
-use  pocketmine\Player;
+use pocketmine\Player;
 use function floor;
 use function strlen;
+
 class Human extends Creature implements ProjectileSource, InventoryHolder{
 
 	const DATA_PLAYER_FLAG_SLEEP = 1;

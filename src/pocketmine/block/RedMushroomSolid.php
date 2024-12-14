@@ -2,7 +2,7 @@
 
 namespace pocketmine\block;
 
-use \pocketmine\item\Item;
+use pocketmine\item\Item;
 use function mt_rand;
 
 class RedMushroomSolid extends Solid{

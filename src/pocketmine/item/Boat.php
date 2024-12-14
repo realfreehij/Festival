@@ -9,7 +9,6 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
 use pocketmine\nbt\tag\EnumTag;
 use pocketmine\nbt\tag\FloatTag;
-
 use pocketmine\Player;
 
 class Boat extends Item{

@@ -55,6 +55,7 @@ use function explode;
 use function str_replace;
 use function strtoupper;
 use function trim;
+
 class Item{
 	//All Block IDs are here too
 	const AIR = 0;

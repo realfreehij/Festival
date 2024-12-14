@@ -24,7 +24,6 @@ namespace pocketmine\entity;
 use pocketmine\inventory\InventoryHolder;
 use pocketmine\network\Network;
 use pocketmine\network\protocol\AddEntityPacket;
-
 use pocketmine\Player;
 
 class Enderman extends Monster implements InventoryHolder{
