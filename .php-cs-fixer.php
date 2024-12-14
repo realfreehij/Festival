@@ -32,7 +32,7 @@ return (new PhpCsFixer\Config)
 			'import_functions' => true,
 			'import_classes' => null,
 		],
-		//'indentation_type' => true,
+		'indentation_type' => true,
 		//'logical_operators' => true,
 		'native_constant_invocation' => [
 			'scope' => 'namespaced'
