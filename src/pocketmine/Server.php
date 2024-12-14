@@ -188,6 +188,9 @@ use const E_USER_WARNING;
 use const E_WARNING;
 use const PHP_INT_MAX;
 use const PHP_INT_SIZE;
+use const SIGHUP;
+use const SIGINT;
+use const SIGTERM;
 use const ZLIB_ENCODING_DEFLATE;
 
 /**
